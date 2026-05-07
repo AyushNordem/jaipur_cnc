@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { SiteContext } from '../context/SiteContext';
 import PageHeader from '../components/PageHeader';
 import { Star, User } from 'lucide-react';
@@ -6,6 +6,16 @@ import styles from './About.module.css';
 
 const About = () => {
   const { siteData } = useContext(SiteContext);
+  const [currentReview, setCurrentReview] = useState(0);
+
+  useEffect(() => {
+    if (!siteData?.testimonials || siteData.testimonials.length <= 1) return;
+    const maxReviews = Math.min(siteData.testimonials.length, 5);
+    const interval = setInterval(() => {
+      setCurrentReview((prev) => (prev + 1) % maxReviews);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [siteData?.testimonials]);
 
   return (
     <div className="page-container" style={{ minHeight: '100vh', backgroundColor: 'var(--color-white)', paddingBottom: '0' }}>
@@ -73,40 +83,53 @@ const About = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className={styles.testimonialSection}>
-        <div className="container">
-          <div className={styles.stars}>
-            <Star size={20} fill="var(--color-accent)" color="var(--color-accent)" />
-            <Star size={20} fill="var(--color-accent)" color="var(--color-accent)" />
-            <Star size={20} fill="var(--color-accent)" color="var(--color-accent)" />
-            <Star size={20} fill="var(--color-accent)" color="var(--color-accent)" />
-            <Star size={20} fill="var(--color-accent)" color="var(--color-accent)" />
-          </div>
-          
-          <p className={styles.quote}>
-            "Beautifully crafted wood temple—perfectly designed to fit my compact, custom space. A bit on the pricier side but a true blessing to have this sacred piece anchoring my daily prayers."
-          </p>
-          
-          <div className={styles.dots}>
-            <div className={`${styles.dot} ${styles.active}`}></div>
-            <div className={styles.dot}></div>
-            <div className={styles.dot}></div>
-            <div className={styles.dot}></div>
-            <div className={styles.dot}></div>
-          </div>
+      {siteData?.testimonials && siteData.testimonials.length > 0 && (
+        <section className={styles.testimonialSection}>
+          <div className="container">
+            <div className={styles.stars}>
+              {Array.from({ length: siteData.testimonials[currentReview]?.rating || 5 }).map((_, i) => (
+                <Star key={`full-${i}`} size={20} fill="var(--color-accent)" color="var(--color-accent)" />
+              ))}
+              {Array.from({ length: 5 - (siteData.testimonials[currentReview]?.rating || 5) }).map((_, i) => (
+                <Star key={`empty-${i}`} size={20} color="var(--color-border)" />
+              ))}
+            </div>
+            
+            <p className={`${styles.quote} animate-fade-in`} key={`quote-${currentReview}`}>
+              "{siteData.testimonials[currentReview]?.quote}"
+            </p>
+            <p className="animate-fade-in" key={`author-${currentReview}`} style={{ fontWeight: 'bold', marginBottom: '30px', color: 'var(--color-dark)' }}>
+              - {siteData.testimonials[currentReview]?.clientName}
+            </p>
+            
+            {siteData.testimonials.length > 1 && (
+              <div className={styles.dots}>
+                {Array.from({ length: Math.min(siteData.testimonials.length, 5) }).map((_, idx) => (
+                  <div 
+                    key={idx} 
+                    className={`${styles.dot} ${idx === currentReview ? styles.active : ''}`}
+                    onClick={() => setCurrentReview(idx)}
+                    style={{ cursor: 'pointer' }}
+                  ></div>
+                ))}
+              </div>
+            )}
 
-          <div className={styles.testimonialGallery}>
-            {/* Gallery Images Placeholder */}
-            {[1, 2, 3, 4, 5, 6].map((img, idx) => (
-              <div key={idx} className={styles.galleryImage}>
-                <div style={{ backgroundColor: 'var(--color-border)', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ color: 'var(--color-medium-gray)', fontSize: '0.9rem' }}>Project {img}</span>
+            {siteData?.gallery && siteData.gallery.length > 0 && (
+              <div className={styles.testimonialGallery}>
+                <div className={styles.galleryTrack}>
+                  {/* Map twice for infinite scroll effect */}
+                  {[...siteData.gallery, ...siteData.gallery].map((img, idx) => (
+                    <div key={idx} className={styles.galleryImage}>
+                      <img src={`http://localhost:5000${img.url}`} alt={img.title} />
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
+            )}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* The Team Section */}
       <section className="section bg-white">
@@ -117,24 +140,24 @@ const About = () => {
 
           <div className={styles.teamGrid}>
             <div className={styles.teamMember}>
-              <div className={styles.avatarWrapper}>
-                <User size={48} color="var(--color-dark)" />
+              <div className={styles.avatarWrapper} style={{ overflow: 'hidden' }}>
+                <img src="/team_design_lead.png" alt="Design Lead" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <h4>The Design Lead</h4>
               <p>Understands spatial needs and creates customized modern and traditional designs accordingly.</p>
             </div>
             
             <div className={styles.teamMember}>
-              <div className={styles.avatarWrapper}>
-                <User size={48} color="var(--color-dark)" />
+              <div className={styles.avatarWrapper} style={{ overflow: 'hidden' }}>
+                <img src="/team_project_manager.png" alt="Project Manager" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <h4>Project Manager</h4>
               <p>Manages timelines, coordination, and ensures smooth execution until final delivery.</p>
             </div>
             
             <div className={styles.teamMember}>
-              <div className={styles.avatarWrapper}>
-                <User size={48} color="var(--color-dark)" />
+              <div className={styles.avatarWrapper} style={{ overflow: 'hidden' }}>
+                <img src="/team_account_manager.png" alt="Account Manager" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <h4>Account Manager</h4>
               <p>Handles communication, updates, and ensures a hassle-free customer experience.</p>

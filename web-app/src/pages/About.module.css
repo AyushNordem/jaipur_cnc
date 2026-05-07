@@ -86,18 +86,34 @@
   background: var(--color-accent);
 }
 
+@keyframes scrollMarquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-50% - 8px)); } /* -50% minus half of the gap to perfectly align */
+}
+
 .testimonialGallery {
+  overflow: hidden;
+  padding-bottom: 20px;
+  width: 100%;
+}
+
+.galleryTrack {
   display: flex;
   gap: 16px;
-  overflow-x: auto;
-  padding-bottom: 20px;
+  width: max-content;
+  animation: scrollMarquee 30s linear infinite;
+}
+
+.galleryTrack:hover {
+  animation-play-state: paused;
 }
 
 .galleryImage {
-  flex: 0 0 250px;
-  height: 300px;
-  border-radius: 4px;
+  flex: 0 0 300px;
+  height: 350px;
+  border-radius: 8px;
   overflow: hidden;
+  box-shadow: var(--shadow-soft);
 }
 
 .galleryImage img {
