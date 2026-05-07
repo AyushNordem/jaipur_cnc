@@ -1,0 +1,78 @@
+.pageHeader {
+  position: relative;
+  height: 350px;
+  background-image: url('/page_header_bg.png');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 80px; /* Offset for fixed navbar */
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65); /* Dark overlay to make text pop */
+  z-index: 1;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 3.5rem;
+  color: var(--color-white);
+  margin-bottom: 16px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.homeLink {
+  color: var(--color-white);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.homeLink:hover {
+  color: var(--color-accent);
+}
+
+.separator {
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 2px;
+}
+
+.current {
+  color: var(--color-accent);
+}
+
+@media (max-width: 768px) {
+  .pageHeader {
+    height: 250px;
+  }
+  
+  .title {
+    font-size: 2.5rem;
+  }
+  
+  .breadcrumbs {
+    font-size: 1rem;
+  }
+}

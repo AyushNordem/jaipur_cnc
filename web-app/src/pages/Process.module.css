@@ -1,0 +1,168 @@
+/* Preparation Banner */
+.prepBanner {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 60px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin-top: 60px;
+  box-shadow: var(--shadow-soft);
+}
+
+.prepContent {
+  flex: 1;
+}
+
+.prepContent h2 {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  color: var(--color-black);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.prepContent p {
+  color: var(--color-medium-gray);
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.prepImage {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--color-light-gray);
+  border-radius: 8px;
+  padding: 40px;
+}
+
+/* Comparison Table */
+.tableContainer {
+  overflow-x: auto;
+  margin-top: 40px;
+  background: var(--color-white);
+  border-radius: 8px;
+  box-shadow: var(--shadow-soft);
+}
+
+.compareTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.compareTable th,
+.compareTable td {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.compareTable th {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-black);
+  background: var(--color-light-gray);
+}
+
+.compareTable th.highlight {
+  background: var(--color-accent);
+  color: var(--color-white);
+}
+
+.compareTable td {
+  font-size: 1rem;
+  color: var(--color-dark);
+}
+
+.compareTable tr:last-child td {
+  border-bottom: none;
+}
+
+.featureName {
+  font-weight: 500;
+  color: var(--color-medium-gray);
+}
+
+.checkIcon {
+  color: var(--color-accent);
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.crossIcon {
+  color: #e74c3c;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* Locations */
+.locationsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+  margin-top: 40px;
+}
+
+.locationBlock h3 {
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  color: var(--color-black);
+  margin-bottom: 40px;
+  text-transform: uppercase;
+}
+
+.cityGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 30px;
+  text-align: center;
+}
+
+.cityCard {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+}
+
+.cityCard:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-soft);
+}
+
+.cityCard span {
+  font-weight: 500;
+  color: var(--color-dark);
+}
+
+@media (max-width: 768px) {
+  .prepBanner {
+    flex-direction: column;
+    padding: 30px;
+  }
+  
+  .prepContent h2 {
+    font-size: 1.8rem;
+  }
+  
+  .cityCard {
+    width: 120px;
+    height: 120px;
+  }
+}
