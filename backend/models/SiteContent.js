@@ -48,7 +48,8 @@ const siteContentSchema = new mongoose.Schema({
   testimonials: [{
     clientName: String,
     quote: String,
-    rating: Number
+    rating: Number,
+    date: { type: Date, default: Date.now }
   }],
 
   galleryImages: [{
