@@ -8,7 +8,7 @@ const Login = ({ onLogin }) => {
   const handleLogin = (e) => {
     e.preventDefault();
     // Static Authentication
-    if (email === 'admin@jaipurcnc.com' && password === 'admin123') {
+    if (email === 'admin@gmail.com' && password === 'admin123') {
       onLogin();
     } else {
       setError('Invalid email or password');
@@ -16,11 +16,11 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <div style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      height: '100vh', 
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
       backgroundImage: 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("/light_hero.png")',
       backgroundSize: 'cover',
       backgroundPosition: 'center'
@@ -36,23 +36,23 @@ const Login = ({ onLogin }) => {
         <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div>
             <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#333' }}>Email</label>
-            <input 
-              type="email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
-              style={{ width: '100%', padding: '12px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} 
+              style={{ width: '100%', padding: '12px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }}
               placeholder="admin@jaipurcnc.com"
             />
           </div>
           <div>
             <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#333' }}>Password</label>
-            <input 
-              type="password" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
-              style={{ width: '100%', padding: '12px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} 
+              style={{ width: '100%', padding: '12px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }}
               placeholder="admin123"
             />
           </div>
