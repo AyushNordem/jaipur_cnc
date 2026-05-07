@@ -20,6 +20,13 @@ const Dashboard = () => {
     reviews: 0
   });
 
+  const [metrics, setMetrics] = useState({
+    happyCustomersCount: '5,000+',
+    completedProjectsCount: '12,500',
+    activeResourcesCount: '45',
+    totalBranchesCount: '3'
+  });
+
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -35,6 +42,12 @@ const Dashboard = () => {
           gallery: data?.galleryImages?.length || 0,
           services: data?.services?.length || 0,
           reviews: data?.testimonials?.length || 0
+        });
+        setMetrics({
+          happyCustomersCount: data?.happyCustomersCount || '5,000+',
+          completedProjectsCount: data?.completedProjectsCount || '12,500',
+          activeResourcesCount: data?.activeResourcesCount || '45',
+          totalBranchesCount: data?.totalBranchesCount || '3'
         });
       })
       .catch(err => console.error("Error fetching live data for dashboard", err));
@@ -160,10 +173,10 @@ const Dashboard = () => {
       <h3 style={{ fontSize: '1.4rem', color: '#323232', marginBottom: '20px' }}>Business Metrics</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px', marginBottom: '40px' }}>
         {[
-          { title: 'Happy Customers', count: '5,000+', icon: <Users size={28} /> },
-          { title: 'Completed Projects', count: '12,500', icon: <CheckCircle size={28} /> },
-          { title: 'Active Resources', count: '45', icon: <Box size={28} /> },
-          { title: 'Total Branches', count: '3', icon: <MapPin size={28} /> },
+          { title: 'Happy Customers', count: metrics.happyCustomersCount, icon: <Users size={28} /> },
+          { title: 'Completed Projects', count: metrics.completedProjectsCount, icon: <CheckCircle size={28} /> },
+          { title: 'Active Resources', count: metrics.activeResourcesCount, icon: <Box size={28} /> },
+          { title: 'Total Branches', count: metrics.totalBranchesCount, icon: <MapPin size={28} /> },
         ].map((metric, idx) => (
           <div key={idx} style={{ 
             background: 'linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%)', 

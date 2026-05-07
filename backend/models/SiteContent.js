@@ -12,13 +12,30 @@ const siteContentSchema = new mongoose.Schema({
   facebookUrl: { type: String, default: '#' },
   instagramUrl: { type: String, default: 'https://instagram.com/jaipurartscnc' },
   whatsappUrl: { type: String, default: 'https://wa.me/919001021857' },
+  youtubeUrl: { type: String, default: '#' },
+  locationUrl: { type: String, default: '#' },
 
   // Home Page
   heroTitle: { type: String, default: 'Premium CNC Cutting\n& Carving' },
   heroSubtitle: { type: String, default: 'Wood | Stone | Metal | Acrylic\nPrecision crafting with modern technology, fast delivery, and professional finishing.' },
+  homeHeroImage: { type: String, default: '' },
   
-  // About Page
+  // Other Pages Hero Images
+  servicesHeroImage: { type: String, default: '' },
+  creationsHeroImage: { type: String, default: '' },
+  aboutHeroImage: { type: String, default: '' },
+  contactHeroImage: { type: String, default: '' },
+  
+  // About Page specific images
   ourStoryImage: { type: String, default: '' },
+  aboutContentImage: { type: String, default: '' },
+  craftsmanshipImage: { type: String, default: '' },
+
+  // Business Metrics
+  happyCustomersCount: { type: String, default: '5,000+' },
+  completedProjectsCount: { type: String, default: '12,500' },
+  activeResourcesCount: { type: String, default: '45' },
+  totalBranchesCount: { type: String, default: '3' },
   
   // Dynamic arrays can be stored here or in separate collections
   // For simplicity, we can store small arrays of objects directly here
