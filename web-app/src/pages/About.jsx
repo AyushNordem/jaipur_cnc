@@ -28,15 +28,7 @@ const About = () => {
       <section className={styles.sectionPadding}>
         <div className={`${styles.wrap} ${styles.storyGrid}`}>
           <div className={styles.storyVisual}>
-            <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%', display: 'block' }}>
-              <defs>
-                <pattern id="jaliPattern2" x="0" y="0" width="46" height="46" patternUnits="userSpaceOnUse">
-                  <circle cx="23" cy="23" r="15" fill="none" stroke="#F2EADC" strokeWidth="1.5" opacity="0.5"/>
-                </pattern>
-              </defs>
-              <rect width="400" height="500" fill="url(#jaliPattern2)"/>
-              <rect x="20" y="20" width="360" height="460" fill="none" stroke="#B8892B" strokeWidth="1.5" opacity="0.7"/>
-            </svg>
+            <img src="/ganeshji.jpg" alt="Ganeshji Wood Carving - Jaipur Art CNC" />
           </div>
           <div className={styles.storyCopy}>
             <div className={styles.eyebrow}>Our Story</div>

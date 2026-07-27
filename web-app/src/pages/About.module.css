@@ -97,12 +97,19 @@
 
 .storyVisual {
   position: relative;
-  aspect-ratio: 4/5;
   border-radius: 4px;
   overflow: hidden;
   box-shadow: var(--shadow);
-  background: radial-gradient(120% 140% at 20% 0%, #7a5230 0%, #4a3220 55%, #2E2116 100%);
   width: 100%;
+  max-width: 360px;
+  justify-self: center;
+}
+
+.storyVisual img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .storyCopy p {

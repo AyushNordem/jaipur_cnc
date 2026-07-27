@@ -86,53 +86,7 @@ const Services = () => {
             ))}
           </div>
 
-          {/* CNC Mandir Manufacturing, Sizes and Other Needs */}
-          <div className={styles.specsContainer}>
-            <div className={styles.specsGrid}>
-              <div className={styles.specColumn}>
-                <h4>CNC Mandir (Temple) Materials</h4>
-                <ul>
-                  <li><b>18 mm HDHMR</b> – Premium temples</li>
-                  <li><b>18 mm MDF</b> – Budget and decorative temples</li>
-                  <li><b>12 mm MDF</b> – Back panels and jali work</li>
-                  <li><b>6 mm MDF</b> – Fine decorative layers</li>
-                  <li><b>Teak / Sheesham Wood</b> – High-end handcrafted temples</li>
-                  <li><b>Acrylic</b> – LED nameplates and decorative inserts</li>
-                  <li><b>Corian</b> – Premium modern temples with backlighting</li>
-                </ul>
-              </div>
 
-              <div className={styles.specColumn}>
-                <h4>Common Sizes & Thicknesses</h4>
-                <div className={styles.sheetSize}>
-                  <b>Standard Sheet Size:</b>
-                  <span>8 ft × 4 ft (2440 × 1220 mm)</span>
-                </div>
-                <b>Available Thicknesses:</b>
-                <div className={styles.thicknessGrid}>
-                  <span>3 mm</span>
-                  <span>6 mm</span>
-                  <span>9 mm</span>
-                  <span>12 mm</span>
-                  <span>16 mm</span>
-                  <span>18 mm</span>
-                  <span>25 mm</span>
-                </div>
-              </div>
-
-              <div className={styles.specColumn}>
-                <h4>Other Accessories & Needs</h4>
-                <ul>
-                  <li>Wood glue (Fevicol SH or equivalent)</li>
-                  <li>PU paint or Duco paint / Primer</li>
-                  <li>Sandpaper (120, 220, 400 grit)</li>
-                  <li>LED strip lights & Acrylic diffusers</li>
-                  <li>Hinges, handles & Edge banding</li>
-                  <li>Screws & concealed fittings</li>
-                </ul>
-              </div>
-            </div>
-          </div>
 
         </div>
       </section>
