@@ -22,8 +22,8 @@ const Dashboard = () => {
 
   const [metrics, setMetrics] = useState({
     happyCustomersCount: '5,000+',
-    completedProjectsCount: '12,500',
-    activeResourcesCount: '45',
+    completedProjectsCount: '500+',
+    yearsExperienceCount: '7+ Yrs',
     totalBranchesCount: '3'
   });
 
@@ -45,8 +45,8 @@ const Dashboard = () => {
         });
         setMetrics({
           happyCustomersCount: data?.happyCustomersCount || '5,000+',
-          completedProjectsCount: data?.completedProjectsCount || '12,500',
-          activeResourcesCount: data?.activeResourcesCount || '45',
+          completedProjectsCount: data?.completedProjectsCount || '500+',
+          yearsExperienceCount: data?.yearsExperienceCount || '7+ Yrs',
           totalBranchesCount: data?.totalBranchesCount || '3'
         });
       })
@@ -175,7 +175,7 @@ const Dashboard = () => {
         {[
           { title: 'Happy Customers', count: metrics.happyCustomersCount, icon: <Users size={28} /> },
           { title: 'Completed Projects', count: metrics.completedProjectsCount, icon: <CheckCircle size={28} /> },
-          { title: 'Active Resources', count: metrics.activeResourcesCount, icon: <Box size={28} /> },
+          { title: 'Years Experience', count: metrics.yearsExperienceCount || '7+ Yrs', icon: <Briefcase size={28} /> },
           { title: 'Total Branches', count: metrics.totalBranchesCount, icon: <MapPin size={28} /> },
         ].map((metric, idx) => (
           <div key={idx} style={{ 

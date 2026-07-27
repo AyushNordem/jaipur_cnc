@@ -14,17 +14,24 @@ const siteContentSchema = new mongoose.Schema({
   whatsappUrl: { type: String, default: 'https://wa.me/919001021857' },
   youtubeUrl: { type: String, default: '#' },
   locationUrl: { type: String, default: '#' },
+  googleBusinessUrl: { type: String, default: '#' },
+  linkedinUrl: { type: String, default: '#' },
+  twitterUrl: { type: String, default: '#' },
+  pinterestUrl: { type: String, default: '#' },
+  telegramUrl: { type: String, default: '#' },
+  threadsUrl: { type: String, default: '#' },
 
   // Home Page
   heroTitle: { type: String, default: 'Premium CNC Cutting\n& Carving' },
   heroSubtitle: { type: String, default: 'Wood | Stone | Metal | Acrylic\nPrecision crafting with modern technology, fast delivery, and professional finishing.' },
   homeHeroImage: { type: String, default: '' },
   
-  // Other Pages Hero Images
+  // Other Pages Hero Images & Media
   servicesHeroImage: { type: String, default: '' },
   creationsHeroImage: { type: String, default: '' },
   aboutHeroImage: { type: String, default: '' },
   contactHeroImage: { type: String, default: '' },
+  servicesVideoUrl: { type: String, default: '/Jaipur_Arts_CNC_promotional_video_202605071220.mp4' },
   
   // About Page specific images
   ourStoryImage: { type: String, default: '' },
@@ -33,7 +40,8 @@ const siteContentSchema = new mongoose.Schema({
 
   // Business Metrics
   happyCustomersCount: { type: String, default: '5,000+' },
-  completedProjectsCount: { type: String, default: '12,500' },
+  completedProjectsCount: { type: String, default: '500+' },
+  yearsExperienceCount: { type: String, default: '7+ Yrs' },
   activeResourcesCount: { type: String, default: '45' },
   totalBranchesCount: { type: String, default: '3' },
   

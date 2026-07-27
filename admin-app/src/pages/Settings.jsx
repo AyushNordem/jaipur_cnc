@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Building2, Share2, Image as ImageIcon, Save, UploadCloud, BarChart2 } from 'lucide-react';
+import { Building2, Share2, Image as ImageIcon, Save, UploadCloud, BarChart2, Video } from 'lucide-react';
 
 const Settings = () => {
   const [content, setContent] = useState(null);
@@ -9,12 +9,15 @@ const Settings = () => {
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/content')
-      .then(res => setContent(res.data))
-      .catch(err => console.error(err));
+      .then(res => setContent(res.data || {}))
+      .catch(err => {
+        console.error('Error fetching settings content:', err);
+        setContent({});
+      });
   }, []);
 
   const handleChange = (e) => {
-    setContent({ ...content, [e.target.name]: e.target.value });
+    setContent(prev => ({ ...(prev || {}), [e.target.name]: e.target.value }));
   };
 
   const handleImageUpload = async (e, fieldName) => {
@@ -29,7 +32,7 @@ const Settings = () => {
       const uploadRes = await axios.post('http://localhost:5000/api/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      setContent({ ...content, [fieldName]: uploadRes.data.url });
+      setContent(prev => ({ ...(prev || {}), [fieldName]: uploadRes.data.url }));
     } catch (err) {
       alert('Error uploading image');
     }
@@ -48,13 +51,14 @@ const Settings = () => {
     setSaving(false);
   };
 
-  if (!content) return <div style={{ padding: '40px', color: '#666' }}>Loading settings...</div>;
+  if (!content) return <div style={{ padding: '40px', color: 'var(--espresso)', fontFamily: 'var(--font-body)' }}>Loading settings...</div>;
 
   const cardStyle = {
-    background: 'white',
+    background: 'var(--paper)',
     padding: '32px',
-    borderRadius: '12px',
-    boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
+    borderRadius: '6px',
+    border: '1px solid var(--line)',
+    boxShadow: 'var(--shadow)',
     marginBottom: '32px'
   };
 
@@ -63,57 +67,70 @@ const Settings = () => {
     alignItems: 'center',
     gap: '12px',
     fontSize: '1.4rem',
-    color: '#323232',
-    borderBottom: '1px solid #eee',
+    fontFamily: 'var(--font-heading)',
+    color: 'var(--espresso)',
+    borderBottom: '1px solid var(--line)',
     paddingBottom: '16px',
     marginBottom: '24px'
   };
 
-  const labelStyle = { display: 'block', marginBottom: '16px', fontWeight: '600', color: '#444' };
+  const labelStyle = { display: 'block', marginBottom: '16px', fontWeight: '600', color: 'var(--espresso)', fontSize: '14px' };
   const inputStyle = { 
     width: '100%', 
     padding: '12px', 
     marginTop: '8px', 
-    border: '1px solid #ddd', 
-    borderRadius: '6px',
-    background: '#fafafa',
+    border: '1px solid var(--line)', 
+    borderRadius: '4px',
+    background: '#ffffff',
+    color: 'var(--espresso)',
+    fontFamily: 'var(--font-body)',
     transition: 'border-color 0.2s',
     outline: 'none',
     boxSizing: 'border-box'
   };
 
-  const ImageUploader = ({ label, fieldName }) => (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', background: '#fafafa', border: '1px solid #eaeaea', borderRadius: '8px', transition: 'border-color 0.2s' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <div style={{ width: '70px', height: '70px', borderRadius: '8px', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid #eee', flexShrink: 0 }}>
-          {content[fieldName] ? (
-            <img src={`http://localhost:5000${content[fieldName]}`} alt={label} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          ) : (
-            <ImageIcon size={24} color="#ccc" />
-          )}
+  const MediaUploader = ({ label, fieldName }) => {
+    const rawUrl = content ? content[fieldName] : '';
+    const mediaUrl = typeof rawUrl === 'string' ? rawUrl : '';
+    const isVideo = Boolean(mediaUrl && (mediaUrl.endsWith('.mp4') || mediaUrl.endsWith('.webm') || mediaUrl.includes('video')));
+
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', background: 'var(--paper)', border: '1px solid var(--line)', borderRadius: '6px', transition: 'border-color 0.2s' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '70px', height: '70px', borderRadius: '6px', background: 'var(--cream)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid var(--line)', flexShrink: 0 }}>
+            {mediaUrl ? (
+              isVideo ? (
+                <video src={mediaUrl.startsWith('/') || mediaUrl.startsWith('http') ? mediaUrl : `http://localhost:5000${mediaUrl}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted />
+              ) : (
+                <img src={mediaUrl.startsWith('/') || mediaUrl.startsWith('http') ? mediaUrl : `http://localhost:5000${mediaUrl}`} alt={label} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              )
+            ) : (
+              <ImageIcon size={24} color="var(--walnut)" />
+            )}
+          </div>
+          <div>
+            <h4 style={{ margin: '0 0 6px 0', color: 'var(--espresso)', fontSize: '0.95rem', fontWeight: '600', fontFamily: 'var(--font-heading)' }}>{label}</h4>
+            <p style={{ margin: 0, fontSize: '0.82rem', color: mediaUrl ? 'var(--brass)' : 'var(--walnut)' }}>
+              {mediaUrl ? (isVideo ? 'Video active' : 'Image uploaded') : 'No media selected'}
+            </p>
+          </div>
         </div>
-        <div>
-          <h4 style={{ margin: '0 0 6px 0', color: '#333', fontSize: '1rem', fontWeight: '600' }}>{label}</h4>
-          <p style={{ margin: 0, fontSize: '0.85rem', color: content[fieldName] ? '#4caf50' : '#888' }}>
-            {content[fieldName] ? 'Image uploaded' : 'No image selected'}
-          </p>
+        
+        <div style={{ position: 'relative' }}>
+          <input 
+            type="file" 
+            accept="image/*,video/*" 
+            onChange={(e) => handleImageUpload(e, fieldName)} 
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
+          />
+          <button type="button" style={{ pointerEvents: 'none', background: 'var(--cream)', color: 'var(--espresso)', border: '1px solid var(--line)', padding: '8px 16px', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', fontWeight: '600' }}>
+            <UploadCloud size={16} />
+            {uploadingImage === fieldName ? 'Uploading...' : 'Upload'}
+          </button>
         </div>
       </div>
-      
-      <div style={{ position: 'relative' }}>
-        <input 
-          type="file" 
-          accept="image/*" 
-          onChange={(e) => handleImageUpload(e, fieldName)} 
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
-        />
-        <button type="button" style={{ pointerEvents: 'none', background: 'white', color: '#323232', border: '1px solid #ddd', padding: '8px 16px', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', fontWeight: '500', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-          <UploadCloud size={16} />
-          {uploadingImage === fieldName ? 'Uploading...' : 'Upload'}
-        </button>
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div style={{ maxWidth: '1000px', paddingBottom: '60px' }}>
@@ -138,8 +155,11 @@ const Settings = () => {
         
         {/* Business Details */}
         <div style={cardStyle}>
-          <h3 style={sectionHeaderStyle}><Building2 color="#8b7355" /> Business Details</h3>
+          <h3 style={sectionHeaderStyle}><Building2 color="var(--brick)" /> Business Details</h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+            <div style={{ gridColumn: '1 / -1', marginBottom: '8px' }}>
+              <MediaUploader label="Website Logo" fieldName="logoUrl" />
+            </div>
             <label style={labelStyle}>
               Site/Business Name
               <input type="text" name="siteName" value={content.siteName || ''} onChange={handleChange} style={inputStyle} />
@@ -169,8 +189,8 @@ const Settings = () => {
 
         {/* Business Metrics */}
         <div style={cardStyle}>
-          <h3 style={sectionHeaderStyle}><BarChart2 color="#8b7355" /> Business Metrics</h3>
-          <p style={{ color: '#666', marginBottom: '24px', fontSize: '0.95rem' }}>Update the statistics displayed on your dashboard and public site.</p>
+          <h3 style={sectionHeaderStyle}><BarChart2 color="var(--brick)" /> Business Metrics</h3>
+          <p style={{ color: 'var(--walnut)', marginBottom: '24px', fontSize: '0.95rem' }}>Update the statistics displayed on your dashboard and public website.</p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
             <label style={labelStyle}>
               Happy Customers Count
@@ -178,11 +198,11 @@ const Settings = () => {
             </label>
             <label style={labelStyle}>
               Completed Projects Count
-              <input type="text" name="completedProjectsCount" value={content.completedProjectsCount || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. 12,500" />
+              <input type="text" name="completedProjectsCount" value={content.completedProjectsCount || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. 500+" />
             </label>
             <label style={labelStyle}>
-              Active Resources Count
-              <input type="text" name="activeResourcesCount" value={content.activeResourcesCount || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. 45" />
+              Years Experience
+              <input type="text" name="yearsExperienceCount" value={content.yearsExperienceCount || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. 7+ Yrs" />
             </label>
             <label style={labelStyle}>
               Total Branches Count
@@ -193,45 +213,71 @@ const Settings = () => {
 
         {/* Social Media Links */}
         <div style={cardStyle}>
-          <h3 style={sectionHeaderStyle}><Share2 color="#8b7355" /> Social Media Links</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+          <h3 style={sectionHeaderStyle}><Share2 color="var(--brick)" /> Global Social Media Links</h3>
+          <p style={{ color: 'var(--walnut)', marginBottom: '24px', fontSize: '0.95rem' }}>Configure all your public social media profiles and communication links.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
             <label style={labelStyle}>
-              Facebook URL
-              <input type="text" name="facebookUrl" value={content.facebookUrl || ''} onChange={handleChange} style={inputStyle} />
+              Facebook Page URL
+              <input type="text" name="facebookUrl" value={content.facebookUrl || ''} onChange={handleChange} style={inputStyle} placeholder="https://facebook.com/jaipurartcnc" />
             </label>
             <label style={labelStyle}>
-              Instagram URL
-              <input type="text" name="instagramUrl" value={content.instagramUrl || ''} onChange={handleChange} style={inputStyle} />
+              Instagram Profile URL
+              <input type="text" name="instagramUrl" value={content.instagramUrl || ''} onChange={handleChange} style={inputStyle} placeholder="https://instagram.com/jaipurartcnc" />
             </label>
             <label style={labelStyle}>
-              YouTube URL
-              <input type="text" name="youtubeUrl" value={content.youtubeUrl || ''} onChange={handleChange} style={inputStyle} />
+              YouTube Channel URL
+              <input type="text" name="youtubeUrl" value={content.youtubeUrl || ''} onChange={handleChange} style={inputStyle} placeholder="https://youtube.com/@jaipurartcnc" />
+            </label>
+            <label style={labelStyle}>
+              WhatsApp Direct Link / Number
+              <input type="text" name="whatsappUrl" value={content.whatsappUrl || ''} onChange={handleChange} style={inputStyle} placeholder="https://wa.me/919001021857" />
+            </label>
+            <label style={labelStyle}>
+              Google Business / Review URL
+              <input type="text" name="googleBusinessUrl" value={content.googleBusinessUrl || ''} onChange={handleChange} style={inputStyle} placeholder="https://g.page/r/..." />
+            </label>
+            <label style={labelStyle}>
+              LinkedIn Company Page
+              <input type="text" name="linkedinUrl" value={content.linkedinUrl || ''} onChange={handleChange} style={inputStyle} placeholder="https://linkedin.com/company/jaipurartcnc" />
+            </label>
+            <label style={labelStyle}>
+              X (Twitter) Profile URL
+              <input type="text" name="twitterUrl" value={content.twitterUrl || ''} onChange={handleChange} style={inputStyle} placeholder="https://x.com/jaipurartcnc" />
+            </label>
+            <label style={labelStyle}>
+              Pinterest Profile URL
+              <input type="text" name="pinterestUrl" value={content.pinterestUrl || ''} onChange={handleChange} style={inputStyle} placeholder="https://pinterest.com/jaipurartcnc" />
+            </label>
+            <label style={labelStyle}>
+              Telegram Channel / Contact
+              <input type="text" name="telegramUrl" value={content.telegramUrl || ''} onChange={handleChange} style={inputStyle} placeholder="https://t.me/jaipurartcnc" />
+            </label>
+            <label style={labelStyle}>
+              Threads Profile URL
+              <input type="text" name="threadsUrl" value={content.threadsUrl || ''} onChange={handleChange} style={inputStyle} placeholder="https://threads.net/@jaipurartcnc" />
             </label>
           </div>
         </div>
 
-        {/* Page Hero Images */}
+        {/* Page Header Background Images */}
         <div style={cardStyle}>
-          <h3 style={sectionHeaderStyle}><ImageIcon color="#8b7355" /> Page Hero Images</h3>
-          <p style={{ color: '#666', marginBottom: '24px', fontSize: '0.95rem' }}>Upload the main background images that appear at the top of each page.</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '16px' }}>
-            <ImageUploader label="Home Page Hero" fieldName="homeHeroImage" />
-            <ImageUploader label="Our Services Hero" fieldName="servicesHeroImage" />
-            <ImageUploader label="Creations Hero" fieldName="creationsHeroImage" />
-            <ImageUploader label="About Us Hero" fieldName="aboutHeroImage" />
-            <ImageUploader label="Contact Hero" fieldName="contactHeroImage" />
+          <h3 style={sectionHeaderStyle}><ImageIcon color="var(--brick)" /> Page Header Background Images</h3>
+          <p style={{ color: 'var(--walnut)', marginBottom: '24px', fontSize: '0.95rem' }}>Upload the wood header background images displayed at the top of subpages.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '16px' }}>
+            <MediaUploader label="Services Header" fieldName="servicesHeroImage" />
+            <MediaUploader label="Creations Header" fieldName="creationsHeroImage" />
+            <MediaUploader label="About Us Header" fieldName="aboutHeroImage" />
+            <MediaUploader label="Contact Us Header" fieldName="contactHeroImage" />
           </div>
         </div>
 
-        {/* Branding & Content Images */}
+        {/* Website Content Media & Videos */}
         <div style={cardStyle}>
-          <h3 style={sectionHeaderStyle}><ImageIcon color="#8b7355" /> Branding & Content Images</h3>
-          <p style={{ color: '#666', marginBottom: '24px', fontSize: '0.95rem' }}>Upload your logo and specific images used within the About Us content blocks.</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '16px' }}>
-            <ImageUploader label="Website Logo" fieldName="logoUrl" />
-            <ImageUploader label="Our Story Image" fieldName="ourStoryImage" />
-            <ImageUploader label="About Us Content Image" fieldName="aboutContentImage" />
-            <ImageUploader label="Timeless Craftsmanship Image" fieldName="craftsmanshipImage" />
+          <h3 style={sectionHeaderStyle}><Video color="var(--brick)" /> Website Content Media & Videos</h3>
+          <p style={{ color: 'var(--walnut)', marginBottom: '24px', fontSize: '0.95rem' }}>Upload specific videos and images used within the Services and About Us content sections.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '16px' }}>
+            <MediaUploader label="Services: All We Need Video" fieldName="servicesVideoUrl" />
+            <MediaUploader label="About Us: Family Carpentry Image" fieldName="ourStoryImage" />
           </div>
         </div>
       </form>
