@@ -7,7 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 80px; /* Offset for fixed navbar */
+  margin-top: 0;
 }
 
 .overlay {

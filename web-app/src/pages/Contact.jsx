@@ -1,129 +1,225 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Phone, Mail, ArrowRight, ChevronDown } from 'lucide-react';
-import { FaFacebookF, FaInstagram, FaWhatsapp, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaWhatsapp } from 'react-icons/fa';
 import PageHeader from '../components/PageHeader';
+import { SiteContext } from '../context/SiteContext';
 import styles from './Contact.module.css';
 
 const Contact = () => {
-  const [openFaq, setOpenFaq] = useState(0);
+  const { siteData } = useContext(SiteContext);
+  const [openFaq, setOpenFaq] = useState(-1);
+
+  const contactPhone = siteData?.contactPhone || '+91 90010 21857';
+  const contactEmail = siteData?.contactEmail || 'hello@jaipurartcnc.com';
+  const address = siteData?.address || 'Workshop No. 12, Vishwakarma Industrial Area, Jaipur, Rajasthan 302013';
+  const whatsappUrl = siteData?.whatsappUrl || 'https://wa.me/919001021857';
 
   const faqs = [
     {
-      q: "What materials do you cut and carve?",
-      a: "We work with a wide range of materials including solid wood, MDF, acrylic, stone, and metals like aluminum and brass."
+      q: "How do I send my design?",
+      a: "Share a photo, sketch, or file (CDR, AI, PDF, or even a hand-drawn image) over WhatsApp or email — we'll confirm it's cuttable and quote you."
     },
     {
-      q: "How do I request a custom design?",
-      a: "You can send us your 2D/3D designs (AutoCAD, CorelDraw, etc.) via email, or contact us with your requirements and our design team will create the blueprints for you."
+      q: "How long does an order take?",
+      a: "Most single pieces are ready in 3–5 working days. Bulk orders depend on quantity — we'll confirm a timeline with your quote."
     },
     {
-      q: "What is your typical turnaround time?",
-      a: "For standard projects, our turnaround time is usually 3-5 business days. Custom or large-scale projects may take longer depending on complexity and material availability."
+      q: "Do you deliver outside Jaipur?",
+      a: "Yes, we ship pan-India. Delivery cost and time depend on size and destination — we'll include it in your quote."
     },
     {
-      q: "Do you offer delivery services?",
-      a: "Yes, we offer secure packaging and delivery services across Jaipur and surrounding areas. We can also arrange shipping for out-of-station orders."
+      q: "Which wood should I choose?",
+      a: "If you're unsure, tell us where the piece will be used — indoors, outdoors, painted or natural finish — and we'll recommend MDF, Plywood or Pine accordingly."
     }
   ];
 
   return (
-    <div className="page-container" style={{ minHeight: '100vh', backgroundColor: 'var(--color-white)' }}>
+    <div className={styles.contactWrapper}>
       <PageHeader title="Contact Us" breadcrumb="Contact" />
 
-      {/* Contact Section */}
-      <section className="section">
-        <div className="container">
-          <div className={styles.contactWrapper}>
-            {/* Contact Info */}
-            <div className={styles.contactInfo}>
-              <h2 className="text-gradient" style={{ fontSize: '2.5rem', marginBottom: '16px' }}>Let's Discuss Your Project</h2>
-              <p style={{ color: 'var(--color-medium-gray)' }}>Ready to transform your space with premium CNC craftsmanship? Get in touch with us today.</p>
-              
-              <div className={styles.contactMethods}>
-                <div className={styles.method}>
-                  <div className={styles.methodIcon}><Phone size={24} className="text-blue" /></div>
-                  <div>
-                    <h4 style={{ color: 'var(--color-black)' }}>Call Us Directly</h4>
-                    <p style={{ color: 'var(--color-dark)' }}>90010-21857</p>
-                  </div>
-                </div>
-                <div className={styles.method}>
-                  <div className={styles.methodIcon}><Mail size={24} className="text-blue" /></div>
-                  <div>
-                    <h4 style={{ color: 'var(--color-black)' }}>Email Us</h4>
-                    <p style={{ color: 'var(--color-dark)' }}>jaipurartscnc@gmail.com</p>
-                  </div>
-                </div>
-                <div className={styles.method}>
-                  <div className={styles.methodIcon}><FaMapMarkerAlt size={24} className="text-blue" /></div>
-                  <div>
-                    <h4 style={{ color: 'var(--color-black)' }}>Our Location</h4>
-                    <p style={{ color: 'var(--color-dark)' }}>Shop No. 2, Narayan Vihar Asarpura, Jaipur</p>
-                  </div>
-                </div>
-                
-                <div className={styles.socialFollowBlock}>
-                  <h4 style={{ color: 'var(--color-black)', marginBottom: '16px' }}>Follow Us</h4>
-                  <div className={styles.socialButtonsRow}>
-                    <a href="#" className={styles.socialBtn}><FaFacebookF size={20} /></a>
-                    <a href="https://instagram.com/jaipurartscnc" target="_blank" rel="noopener noreferrer" className={styles.socialBtn}><FaInstagram size={20} /></a>
-                    <a href="https://wa.me/919001021857" target="_blank" rel="noopener noreferrer" className={styles.socialBtn}><FaWhatsapp size={20} /></a>
-                  </div>
-                </div>
+      {/* ================= PAGE HERO ================= */}
+      <div className={`${styles.pageHero} styles.jaliBg`}>
+        <div className={styles.wrap}>
+          <div className={styles.eyebrow}>Get In Touch</div>
+          <h1>Tell us what you'd like cut — we'll take it from there.</h1>
+          <p className={styles.lede}>Send a design, ask about a wood type, or just say hello. We usually reply within a few hours.</p>
+        </div>
+      </div>
+
+      {/* ================= QUICK CONTACT ================= */}
+      <section className={styles.sectionPadding}>
+        <div className={styles.wrap}>
+          <div className={styles.quickGrid}>
+            <div className={styles.quickCard}>
+              <Phone size={26} className={styles.quickIcon} />
+              <div>
+                <h3>Call Us</h3>
+                <p>Mon–Sat, 9am–7pm</p>
+                <a className={styles.quickLink} href={`tel:${contactPhone}`}>{contactPhone}</a>
               </div>
             </div>
-
-            {/* Contact Form */}
-            <div className={`glass-card ${styles.contactForm}`}>
-              <h3 style={{ color: 'var(--color-black)' }}>Request a Free Quote</h3>
-              <form>
-                <div className={styles.formGroup}>
-                  <input type="text" placeholder="Your Name" className={styles.formInput} required />
-                </div>
-                <div className={styles.formGroup}>
-                  <input type="tel" placeholder="Mobile Number" className={styles.formInput} required />
-                </div>
-                <div className={styles.formGroup}>
-                  <select className={styles.formInput} required defaultValue="">
-                    <option value="" disabled>Select Project Type</option>
-                    <option value="2d">2D Cutting</option>
-                    <option value="3d">3D Carving</option>
-                    <option value="furniture">Furniture Design</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div className={styles.formGroup}>
-                  <textarea placeholder="Project Details" rows="4" className={styles.formInput} required></textarea>
-                </div>
-                <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '16px' }}>
-                  Send Request
-                </button>
-              </form>
+            <div className={styles.quickCard}>
+              <FaWhatsapp size={26} className={styles.quickIcon} />
+              <div>
+                <h3>WhatsApp</h3>
+                <p>Fastest way to share a design</p>
+                <a className={styles.quickLink} href={whatsappUrl} target="_blank" rel="noopener noreferrer">Chat with us →</a>
+              </div>
+            </div>
+            <div className={styles.quickCard}>
+              <Mail size={26} className={styles.quickIcon} />
+              <div>
+                <h3>Email</h3>
+                <p>For detailed orders and files</p>
+                <a className={styles.quickLink} href={`mailto:${contactEmail}`}>{contactEmail}</a>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="section bg-light" style={{ backgroundColor: 'var(--color-light-gray)' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '40px', maxWidth: '800px', margin: '0 auto 40px' }}>
-            <h2 className="text-gradient" style={{ fontSize: '2.5rem', marginBottom: '16px' }}>Frequently Asked Questions</h2>
-            <p style={{ color: 'var(--color-medium-gray)' }}>Find answers to common questions about our CNC services and processes.</p>
+      {/* ================= FORM + INFO ================= */}
+      <section id="form" className={styles.sectionPadding} style={{ paddingTop: 0 }}>
+        <div className={`${styles.wrap} ${styles.contactGrid}`}>
+          <div className={styles.formCard}>
+            <h2>Request a quote</h2>
+            <p>Fill in a few details and attach a design if you have one — we'll get back with pricing and timeline.</p>
+
+            <form onSubmit={(e) => e.preventDefault()}>
+              <div className={styles.formRow}>
+                <div className={styles.field}>
+                  <label>Full Name</label>
+                  <input type="text" placeholder="Your name" required />
+                </div>
+                <div className={styles.field}>
+                  <label>Phone Number</label>
+                  <input type="tel" placeholder="+91 " required />
+                </div>
+              </div>
+              <div className={styles.field}>
+                <label>Email</label>
+                <input type="email" placeholder="you@example.com" />
+              </div>
+              <div className={styles.formRow}>
+                <div className={styles.field}>
+                  <label>Wood Type</label>
+                  <select>
+                    <option>MDF</option>
+                    <option>Plywood</option>
+                    <option>Pine</option>
+                    <option>Not sure — need advice</option>
+                  </select>
+                </div>
+                <div className={styles.field}>
+                  <label>Pattern Type</label>
+                  <select>
+                    <option>2D Pattern</option>
+                    <option>3D Relief</option>
+                    <option>Custom / Not sure</option>
+                  </select>
+                </div>
+              </div>
+              <div className={styles.field}>
+                <label>Size / Quantity (if known)</label>
+                <input type="text" placeholder="e.g. 3ft x 2ft, 1 piece" />
+              </div>
+              <div className={styles.field}>
+                <label>Tell us about your design</label>
+                <textarea placeholder="Describe what you'd like cut, or mention that you'll share a photo/file over WhatsApp"></textarea>
+              </div>
+              <button className="btn btn-primary styles.submitBtn" type="submit" style={{ width: '100%' }}>Send Request</button>
+              <p className={styles.formNote}>Prefer WhatsApp? Tap the green button in the corner and send your design directly.</p>
+            </form>
           </div>
 
+          <div>
+            <div className={styles.infoCard}>
+              <div className={styles.eyebrow} style={{ color: 'var(--brass)' }}>Workshop</div>
+              <div className={styles.infoRow}>
+                <MapPinIcon className={styles.infoIcon} />
+                <div>
+                  <b>Address</b>
+                  <span>{address}</span>
+                </div>
+              </div>
+              <div className={styles.infoRow}>
+                <Phone size={20} className={styles.infoIcon} />
+                <div>
+                  <b>Phone</b>
+                  <span>{contactPhone}</span>
+                </div>
+              </div>
+              <div className={styles.infoRow}>
+                <Mail size={20} className={styles.infoIcon} />
+                <div>
+                  <b>Email</b>
+                  <span>{contactEmail}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.hoursCard}>
+              <h3>Working Hours</h3>
+              <div className={styles.hoursRow}>
+                <span>Monday – Saturday</span>
+                <span>9:00 – 19:00</span>
+              </div>
+              <div className={styles.hoursRow}>
+                <span>Sunday</span>
+                <span>Closed</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= MAP ================= */}
+      <section className={styles.mapSection}>
+        <div className={styles.wrap}>
+          <div className={styles.mapFrame}>
+            <svg viewBox="0 0 1000 380" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="mapGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M40 0H0V40" fill="none" stroke="#F2EADC" strokeWidth="0.6" opacity="0.18"/>
+                </pattern>
+              </defs>
+              <rect width="1000" height="380" fill="url(#mapGrid)"/>
+              <path d="M0 260 C 200 200, 350 300, 550 240 S 800 180, 1000 220" stroke="#B8892B" strokeWidth="2" fill="none" opacity="0.4"/>
+              <path d="M0 120 C 220 160, 400 80, 620 130 S 850 110, 1000 90" stroke="#B8892B" stroke-width="2" fill="none" opacity="0.25"/>
+            </svg>
+            <div className={styles.mapPin}>
+              <div className={styles.tag}>Jaipur Art CNC — Vishwakarma Industrial Area</div>
+              <div className={styles.dot}></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= FAQ ================= */}
+      <section className={styles.sectionPadding}>
+        <div className={styles.wrap}>
+          <div className={styles.sectionHead}>
+            <div>
+              <div className={styles.eyebrow}>Before You Ask</div>
+              <h2>Common questions</h2>
+            </div>
+            <p>A few things people usually want to know before placing an order.</p>
+          </div>
           <div className={styles.faqList}>
             {faqs.map((faq, index) => (
               <div 
                 key={index} 
-                className={`${styles.faqItem} ${openFaq === index ? styles.faqOpen : ''}`}
+                className={styles.faqItem}
                 onClick={() => setOpenFaq(openFaq === index ? -1 : index)}
+                style={{ cursor: 'pointer' }}
               >
-                <div className={styles.faqHeader}>
-                  <h4 style={{ color: 'var(--color-black)' }}>{faq.q}</h4>
-                  <ChevronDown className={styles.faqIcon} />
-                </div>
-                <div className={styles.faqBody}>
+                <h3>
+                  {faq.q}
+                  <span className={styles.qMark}>
+                    {openFaq === index ? '−' : '?'}
+                  </span>
+                </h3>
+                <div className={`${styles.faqBody} ${openFaq === index ? styles.faqOpen : ''}`}>
                   <p>{faq.a}</p>
                 </div>
               </div>
@@ -131,8 +227,22 @@ const Contact = () => {
           </div>
         </div>
       </section>
+
+      {/* ================= WHATSAPP FLOAT ================= */}
+      <a className={styles.waFloat} href={whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.87.5 3.66 1.44 5.24L2 22l4.98-1.53a9.87 9.87 0 0 0 5.06 1.38h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.4 1.3-1.93 1.36-.5.06-1.13.09-1.83-.11-.42-.13-.96-.3-1.65-.6-2.9-1.25-4.79-4.16-4.94-4.36-.14-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.26-.28.57-.35.76-.35h.55c.18 0 .42-.07.65.5.24.6.82 2.06.9 2.21.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.35 1.44.3.15.47.13.65-.08.17-.2.73-.85.93-1.15.2-.3.4-.24.65-.15.26.1 1.65.78 1.93.92.29.15.48.22.55.34.07.13.07.72-.17 1.4z"/></svg>
+      </a>
+
     </div>
   );
 };
+
+// Helper Map Pin Icon component
+const MapPinIcon = ({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 10c0 7-9 12-9 12S3 17 3 10a9 9 0 0 1 18 0z" />
+    <circle cx="12" cy="10" r="3" />
+  </svg>
+);
 
 export default Contact;

@@ -1,332 +1,352 @@
-import { ArrowRight, Play, CheckCircle2, Award, Zap, Ruler, Phone, Mail } from 'lucide-react';
-import { FaFacebookF, FaInstagram, FaWhatsapp, FaMapMarkerAlt } from 'react-icons/fa';
+import { ArrowRight } from 'lucide-react';
 import styles from './Home.module.css';
-import { useContext, useState, useEffect } from 'react';
+import { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { SiteContext } from '../context/SiteContext';
 
 const Home = () => {
   const { siteData } = useContext(SiteContext);
-  const [currentReview, setCurrentReview] = useState(0);
 
-  useEffect(() => {
-    if (!siteData?.testimonials || siteData.testimonials.length <= 1) return;
-    const maxReviews = Math.min(siteData.testimonials.length, 5);
-    const interval = setInterval(() => {
-      setCurrentReview((prev) => (prev + 1) % maxReviews);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [siteData?.testimonials]);
+  // Fallback data for gallery items
+  const defaultGalleryItems = [
+    { title: 'Jali Panel • MDF', category: '2D', fill: '#6E4A2E', pattern: true },
+    { title: 'Relief • Pine', category: '3D', fill: '#A83D2C', path: true },
+    { title: 'Name Board • Plywood', category: 'Name Board', fill: '#B8892B', circle: true },
+    { title: 'Wall Décor • MDF', category: 'Wall Décor', fill: '#2E2116', triangle: true },
+    { title: 'Room Partition • Ply', category: 'Room Partition', fill: '#6E4A2E', rect: true },
+    { title: 'Rangoli Panel • MDF', category: 'Rangoli Panel', fill: '#A83D2C', doubleCircle: true }
+  ];
+
+  const galleryImages = siteData?.galleryImages && siteData.galleryImages.length > 0
+    ? siteData.galleryImages.slice(0, 6)
+    : [];
+
+  const testimonials = siteData?.testimonials && siteData.testimonials.length > 0
+    ? siteData.testimonials
+    : [
+        { clientName: 'Ritu Sharma', clientLocation: 'Jaipur', quote: 'Ordered a jali panel for our living room — the detail on the MDF cut was so clean. Exactly what we asked for.' },
+        { clientName: 'Vikram Singh', clientLocation: 'Jodhpur', quote: 'Got a 3D relief piece made from a photo we sent. The finishing and depth of the carving was beyond what we expected.' },
+        { clientName: 'Ankit Verma', clientLocation: 'Delhi', quote: 'Ordered plywood signage in bulk for our showroom. Delivery on time and every piece cut to the same accuracy.' }
+      ];
+
+  const whatsappUrl = siteData?.whatsappUrl || 'https://wa.me/919001021857';
 
   return (
-    <div className={styles.homeContainer}>
-      {/* 1. HERO SECTION */}
-      <section className={styles.heroSection}>
-        <div className={styles.heroOverlay}></div>
-        <div className={`container ${styles.heroContent}`}>
-          <div className={styles.badge}>
-            <span className={styles.pulseDot}></span>
-            Premium CNC Craftsmanship
-          </div>
-          <h1 className="animate-fade-in" style={{ whiteSpace: 'pre-line' }}>
-            {siteData?.heroTitle ? (
-              <>
-                {siteData.heroTitle.split('\n')[0]} <br />
-                <span className="text-gradient">{siteData.heroTitle.split('\n').slice(1).join('\n')}</span>
-              </>
-            ) : (
-              <>
-                Premium CNC Cutting <br />
-                & <span className="text-gradient">Carving</span>
-              </>
-            )}
-          </h1>
-          <p className="animate-fade-in" style={{ animationDelay: '0.2s', whiteSpace: 'pre-line' }}>
-            {siteData?.heroSubtitle || 'Wood | Stone | Metal | Acrylic\nPrecision crafting with modern technology, fast delivery, and professional finishing.'}
-          </p>
-          <div className={`${styles.heroActions} animate-fade-in`} style={{ animationDelay: '0.4s' }}>
-            <button className="btn btn-primary">
-              Get Free Quote <ArrowRight size={18} />
-            </button>
-            <button className="btn btn-outline">
-              <Play size={18} /> Watch Process
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <div style={{ height: '80px' }}></div>
-      {/* 2. TRUST SECTION */}
-      <section className={`container ${styles.trustSection}`}>
-        <div className={`glass-card ${styles.trustCard}`}>
-          <Award size={32} className="text-blue" />
-          <div className={styles.trustInfo}>
-            <h3 className="text-gold">500+</h3>
-            <p>Projects Completed</p>
-          </div>
-        </div>
-        <div className={`glass-card ${styles.trustCard}`}>
-          <Ruler size={32} className="text-blue" />
-          <div className={styles.trustInfo}>
-            <h3 className="text-gold">0.1mm</h3>
-            <p>High Precision Cutting</p>
-          </div>
-        </div>
-        <div className={`glass-card ${styles.trustCard}`}>
-          <Zap size={32} className="text-blue" />
-          <div className={styles.trustInfo}>
-            <h3 className="text-gold">On-Time</h3>
-            <p>Delivery Guarantee</p>
-          </div>
-        </div>
-        <div className={`glass-card ${styles.trustCard}`}>
-          <CheckCircle2 size={32} className="text-blue" />
-          <div className={styles.trustInfo}>
-            <h3 className="text-gold">Premium</h3>
-            <p>Finishing Quality</p>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. SERVICES SECTION */}
-      <section id="services" className="section">
-        <div className="container">
-          <div className={styles.sectionHeader}>
-            <h2 className="text-gradient">Our Premium Services</h2>
-            <p>Transforming concepts into reality with state-of-the-art CNC technology.</p>
-          </div>
-
-          <div className={styles.servicesGrid}>
-            {[
-              { title: '2D CNC Cutting', desc: 'Precision cutting for MDF, Acrylic, and Plywood panels.' },
-              { title: '3D CNC Carving', desc: 'Intricate 3D reliefs and artistic wood carving for luxury interiors.' },
-              { title: 'Furniture Design', desc: 'Custom furniture components cut to exact specifications.' },
-              { title: 'Interior Panels', desc: 'Decorative wall panels and room dividers with modern patterns.' },
-              { title: 'Temple CNC Work', desc: 'Traditional and modern mandir designs with detailed craftsmanship.' },
-              { title: 'Custom Crafting', desc: 'Bespoke wood projects tailored to your unique requirements.' }
-            ].map((service, index) => (
-              <div key={index} className={`glass-card ${styles.serviceCard}`}>
-                <div className={styles.serviceIconWrapper}>
-                  <div className={styles.serviceIconGlow}></div>
-                  <CheckCircle2 size={24} className="text-blue" />
-                </div>
-                <h3>{service.title}</h3>
-                <p>{service.desc}</p>
-                <button className={styles.serviceLink} onClick={() => window.location.href='/services'}>
-                  Learn more <ArrowRight size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+    <div className={styles.homeWrapper}>
       
-      {/* 4. HOW WE WORK SECTION */}
-      <section id="process" className={`section ${styles.processSection}`}>
-        <div className="container">
-          <div className={styles.sectionHeader}>
-            <h2 className="text-gradient">How We Work</h2>
-            <p>A streamlined, professional process from concept to delivery.</p>
+      {/* ================= HERO ================= */}
+      <section className={`${styles.hero} ${styles.jaliBg}`}>
+        <div className={styles.wrap}>
+          <div className={styles.heroGrid}>
+            <div>
+              <div className={styles.eyebrow}>Jaipur, Rajasthan · Custom CNC Wood Cutting</div>
+              <h1>We cut wood<br />into <em>art</em>, precisely.</h1>
+              <p className={styles.lede}>From intricate 2D jali patterns to sculpted 3D reliefs — MDF, Plywood or Pine, cut to your exact design and size.</p>
+              <div className={styles.heroCta}>
+                <Link to="/contact" className="btn btn-primary">Get a Custom Quote</Link>
+                <Link to="/gallery" className="btn btn-outline">View Gallery</Link>
+              </div>
+              <div className={styles.heroStats}>
+                <div className={styles.hstat}><b>500+</b><span>Projects Cut</span></div>
+                <div className={styles.hstat}><b>3</b><span>Wood Types</span></div>
+                <div className={styles.hstat}><b>2D / 3D</b><span>Both Handled</span></div>
+                <div className={styles.hstat}><b>7+ Yrs</b><span>Experience</span></div>
+              </div>
+            </div>
+            <div className={styles.heroVisual}>
+              <div className={styles.heroPanel}>
+                <svg viewBox="0 0 400 420" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern id="jaliPatternHome" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+                      <circle cx="25" cy="25" r="16" fill="none" stroke="#F2EADC" strokeWidth="1.6" opacity="0.5"/>
+                      <circle cx="0" cy="0" r="16" fill="none" stroke="#F2EADC" strokeWidth="1.6" opacity="0.5"/>
+                      <circle cx="50" cy="0" r="16" fill="none" stroke="#F2EADC" strokeWidth="1.6" opacity="0.5"/>
+                      <circle cx="0" cy="50" r="16" fill="none" stroke="#F2EADC" strokeWidth="1.6" opacity="0.5"/>
+                      <circle cx="50" cy="50" r="16" fill="none" stroke="#F2EADC" strokeWidth="1.6" opacity="0.5"/>
+                    </pattern>
+                  </defs>
+                  <rect width="400" height="420" fill="url(#jaliPatternHome)"/>
+                  <rect x="20" y="20" width="360" height="380" fill="none" stroke="#B8892B" strokeWidth="1.5" opacity="0.7"/>
+                </svg>
+              </div>
+              <div className={styles.heroTag}>
+                <div className={styles.eyebrow}>Signature Cut</div>
+                <p>Jharokha-style jali lattice — a favourite for wall art and room partitions.</p>
+              </div>
+            </div>
           </div>
-          <div className={styles.processTimeline}>
-            {[
-              { title: 'Requirement Discussion', num: '01', desc: 'We analyze your specific design needs and project goals.' },
-              { title: 'Planning & Estimation', num: '02', desc: 'Providing precise material selection and cost estimates.' },
-              { title: 'Design Creation', num: '03', desc: 'Crafting the detailed 2D or 3D digital blueprints.' },
-              { title: 'CNC Cutting Process', num: '04', desc: 'High-precision routing and cutting of the materials.' },
-              { title: 'Finishing & Polish', num: '05', desc: 'Sanding, edge-banding, and polishing the final piece.' },
-              { title: 'Packaging & Delivery', num: '06', desc: 'Secure packaging and safe transport to your site.' }
-            ].map((step, index) => (
-              <div key={index} className={styles.processStep}>
-                <div className={styles.stepNumber}>{step.num}</div>
-                <div className={styles.stepContentBlock}>
-                  <h4>{step.title}</h4>
-                  <p>{step.desc}</p>
+        </div>
+      </section>
+
+      {/* ================= TRUST STRIP ================= */}
+      <div className={styles.strip}>
+        <div className={styles.wrapFlex}>
+          <div className={styles.stripItem}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+            Precision cut to size
+          </div>
+          <div className={styles.stripItem}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+            2D &amp; 3D patterns
+          </div>
+          <div className={styles.stripItem}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+            MDF · Plywood · Pine
+          </div>
+          <div className={styles.stripItem}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+            Bulk &amp; single-piece
+          </div>
+          <div className={styles.stripItem}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+            Pan-India delivery
+          </div>
+        </div>
+      </div>
+
+      {/* ================= SERVICES ================= */}
+      <section id="services" className={styles.sectionPadding}>
+        <div className={styles.wrap}>
+          <div className={styles.sectionHead}>
+            <div>
+              <div className={styles.eyebrow}>What We Do</div>
+              <h2>Three ways we cut for you</h2>
+            </div>
+            <p>Send us a design, a photo, or just an idea — we'll turn it into a precise CNC-cut piece in the wood of your choice.</p>
+          </div>
+          <div className={styles.servicesGrid}>
+            <div className={styles.serviceCard}>
+              <div className={styles.serviceNum}>01</div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <line x1="3" y1="9" x2="21" y2="9" />
+                <line x1="9" y1="21" x2="9" y2="3" />
+              </svg>
+              <h3>2D Pattern Cutting</h3>
+              <p>Jali screens, name boards, rangoli panels, wall décor — flat patterns cut with fine detail.</p>
+            </div>
+            <div className={styles.serviceCard}>
+              <div className={styles.serviceNum}>02</div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+              </svg>
+              <h3>3D Relief Carving</h3>
+              <p>Layered, sculpted designs with depth and shadow — deities, portraits, decorative reliefs.</p>
+            </div>
+            <div className={styles.serviceCard}>
+              <div className={styles.serviceNum}>03</div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                <polyline points="2 17 12 22 22 17" />
+                <polyline points="2 12 12 17 22 12" />
+              </svg>
+              <h3>Custom Design Work</h3>
+              <p>Have a sketch or a reference photo? We design and cut it exactly to your size and finish.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= WOOD TYPES ================= */}
+      <section id="wood" className={`${styles.sectionPadding} ${styles.woodSection}`}>
+        <div className={styles.wrap}>
+          <div className={styles.sectionHead}>
+            <div>
+              <div className={styles.eyebrow}>Materials</div>
+              <h2>Choose your wood</h2>
+            </div>
+            <p>Each material suits a different look and use — we'll help you pick the right one for your project.</p>
+          </div>
+          <div className={styles.woodGrid}>
+            <div className={styles.woodCard}>
+              <div className={`${styles.woodSwatch} ${styles.mdf}`}></div>
+              <div className={styles.woodBody}>
+                <h3>MDF</h3>
+                <p>Smooth, uniform surface — best for fine detail, painted finishes and intricate 2D jali work.</p>
+                <div className={styles.woodTags}>
+                  <span>Fine Detail</span>
+                  <span>Paint-Ready</span>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. STATS BANNER */}
-      <section className={styles.statsBanner}>
-        <div className={styles.statsOverlay}></div>
-        <div className={`container ${styles.statsContent}`}>
-          <h2>Completed Custom Projects</h2>
-          <div className={styles.statsGrid}>
-            <div className={styles.statItem}>
-              <h3>150</h3>
-              <p>Happy Customer</p>
             </div>
-            <div className={styles.statItem}>
-              <h3>180</h3>
-              <p>Completed Projects</p>
-            </div>
-            <div className={styles.statItem}>
-              <h3>1,800</h3>
-              <p>Available Resources</p>
-            </div>
-            <div className={styles.statItem}>
-              <h3>1,100</h3>
-              <p>Subscribers</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. SACRED SPACE COLLECTION */}
-      <section className="section bg-white">
-        <div className={`container ${styles.sacredCollection}`}>
-          <div className={styles.sacredImageWrapper}>
-            <div style={{ position: 'absolute', left: 0, top: 0, width: '50%', height: '100%', zIndex: 1 }}>
-              <img src="/cnc_raw_wood.png" alt="Raw CNC Wood" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'right' }} />
-            </div>
-            <div style={{ position: 'absolute', right: 0, top: 0, width: '50%', height: '100%', zIndex: 1 }}>
-              <img src="/cnc_finished_mandir.png" alt="Finished Mandir Design" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left' }} />
-            </div>
-            <div className={styles.sacredSliderLine}></div>
-            <div className={styles.sacredSliderHandle}></div>
-          </div>
-          <div className={styles.sacredText}>
-            <div className={styles.sacredSubtitle}>SACRED SPACE COLLECTION</div>
-            <h2>Timeless craftsmanship<br/>for sacred spaces</h2>
-            <p>At Jaipur Arts CNC, we showcase beautifully handcrafted mandirs through a virtual display.</p>
-            <p>Explore custom designs, premium materials, and fine details from anywhere.</p>
-            <p>See how our mandirs can create a peaceful, elegant, and sacred space in your home.</p>
-            <button className={styles.sacredBtn} onClick={() => window.location.href='/services'}>
-              VIEW MORE
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. HOME PAGE GALLERY SECTION */}
-      <section className="section">
-        <div className="container">
-          <div className={styles.sectionHeader}>
-            <h2 className="text-gradient">Recent CNC Creations</h2>
-            <p>A glimpse into our premium creations.</p>
-          </div>
-          <div className={styles.homeGalleryGrid}>
-            {(siteData?.galleryImages?.slice(0, 6) || [1, 2, 3, 4, 5, 6]).map((item, index) => (
-              <div key={index} className={`glass-card ${styles.homeGalleryCard}`}>
-                <div className={styles.galleryImagePlaceholder} style={item.url ? { backgroundImage: `url(http://localhost:5000${item.url})`, backgroundSize: 'cover' } : {}}></div>
-                <div className={styles.galleryContent}>
-                  <h4>{item.title || `Premium Design ${item}`}</h4>
-                  <p>{item.category || 'MDF Cutting • Interior'}</p>
+            <div className={styles.woodCard}>
+              <div className={`${styles.woodSwatch} ${styles.ply}`}></div>
+              <div className={styles.woodBody}>
+                <h3>Plywood</h3>
+                <p>Strong and layered — ideal for furniture parts, signage and pieces that need durability.</p>
+                <div className={styles.woodTags}>
+                  <span>Durable</span>
+                  <span>Load-Bearing</span>
                 </div>
               </div>
-            ))}
+            </div>
+            <div className={styles.woodCard}>
+              <div className={`${styles.woodSwatch} ${styles.pine}`}></div>
+              <div className={styles.woodBody}>
+                <h3>Pine</h3>
+                <p>Natural wood grain and warmth — suited to premium wall art and pieces left unpainted.</p>
+                <div className={styles.woodTags}>
+                  <span>Natural Grain</span>
+                  <span>Premium Look</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= GALLERY ================= */}
+      <section id="gallery" className={styles.sectionPadding}>
+        <div className={styles.wrap}>
+          <div className={styles.sectionHead}>
+            <div>
+              <div className={styles.eyebrow}>Recent Work</div>
+              <h2>A few pieces we've cut</h2>
+            </div>
+            <p>A small sample from our portfolio of premium CNC carving and custom cutting.</p>
+          </div>
+          <div className={styles.galleryGrid}>
+            {galleryImages.length > 0 ? (
+              galleryImages.map((item, idx) => (
+                <div key={idx} className={styles.gItem}>
+                  <div 
+                    className={styles.gImage} 
+                    style={{ 
+                      backgroundImage: `url(http://localhost:5000${item.url})`, 
+                      backgroundSize: 'cover', 
+                      backgroundPosition: 'center',
+                      width: '100%',
+                      height: '100%'
+                    }}
+                  />
+                  <span className={styles.gLabel}>{item.category || item.desc || 'Custom CNC Wood Work'}</span>
+                </div>
+              ))
+            ) : (
+              defaultGalleryItems.map((item, idx) => (
+                <div key={idx} className={styles.gItem}>
+                  <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%', display: 'block' }}>
+                    <rect width="200" height="200" fill={item.fill} />
+                    {item.pattern && (
+                      <>
+                        <defs>
+                          <pattern id="galleryPat" width="28" height="28" patternUnits="userSpaceOnUse">
+                            <circle cx="14" cy="14" r="9" fill="none" stroke="#F2EADC" strokeWidth="1.2" opacity="0.6" />
+                          </pattern>
+                        </defs>
+                        <rect width="200" height="200" fill="url(#galleryPat)" />
+                      </>
+                    )}
+                    {item.path && <path d="M0 100 100 0 200 100 100 200Z" fill="#F2EADC" opacity="0.18" />}
+                    {item.circle && <circle cx="100" cy="100" r="55" fill="none" stroke="#2E2116" strokeWidth="2" opacity="0.4" />}
+                    {item.triangle && <path d="M20 180 L100 20 L180 180 Z" fill="none" stroke="#B8892B" strokeWidth="2" />}
+                    {item.rect && <rect x="40" y="40" width="120" height="120" fill="none" stroke="#F2EADC" strokeWidth="1.4" opacity="0.5" />}
+                    {item.doubleCircle && (
+                      <>
+                        <circle cx="60" cy="60" r="14" fill="#F2EADC" opacity="0.3" />
+                        <circle cx="140" cy="140" r="14" fill="#F2EADC" opacity="0.3" />
+                      </>
+                    )}
+                  </svg>
+                  <span className={styles.gLabel}>{item.title}</span>
+                </div>
+              ))
+            )}
           </div>
           <div style={{ textAlign: 'center', marginTop: '40px' }}>
-            <button className="btn btn-primary" onClick={() => window.location.href='/gallery'}>
-              View Full Gallery <ArrowRight size={18} />
-            </button>
+            <Link to="/gallery" className="btn btn-outline">
+              View Full Gallery <ArrowRight size={16} />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* 8. TESTIMONIAL SECTION */}
-      {siteData?.testimonials && siteData.testimonials.length > 0 && (
-        <section className={styles.testimonialSection}>
-          <div className="container">
-            <div className={styles.stars}>
-              {Array.from({ length: siteData.testimonials[currentReview]?.rating || 5 }).map((_, i) => (
-                <svg key={`full-${i}`} width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-              ))}
-              {Array.from({ length: 5 - (siteData.testimonials[currentReview]?.rating || 5) }).map((_, i) => (
-                <svg key={`empty-${i}`} width="20" height="20" viewBox="0 0 24 24" fill="var(--color-border)" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-              ))}
+      {/* ================= PROCESS ================= */}
+      <section className={`${styles.sectionPadding} ${styles.process}`}>
+        <div className={styles.wrap}>
+          <div className={styles.sectionHead}>
+            <div>
+              <div className={styles.eyebrow}>How Ordering Works</div>
+              <h2>From idea to finished cut</h2>
             </div>
-            <p className={`${styles.quote} animate-fade-in`} key={`quote-${currentReview}`}>
-              "{siteData.testimonials[currentReview]?.quote}"
-            </p>
-            <p className="animate-fade-in" key={`author-${currentReview}`} style={{ fontWeight: 'bold', marginTop: '20px' }}>
-              - {siteData.testimonials[currentReview]?.clientName}
-            </p>
-            
-            {siteData.testimonials.length > 1 && (
-              <div className={styles.dots} style={{ marginTop: '30px' }}>
-                {Array.from({ length: Math.min(siteData.testimonials.length, 5) }).map((_, idx) => (
-                  <div 
-                    key={idx} 
-                    className={`${styles.dot} ${idx === currentReview ? styles.active : ''}`}
-                    onClick={() => setCurrentReview(idx)}
-                    style={{ cursor: 'pointer' }}
-                  ></div>
-                ))}
-              </div>
-            )}
           </div>
-        </section>
-      )}
-
-      {/* 9. CONTACT SECTION */}
-      <section id="contact" className={`section ${styles.contactSection}`}>
-        <div className="container">
-          <div className={styles.contactWrapper}>
-            <div className={styles.contactInfo}>
-              <h2 className="text-gradient">Let's Discuss Your Project</h2>
-              <p>Ready to transform your space with premium CNC craftsmanship? Get in touch with us today.</p>
-              <div className={styles.contactMethods}>
-                <div className={styles.method}>
-                  <div className={styles.methodIcon}><Phone size={24} className="text-blue" /></div>
-                  <div>
-                    <h4>Call Us Directly</h4>
-                    <p>90010-21857</p>
-                  </div>
-                </div>
-                <div className={styles.method}>
-                  <div className={styles.methodIcon}><Mail size={24} className="text-blue" /></div>
-                  <div>
-                    <h4>Email Us</h4>
-                    <p>jaipurartscnc@gmail.com</p>
-                  </div>
-                </div>
-                <div className={styles.method}>
-                  <div className={styles.methodIcon}><FaMapMarkerAlt size={24} className="text-blue" /></div>
-                  <div>
-                    <h4>Our Location</h4>
-                    <p>Shop No. 2, Narayan Vihar Asarpura, Jaipur</p>
-                  </div>
-                </div>
-                
-                <div className={styles.socialFollowBlock}>
-                  <h4>Follow Us</h4>
-                  <div className={styles.socialButtonsRow}>
-                    <a href="#" className={styles.socialBtn}><FaFacebookF size={20} /></a>
-                    <a href="https://instagram.com/jaipurartscnc" target="_blank" rel="noopener noreferrer" className={styles.socialBtn}><FaInstagram size={20} /></a>
-                    <a href="https://wa.me/919001021857" target="_blank" rel="noopener noreferrer" className={styles.socialBtn}><FaWhatsapp size={20} /></a>
-                  </div>
-                </div>
-              </div>
+          <div className={styles.processGrid}>
+            <div className={styles.pStep}>
+              <div className={styles.pNum}>01</div>
+              <h3>Share your design</h3>
+              <p>Send a photo, sketch, or file — or tell us what you have in mind.</p>
             </div>
-            <div className={`glass-card ${styles.contactForm}`}>
-              <h3>Request a Free Quote</h3>
-              <form>
-                <div className={styles.formGroup}>
-                  <input type="text" placeholder="Your Name" className={styles.formInput} />
-                </div>
-                <div className={styles.formGroup}>
-                  <input type="tel" placeholder="Mobile Number" className={styles.formInput} />
-                </div>
-                <div className={styles.formGroup}>
-                  <select className={styles.formInput}>
-                    <option value="">Select Project Type</option>
-                    <option value="2d">2D Cutting</option>
-                    <option value="3d">3D Carving</option>
-                    <option value="furniture">Furniture</option>
-                  </select>
-                </div>
-                <div className={styles.formGroup}>
-                  <textarea placeholder="Project Details" rows="4" className={styles.formInput}></textarea>
-                </div>
-                <button type="button" className="btn btn-primary" style={{ width: '100%' }}>Send Request</button>
-              </form>
+            <div className={styles.pStep}>
+              <div className={styles.pNum}>02</div>
+              <h3>Get a quote</h3>
+              <p>We confirm wood type, size and finish, and give you a price and timeline.</p>
+            </div>
+            <div className={styles.pStep}>
+              <div className={styles.pNum}>03</div>
+              <h3>We cut it</h3>
+              <p>Your piece is cut on our CNC machine and finished by hand where needed.</p>
+            </div>
+            <div className={styles.pStep}>
+              <div className={styles.pNum}>04</div>
+              <h3>Delivered to you</h3>
+              <p>Packed carefully and shipped, or ready for pickup in Jaipur.</p>
             </div>
           </div>
         </div>
       </section>
+
+      {/* ================= REVIEWS ================= */}
+      <section id="reviews" className={styles.sectionPadding}>
+        <div className={styles.wrap}>
+          <div className={styles.sectionHead}>
+            <div>
+              <div className={styles.eyebrow}>Customer Reviews</div>
+              <h2>What people say</h2>
+            </div>
+          </div>
+          <div className={styles.reviewsGrid}>
+            {testimonials.slice(0, 3).map((item, idx) => (
+              <div key={idx} className={styles.reviewCard}>
+                <div className={styles.stars}>★★★★★</div>
+                <p>"{item.quote || item.text}"</p>
+                <div className={styles.reviewer}>
+                  <div className={styles.rAvatar}>
+                    {(item.clientName || 'C').charAt(0)}
+                  </div>
+                  <div>
+                    <div className={styles.rName}>{item.clientName}</div>
+                    <div className={styles.rLoc}>{item.clientLocation || 'India'}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= CTA BANNER ================= */}
+      <section style={{ paddingTop: 0, paddingBottom: '96px' }}>
+        <div className={styles.wrap}>
+          <div className={styles.ctaBanner}>
+            <h2>Have a design in mind? Let's cut it, precisely.</h2>
+            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', zIndex: 2 }}>
+              <Link to="/contact" className="btn btn-primary" style={{ background: 'var(--paper)', color: 'var(--brick)' }}>
+                Get a Custom Quote
+              </Link>
+              <a href={whatsappUrl} className="btn btn-outline" style={{ borderColor: 'var(--paper)', color: 'var(--paper)' }}>
+                Chat on WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= WHATSAPP FLOAT ================= */}
+      <a className={styles.waFloat} href={whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.87.5 3.66 1.44 5.24L2 22l4.98-1.53a9.87 9.87 0 0 0 5.06 1.38h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.4 1.3-1.93 1.36-.5.06-1.13.09-1.83-.11-.42-.13-.96-.3-1.65-.6-2.9-1.25-4.79-4.16-4.94-4.36-.14-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.26-.28.57-.35.76-.35h.55c.18 0 .42-.07.65.5.24.6.82 2.06.9 2.21.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.35 1.44.3.15.47.13.65-.08.17-.2.73-.85.93-1.15.2-.3.4-.24.65-.15.26.1 1.65.78 1.93.92.29.15.48.22.55.34.07.13.07.72-.17 1.4z"/></svg>
+      </a>
+
     </div>
   );
 };
