@@ -55,19 +55,15 @@ const Home = () => {
             </div>
             <div className={styles.heroVisual}>
               <div className={styles.heroPanel}>
-                <svg viewBox="0 0 400 420" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <pattern id="jaliPatternHome" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
-                      <circle cx="25" cy="25" r="16" fill="none" stroke="#F2EADC" strokeWidth="1.6" opacity="0.5"/>
-                      <circle cx="0" cy="0" r="16" fill="none" stroke="#F2EADC" strokeWidth="1.6" opacity="0.5"/>
-                      <circle cx="50" cy="0" r="16" fill="none" stroke="#F2EADC" strokeWidth="1.6" opacity="0.5"/>
-                      <circle cx="0" cy="50" r="16" fill="none" stroke="#F2EADC" strokeWidth="1.6" opacity="0.5"/>
-                      <circle cx="50" cy="50" r="16" fill="none" stroke="#F2EADC" strokeWidth="1.6" opacity="0.5"/>
-                    </pattern>
-                  </defs>
-                  <rect width="400" height="420" fill="url(#jaliPatternHome)"/>
-                  <rect x="20" y="20" width="360" height="380" fill="none" stroke="#B8892B" strokeWidth="1.5" opacity="0.7"/>
-                </svg>
+                <video
+                  src="/cnc_header_video.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className={styles.heroVideo}
+                />
+                <div className={styles.videoOverlay}></div>
               </div>
               <div className={styles.heroTag}>
                 <div className={styles.eyebrow}>Signature Cut</div>
