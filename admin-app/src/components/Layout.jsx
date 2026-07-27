@@ -14,16 +14,19 @@ const Layout = ({ children, onLogout }) => {
   ];
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: 'var(--cream)', overflow: 'hidden' }}>
-      {/* Sidebar */}
+    <div style={{ display: 'flex', height: '100vh', width: '100vw', backgroundColor: 'var(--cream)', overflow: 'hidden' }}>
+      {/* Sidebar - Fixed Left Drawer */}
       <div style={{ 
         width: isSidebarOpen ? '260px' : '0px', 
+        height: '100vh',
+        flexShrink: 0,
         backgroundColor: 'var(--espresso)', 
         color: 'var(--cream)', 
         display: 'flex', 
         flexDirection: 'column',
         transition: 'width 0.3s ease',
-        overflow: 'hidden',
+        overflowX: 'hidden',
+        overflowY: 'auto',
         whiteSpace: 'nowrap',
         boxShadow: '4px 0 20px rgba(46,33,22,0.15)',
         zIndex: 10
@@ -73,8 +76,8 @@ const Layout = ({ children, onLogout }) => {
       </div>
 
       {/* Main Content Area */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        <header style={{ backgroundColor: 'var(--paper)', padding: '16px 32px', borderBottom: '1px solid var(--line)', display: 'flex', alignItems: 'center', gap: '20px', boxShadow: '0 2px 8px rgba(46,33,22,0.04)' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', minWidth: 0, overflow: 'hidden' }}>
+        <header style={{ backgroundColor: 'var(--paper)', padding: '16px 32px', borderBottom: '1px solid var(--line)', display: 'flex', alignItems: 'center', gap: '20px', boxShadow: '0 2px 8px rgba(46,33,22,0.04)', flexShrink: 0 }}>
           <button 
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', color: 'var(--espresso)', padding: '8px', borderRadius: '4px', transition: 'background 0.2s' }}
