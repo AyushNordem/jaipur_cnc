@@ -35,38 +35,47 @@ const Home = () => {
     <div className={styles.homeWrapper}>
       
       {/* ================= HERO ================= */}
-      <section className={`${styles.hero} ${styles.jaliBg}`}>
-        <div className={styles.wrap}>
+      <section className={styles.heroSection}>
+        {/* Full-width Video Background */}
+        <div className={styles.heroVideoBg}>
+          <video
+            src="/cnc_header_video.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className={styles.heroVideo}
+          />
+          {/* Left Shadow Overlay covering video smoothly on left */}
+          <div className={styles.heroShadowOverlay}></div>
+        </div>
+
+        <div className={styles.heroWrap}>
           <div className={styles.heroGrid}>
-            <div>
-              <div className={styles.eyebrow}>Jaipur, Rajasthan · Custom CNC Wood Cutting</div>
-              <h1>We cut wood<br />into <em>art</em>, precisely.</h1>
-              <p className={styles.lede}>From intricate 2D jali patterns to sculpted 3D reliefs — MDF, Plywood or Pine, cut to your exact design and size.</p>
+            <div className={styles.heroLeftContent}>
+              <div className={styles.eyebrowLight}>Jaipur, Rajasthan · Custom CNC Wood Cutting</div>
+              <h1 className={styles.heroTitleLight}>
+                We cut wood<br />into <em>art</em>, precisely.
+              </h1>
+              <p className={styles.ledeLight}>
+                From intricate 2D jali patterns to sculpted 3D reliefs — MDF, Plywood or Pine, cut to your exact design and size.
+              </p>
               <div className={styles.heroCta}>
                 <Link to="/contact" className="btn btn-primary">Get a Custom Quote</Link>
-                <Link to="/gallery" className="btn btn-outline">View Gallery</Link>
+                <Link to="/gallery" className="btn btn-outline" style={{ color: '#F2EADC', borderColor: 'rgba(242, 234, 220, 0.4)' }}>View Gallery</Link>
               </div>
-              <div className={styles.heroStats}>
-                <div className={styles.hstat}><b>500+</b><span>Projects Cut</span></div>
-                <div className={styles.hstat}><b>3</b><span>Wood Types</span></div>
-                <div className={styles.hstat}><b>2D / 3D</b><span>Both Handled</span></div>
-                <div className={styles.hstat}><b>7+ Yrs</b><span>Experience</span></div>
+              <div className={styles.heroStatsLight}>
+                <div className={styles.hstatLight}><b>500+</b><span>Projects Cut</span></div>
+                <div className={styles.hstatLight}><b>3</b><span>Wood Types</span></div>
+                <div className={styles.hstatLight}><b>2D / 3D</b><span>Both Handled</span></div>
+                <div className={styles.hstatLight}><b>7+ Yrs</b><span>Experience</span></div>
               </div>
             </div>
-            <div className={styles.heroVisual}>
-              <div className={styles.heroPanel}>
-                <video
-                  src="/cnc_header_video.mp4"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className={styles.heroVideo}
-                />
-                <div className={styles.videoOverlay}></div>
-              </div>
-              <div className={styles.heroTag}>
-                <div className={styles.eyebrow}>Signature Cut</div>
+
+            {/* Signature Cut Floating Badge */}
+            <div className={styles.heroRightFloating}>
+              <div className={styles.heroTagLight}>
+                <div className={styles.eyebrow} style={{ color: 'var(--brass)' }}>Signature Cut</div>
                 <p>Jharokha-style jali lattice — a favourite for wall art and room partitions.</p>
               </div>
             </div>
