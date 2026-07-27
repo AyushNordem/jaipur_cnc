@@ -168,27 +168,27 @@ const Settings = () => {
             </div>
             <label style={labelStyle}>
               Site/Business Name
-              <input type="text" name="siteName" value={content.siteName || ''} onChange={handleChange} style={inputStyle} />
+              <input type="text" name="siteName" value={content.siteName || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. Jaipur Art CNC" />
             </label>
             <label style={labelStyle}>
               Contact Number
-              <input type="text" name="contactPhone" value={content.contactPhone || ''} onChange={handleChange} style={inputStyle} />
+              <input type="text" name="contactPhone" value={content.contactPhone || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. +91 90010 21857" />
             </label>
             <label style={labelStyle}>
               Contact Email
-              <input type="email" name="contactEmail" value={content.contactEmail || ''} onChange={handleChange} style={inputStyle} />
+              <input type="email" name="contactEmail" value={content.contactEmail || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. hello@jaipurartcnc.com" />
             </label>
             <label style={labelStyle}>
               WhatsApp Number (for direct messages)
-              <input type="text" name="whatsappUrl" value={content.whatsappUrl || ''} onChange={handleChange} style={inputStyle} placeholder="https://wa.me/919001021857" />
+              <input type="text" name="whatsappUrl" value={content.whatsappUrl || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. https://wa.me/919001021857" />
             </label>
             <label style={{ ...labelStyle, gridColumn: '1 / -1' }}>
               Physical Address
-              <input type="text" name="address" value={content.address || ''} onChange={handleChange} style={inputStyle} />
+              <input type="text" name="address" value={content.address || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. Shop No. 2, Asarpura, Narayan Vihar, Jaipur, Rajasthan 302020" />
             </label>
             <label style={{ ...labelStyle, gridColumn: '1 / -1' }}>
               Location URL (Google Maps Link)
-              <input type="text" name="locationUrl" value={content.locationUrl || ''} onChange={handleChange} style={inputStyle} />
+              <input type="text" name="locationUrl" value={content.locationUrl || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. https://maps.google.com/?cid=..." />
             </label>
           </div>
         </div>
