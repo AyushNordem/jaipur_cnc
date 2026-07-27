@@ -75,8 +75,16 @@ const Home = () => {
             {/* Signature Cut Floating Badge */}
             <div className={styles.heroRightFloating}>
               <div className={styles.heroTagLight}>
-                <div className={styles.eyebrow} style={{ color: 'var(--brass)' }}>Signature Cut</div>
-                <p>Jharokha-style jali lattice — a favourite for wall art and room partitions.</p>
+                <div className={styles.eyebrowTag}>
+                  <span className={styles.tagDot}></span>
+                  <span>Signature Precision</span>
+                </div>
+                <h3>Master CNC Carving</h3>
+                <p>Custom 2D Jali screens, 3D mandir reliefs &amp; luxury architectural woodwork.</p>
+                <div className={styles.tagBadge}>
+                  <span>100% Custom Fit</span>
+                  <span>Fast Delivery</span>
+                </div>
               </div>
             </div>
           </div>

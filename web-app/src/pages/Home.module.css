@@ -187,20 +187,77 @@
 }
 
 .heroTagLight {
-  background: rgba(30, 20, 14, 0.82);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(184, 137, 43, 0.4);
-  padding: 18px 22px;
-  border-radius: 4px;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.6);
-  max-width: 270px;
+  background: rgba(26, 17, 12, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(184, 137, 43, 0.35);
+  padding: 22px 24px;
+  border-radius: 6px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  max-width: 310px;
+  position: relative;
+  overflow: hidden;
+}
+
+.heroTagLight::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--brass), var(--brick), var(--brass));
+}
+
+.eyebrowTag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brass);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tagDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brass);
+  box-shadow: 0 0 8px var(--brass);
+}
+
+.heroTagLight h3 {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  color: var(--paper);
+  margin-bottom: 8px;
+  font-weight: 600;
 }
 
 .heroTagLight p {
   color: #D4C5B3;
-  font-size: 13px;
-  line-height: 1.4;
-  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.tagBadge {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tagBadge span {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--brass);
+  background: rgba(184, 137, 43, 0.14);
+  border: 1px solid rgba(184, 137, 43, 0.35);
+  padding: 3px 9px;
+  border-radius: 12px;
 }
 
 .heroTag {
@@ -524,6 +581,11 @@
   font-size: 14.5px;
   color: var(--espresso);
   margin-bottom: 22px;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .reviewer {
