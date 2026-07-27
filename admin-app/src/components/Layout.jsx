@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Settings, Image, FileText, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Settings, Image, FileText, LogOut, Menu } from 'lucide-react';
 
 const Layout = ({ children, onLogout }) => {
   const location = useLocation();
@@ -8,69 +8,82 @@ const Layout = ({ children, onLogout }) => {
 
   const menuItems = [
     { name: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
-    { name: 'Global Things', path: '/settings', icon: <Settings size={20} /> },
+    { name: 'Global Settings', path: '/settings', icon: <Settings size={20} /> },
     { name: 'Review Section', path: '/reviews', icon: <FileText size={20} /> },
     { name: 'Gallery Manager', path: '/gallery', icon: <Image size={20} /> },
-    { name: 'Home Page Info', path: '/home-info', icon: <FileText size={20} /> },
   ];
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f5f2f0', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: 'var(--cream)', overflow: 'hidden' }}>
       {/* Sidebar */}
       <div style={{ 
         width: isSidebarOpen ? '260px' : '0px', 
-        backgroundColor: '#323232', 
-        color: 'white', 
+        backgroundColor: 'var(--espresso)', 
+        color: 'var(--cream)', 
         display: 'flex', 
         flexDirection: 'column',
         transition: 'width 0.3s ease',
         overflow: 'hidden',
-        whiteSpace: 'nowrap'
+        whiteSpace: 'nowrap',
+        boxShadow: '4px 0 20px rgba(46,33,22,0.15)',
+        zIndex: 10
       }}>
-        <div style={{ padding: '24px', borderBottom: '1px solid #4A4A4A', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <h2 style={{ margin: 0, fontSize: '1.2rem', color: '#f5f2f0', opacity: isSidebarOpen ? 1 : 0, transition: 'opacity 0.2s' }}>Jaipur Arts CNC</h2>
+        <div style={{ padding: '24px', borderBottom: '1px solid rgba(242,234,220,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <span style={{ display: 'block', fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--brass)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>ADMIN PORTAL</span>
+            <h2 style={{ margin: 0, fontSize: '1.25rem', fontFamily: 'var(--font-heading)', color: 'var(--paper)', opacity: isSidebarOpen ? 1 : 0, transition: 'opacity 0.2s' }}>
+              Jaipur Art CNC
+            </h2>
+          </div>
         </div>
         
         <nav style={{ flex: 1, padding: '20px 0' }}>
-          {menuItems.map((item) => (
-            <Link 
-              key={item.name} 
-              to={item.path}
-              style={{
-                display: 'flex', alignItems: 'center', gap: '12px', padding: '16px 24px',
-                color: location.pathname === item.path ? '#f5f2f0' : '#A09D9A',
-                textDecoration: 'none',
-                backgroundColor: location.pathname === item.path ? '#4A4A4A' : 'transparent',
-                borderLeft: location.pathname === item.path ? '4px solid #f5f2f0' : '4px solid transparent',
-                transition: 'all 0.2s'
-              }}
-            >
-              {item.icon}
-              <span style={{ opacity: isSidebarOpen ? 1 : 0, transition: 'opacity 0.2s' }}>{item.name}</span>
-            </Link>
-          ))}
+          {menuItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <Link 
+                key={item.name} 
+                to={item.path}
+                style={{
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '12px', 
+                  padding: '14px 24px',
+                  color: isActive ? 'var(--paper)' : '#C7B9A6',
+                  textDecoration: 'none',
+                  backgroundColor: isActive ? 'rgba(168, 61, 44, 0.25)' : 'transparent',
+                  borderLeft: isActive ? '4px solid var(--brass)' : '4px solid transparent',
+                  fontWeight: isActive ? '600' : '400',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <span style={{ color: isActive ? 'var(--brass)' : '#C7B9A6' }}>{item.icon}</span>
+                <span style={{ opacity: isSidebarOpen ? 1 : 0, transition: 'opacity 0.2s', fontFamily: 'var(--font-body)' }}>{item.name}</span>
+              </Link>
+            );
+          })}
         </nav>
 
-        <div style={{ padding: '24px', borderTop: '1px solid #4A4A4A' }}>
-          <button onClick={onLogout} style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'none', border: 'none', color: '#A09D9A', cursor: 'pointer', fontSize: '1rem' }}>
+        <div style={{ padding: '20px 24px', borderTop: '1px solid rgba(242,234,220,0.12)' }}>
+          <button onClick={onLogout} style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'none', border: 'none', color: '#C7B9A6', cursor: 'pointer', fontSize: '0.95rem', fontFamily: 'var(--font-body)', width: '100%', padding: '8px 0', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = 'var(--brick)'} onMouseOut={(e) => e.currentTarget.style.color = '#C7B9A6'}>
             <LogOut size={20} /> 
             <span style={{ opacity: isSidebarOpen ? 1 : 0, transition: 'opacity 0.2s' }}>Logout</span>
           </button>
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Main Content Area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        <header style={{ backgroundColor: 'white', padding: '16px 32px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <header style={{ backgroundColor: 'var(--paper)', padding: '16px 32px', borderBottom: '1px solid var(--line)', display: 'flex', alignItems: 'center', gap: '20px', boxShadow: '0 2px 8px rgba(46,33,22,0.04)' }}>
           <button 
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', color: '#323232', padding: '8px', borderRadius: '4px', transition: 'background 0.2s' }}
-            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f5f2f0'}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', color: 'var(--espresso)', padding: '8px', borderRadius: '4px', transition: 'background 0.2s' }}
+            onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--cream)'}
             onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           >
-            <Menu size={24} />
+            <Menu size={22} />
           </button>
-          <h1 style={{ margin: 0, fontSize: '1.4rem', color: '#323232', fontWeight: '600' }}>
+          <h1 style={{ margin: 0, fontSize: '1.4rem', fontFamily: 'var(--font-heading)', color: 'var(--espresso)', fontWeight: '600' }}>
             {menuItems.find(m => m.path === location.pathname)?.name || 'Admin Panel'}
           </h1>
         </header>
