@@ -305,7 +305,9 @@
 
 /* CTA Banner */
 .ctaBanner {
-  background: var(--brick);
+  background-image: url('/cnc_about_hero.png');
+  background-size: cover;
+  background-position: center;
   color: var(--paper);
   border-radius: 4px;
   padding: 60px 50px;
@@ -322,17 +324,23 @@
   content: "";
   position: absolute;
   inset: 0;
+  background-color: rgba(168, 61, 44, 0.9); /* Brick Red overlay */
   background-image:
     linear-gradient(135deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
     linear-gradient(45deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
   background-size: 30px 30px;
+  z-index: 1;
+}
+
+.ctaBanner > * {
+  position: relative;
+  z-index: 2;
 }
 
 .ctaBanner h2 {
   color: var(--paper);
   font-size: clamp(24px, 3vw, 34px);
   max-width: 480px;
-  position: relative;
   font-family: var(--font-heading);
   font-weight: 600;
 }

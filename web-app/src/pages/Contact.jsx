@@ -177,20 +177,14 @@ const Contact = () => {
       <section className={styles.mapSection}>
         <div className={styles.wrap}>
           <div className={styles.mapFrame}>
-            <svg viewBox="0 0 1000 380" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="mapGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M40 0H0V40" fill="none" stroke="#F2EADC" strokeWidth="0.6" opacity="0.18"/>
-                </pattern>
-              </defs>
-              <rect width="1000" height="380" fill="url(#mapGrid)"/>
-              <path d="M0 260 C 200 200, 350 300, 550 240 S 800 180, 1000 220" stroke="#B8892B" strokeWidth="2" fill="none" opacity="0.4"/>
-              <path d="M0 120 C 220 160, 400 80, 620 130 S 850 110, 1000 90" stroke="#B8892B" stroke-width="2" fill="none" opacity="0.25"/>
-            </svg>
-            <div className={styles.mapPin}>
-              <div className={styles.tag}>Jaipur Art CNC — Vishwakarma Industrial Area</div>
-              <div className={styles.dot}></div>
-            </div>
+            <iframe
+              title="Jaipur Art CNC Location"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3557.512630095818!2d75.76735117628892!3d26.91974717664273!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396db57f496c274d%3A0x69e65de890e2b706!2sJaipur%20Art%20CNC!5e0!3m2!1sen!2sin!4v1722000000000!5m2!1sen!2sin"
+              style={{ border: 0, display: 'block', width: '100%', height: '100%' }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
           </div>
         </div>
       </section>
