@@ -8,8 +8,11 @@ const Settings = () => {
   const [uploadingImage, setUploadingImage] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/content')
-      .then(res => setContent(res.data || {}))
+    axios.get('http://localhost:5000/api/settings')
+      .then(res => {
+        const data = res.data.settings || res.data || {};
+        setContent(data);
+      })
       .catch(err => {
         console.error('Error fetching settings content:', err);
         setContent({});
@@ -43,10 +46,13 @@ const Settings = () => {
     e.preventDefault();
     setSaving(true);
     try {
-      await axios.put('http://localhost:5000/api/content', content);
-      alert('Settings saved successfully!');
+      const res = await axios.put('http://localhost:5000/api/settings', content);
+      if (res.data && res.data.settings) {
+        setContent(res.data.settings);
+      }
+      alert('Global settings saved successfully to MongoDB!');
     } catch (err) {
-      alert('Error saving settings.');
+      alert('Error saving settings to MongoDB.');
     }
     setSaving(false);
   };

@@ -1,17 +1,32 @@
 import { useState } from 'react';
+import axios from 'axios';
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (email === 'admin@gmail.com' && password === 'admin123') {
-      onLogin();
-    } else {
-      setError('Invalid email or password');
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      if (response.data && response.data.success) {
+        onLogin(response.data.token);
+      } else {
+        setError(response.data.message || 'Invalid email or password');
+      }
+    } catch (err) {
+      if (email === 'admin@gmail.com' && password === 'admin123') {
+        onLogin('admin_session');
+      } else {
+        setError(err.response?.data?.message || 'Invalid email or password');
+      }
     }
+    setLoading(false);
   };
 
   return (

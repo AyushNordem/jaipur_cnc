@@ -1,19 +1,29 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
 
+const connectDB = require('./config/db');
 const SiteContent = require('./models/SiteContent');
+const errorHandler = require('./middleware/errorHandler');
+const sendResponse = require('./utils/responseHandler');
+
+// Import Modular Routers
+const authRoutes = require('./routes/authRoutes');
+const settingsRoutes = require('./routes/settingsRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// Connect to Database
+connectDB();
+
+// Core Middleware
 app.use(cors());
 app.use(express.json());
+
 // Serve static uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -23,7 +33,7 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-// Multer storage configuration for image uploads
+// Multer Storage Configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
@@ -34,20 +44,16 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/jaipurcnc')
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.error('MongoDB Connection Error:', err));
+// -- MOUNT ROUTERS --
+app.use('/api/auth', authRoutes);
+app.use('/api/settings', settingsRoutes);
 
-
-// -- API ROUTES --
-
-// Initialize/Get Site Content
+// Legacy `/api/content` routes for backward compatibility
 app.get('/api/content', async (req, res) => {
   try {
     let content = await SiteContent.findOne();
     if (!content) {
-      content = await SiteContent.create({}); // Creates default document
+      content = await SiteContent.create({});
     }
     res.json(content);
   } catch (error) {
@@ -55,33 +61,31 @@ app.get('/api/content', async (req, res) => {
   }
 });
 
-// Update Site Content (Admin only)
 app.put('/api/content', async (req, res) => {
   try {
     let content = await SiteContent.findOne();
     if (!content) {
       content = new SiteContent();
     }
-
-    // Update fields dynamically
     Object.assign(content, req.body);
     await content.save();
-
     res.json({ message: 'Content updated successfully', content });
   } catch (error) {
     res.status(500).json({ message: 'Server Error', error: error.message });
   }
 });
 
-// Upload Image Endpoint
+// File Upload Endpoint
 app.post('/api/upload', upload.single('image'), (req, res) => {
   if (!req.file) {
-    return res.status(400).json({ message: 'No file uploaded' });
+    return res.status(400).json({ status: 400, error: 'No file uploaded', success: false });
   }
-  // Return the public URL for the uploaded image
   const imageUrl = `/uploads/${req.file.filename}`;
-  res.json({ url: imageUrl });
+  sendResponse(res, 200, 'File uploaded successfully', { url: imageUrl });
 });
+
+// Global Centralized Error Handler Middleware
+app.use(errorHandler);
 
 // Start Server
 app.listen(PORT, () => {

@@ -8,14 +8,15 @@ export const SiteProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch dynamic content from backend
-    axios.get('http://localhost:5000/api/content')
+    // Fetch dynamic global site settings from backend API
+    axios.get('http://localhost:5000/api/settings')
       .then(res => {
-        setSiteData(res.data);
+        const settingsData = res.data.settings || res.data || {};
+        setSiteData(settingsData);
         setLoading(false);
       })
       .catch(err => {
-        console.error("Error fetching site content:", err);
+        console.error("Error fetching site settings:", err);
         setLoading(false);
       });
   }, []);
