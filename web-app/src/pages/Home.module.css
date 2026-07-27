@@ -184,7 +184,7 @@
 
 /* Shell Settings */
 .sectionPadding {
-  padding: 96px 0;
+  padding: 60px 0;
 }
 
 .sectionHead {
@@ -295,12 +295,24 @@
   background: linear-gradient(120deg, #8a6b45, #6b4e2c);
 }
 
+.hdhmr {
+  background: linear-gradient(120deg, #2b4c3f, #1b352a);
+}
+
 .ply {
   background: linear-gradient(120deg, #a9835a, #7d5c37);
 }
 
-.pine {
-  background: linear-gradient(120deg, #c9a774, #9d7845);
+.solidwood {
+  background: linear-gradient(120deg, #8b4513, #5c2c06);
+}
+
+.acrylic {
+  background: linear-gradient(120deg, #51a8f9, #d0e7ff);
+}
+
+.pvc {
+  background: linear-gradient(120deg, #e5e5e5, #ffffff);
 }
 
 .woodSwatch::after {

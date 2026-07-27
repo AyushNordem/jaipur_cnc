@@ -66,18 +66,74 @@ const Services = () => {
 
           <div className={styles.materialsGrid}>
             {[
-              { title: 'Wood & MDF', desc: 'From solid Teak and Oak to high-density MDF and Plywood, we deliver pristine cuts without splintering.', icon: <Layers size={32} /> },
-              { title: 'Acrylic & PVC', desc: 'Perfect for modern signage, backlit panels, and sleek contemporary interior partitions.', icon: <Box size={32} /> },
-              { title: 'Soft Metals', desc: 'Precision routing for Aluminum, Brass, and Copper sheets for industrial and luxury accents.', icon: <Settings size={32} /> },
-              { title: 'Corian & Stone', desc: 'Intricate carving and engraving on Corian solid surfaces and engineered stone materials.', icon: <Gem size={32} /> }
+              { title: 'MDF (Medium Density Fibreboard)', desc: 'Smooth, uniform surface wood sheet — perfect for budget carvings.', bestFor: 'Decorative jali, mandirs, wall panels', advantages: 'Smooth finish, easy to carve, affordable', disadvantages: 'Not water resistant', icon: <Layers size={32} /> },
+              { title: 'HDHMR Board', desc: 'High Density High Moisture Resistant wood sheet — built to last in damp environments.', bestFor: 'Premium furniture, mandirs, kitchens', advantages: 'Strong, moisture resistant, durable', disadvantages: 'More expensive than MDF', icon: <Box size={32} /> },
+              { title: 'Plywood', desc: 'Cross-laminated veneer sheets — structural panels offering lightweight durability.', bestFor: 'Furniture, cabinets, architectural panels', advantages: 'Strong, lightweight, stable', disadvantages: 'Grain may chip during detailed carving', icon: <Ruler size={32} /> },
+              { title: 'Solid Wood (Teak, Sheesham, Pine)', desc: 'Premium natural logs — providing wood warmth and generation-spanning longevity.', bestFor: 'Luxury temples, premium furniture', advantages: 'Natural look, long life', disadvantages: 'Expensive and requires skilled finishing', icon: <Hammer size={32} /> },
+              { title: 'Acrylic Sheet', desc: 'High-gloss polymer panels — available in custom colours and finishes.', bestFor: 'Name plates, branding logos, decorative inserts', advantages: 'Glossy finish, available in many colours', disadvantages: 'Can crack if handled improperly', icon: <Gem size={32} /> },
+              { title: 'PVC Foam Board', desc: 'Lightweight foam sheets — completely waterproof and termite-free.', bestFor: 'Indoor/outdoor signs, bathroom items', advantages: 'Waterproof, lightweight', disadvantages: 'Not suitable for heavy structural use', icon: <Scissors size={32} /> }
             ].map((material, index) => (
               <div key={index} className={styles.materialCard}>
                 <div className={styles.materialIcon}>{material.icon}</div>
                 <h3>{material.title}</h3>
                 <p>{material.desc}</p>
+                <div className={styles.materialDetail}>
+                  <div><b>Best For:</b> <span>{material.bestFor}</span></div>
+                  <div><b>Advantages:</b> <span>{material.advantages}</span></div>
+                  <div><b>Disadvantages:</b> <span>{material.disadvantages}</span></div>
+                </div>
               </div>
             ))}
           </div>
+
+          {/* CNC Mandir Manufacturing, Sizes and Other Needs */}
+          <div className={styles.specsContainer}>
+            <div className={styles.specsGrid}>
+              <div className={styles.specColumn}>
+                <h4>CNC Mandir (Temple) Materials</h4>
+                <ul>
+                  <li><b>18 mm HDHMR</b> – Premium temples</li>
+                  <li><b>18 mm MDF</b> – Budget and decorative temples</li>
+                  <li><b>12 mm MDF</b> – Back panels and jali work</li>
+                  <li><b>6 mm MDF</b> – Fine decorative layers</li>
+                  <li><b>Teak / Sheesham Wood</b> – High-end handcrafted temples</li>
+                  <li><b>Acrylic</b> – LED nameplates and decorative inserts</li>
+                  <li><b>Corian</b> – Premium modern temples with backlighting</li>
+                </ul>
+              </div>
+
+              <div className={styles.specColumn}>
+                <h4>Common Sizes & Thicknesses</h4>
+                <div className={styles.sheetSize}>
+                  <b>Standard Sheet Size:</b>
+                  <span>8 ft × 4 ft (2440 × 1220 mm)</span>
+                </div>
+                <b>Available Thicknesses:</b>
+                <div className={styles.thicknessGrid}>
+                  <span>3 mm</span>
+                  <span>6 mm</span>
+                  <span>9 mm</span>
+                  <span>12 mm</span>
+                  <span>16 mm</span>
+                  <span>18 mm</span>
+                  <span>25 mm</span>
+                </div>
+              </div>
+
+              <div className={styles.specColumn}>
+                <h4>Other Accessories & Needs</h4>
+                <ul>
+                  <li>Wood glue (Fevicol SH or equivalent)</li>
+                  <li>PU paint or Duco paint / Primer</li>
+                  <li>Sandpaper (120, 220, 400 grit)</li>
+                  <li>LED strip lights & Acrylic diffusers</li>
+                  <li>Hinges, handles & Edge banding</li>
+                  <li>Screws & concealed fittings</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 

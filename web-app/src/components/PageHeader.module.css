@@ -1,6 +1,6 @@
 .pageHeader {
   position: relative;
-  height: 350px;
+  height: 300px;
   background-image: url('/page_header_bg.png');
   background-size: cover;
   background-position: center;
@@ -16,7 +16,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.65); /* Dark overlay to make text pop */
+  background: rgba(0, 0, 0, 0.65);
+  /* Dark overlay to make text pop */
   z-index: 1;
 }
 
@@ -28,9 +29,9 @@
 
 .title {
   font-family: var(--font-heading);
-  font-size: 3.5rem;
+  font-size: 2.6rem;
   color: var(--color-white);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -67,11 +68,11 @@
   .pageHeader {
     height: 250px;
   }
-  
+
   .title {
     font-size: 2.5rem;
   }
-  
+
   .breadcrumbs {
     font-size: 1rem;
   }

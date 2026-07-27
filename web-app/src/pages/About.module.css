@@ -39,7 +39,7 @@
 
 /* Page Hero */
 .pageHero {
-  padding: 70px 0 60px;
+  padding: 40px 0 20px;
   position: relative;
   overflow: hidden;
 }
@@ -62,7 +62,7 @@
 }
 
 .sectionPadding {
-  padding: 90px 0;
+  padding: 60px 0;
 }
 
 .sectionHead {

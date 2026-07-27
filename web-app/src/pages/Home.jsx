@@ -163,10 +163,21 @@ const Home = () => {
               <div className={`${styles.woodSwatch} ${styles.mdf}`}></div>
               <div className={styles.woodBody}>
                 <h3>MDF</h3>
-                <p>Smooth, uniform surface — best for fine detail, painted finishes and intricate 2D jali work.</p>
+                <p>Smooth, uniform surface — best for decorative jali, mandirs, and intricate wall panels.</p>
                 <div className={styles.woodTags}>
-                  <span>Fine Detail</span>
-                  <span>Paint-Ready</span>
+                  <span>Smooth Finish</span>
+                  <span>Affordable</span>
+                </div>
+              </div>
+            </div>
+            <div className={styles.woodCard}>
+              <div className={`${styles.woodSwatch} ${styles.hdhmr}`}></div>
+              <div className={styles.woodBody}>
+                <h3>HDHMR Board</h3>
+                <p>High Density High Moisture Resistant — ideal for premium furniture and durable mandirs.</p>
+                <div className={styles.woodTags}>
+                  <span>Water Resistant</span>
+                  <span>Extremely Strong</span>
                 </div>
               </div>
             </div>
@@ -174,21 +185,43 @@ const Home = () => {
               <div className={`${styles.woodSwatch} ${styles.ply}`}></div>
               <div className={styles.woodBody}>
                 <h3>Plywood</h3>
-                <p>Strong and layered — ideal for furniture parts, signage and pieces that need durability.</p>
+                <p>Cross-layered veneer sheet — best for structural furniture, cabinets and sub-bases.</p>
                 <div className={styles.woodTags}>
-                  <span>Durable</span>
-                  <span>Load-Bearing</span>
+                  <span>High Strength</span>
+                  <span>Lightweight</span>
                 </div>
               </div>
             </div>
             <div className={styles.woodCard}>
-              <div className={`${styles.woodSwatch} ${styles.pine}`}></div>
+              <div className={`${styles.woodSwatch} ${styles.solidwood}`}></div>
               <div className={styles.woodBody}>
-                <h3>Pine</h3>
-                <p>Natural wood grain and warmth — suited to premium wall art and pieces left unpainted.</p>
+                <h3>Solid Wood</h3>
+                <p>Teak, Sheesham, Pine — premium natural logs suited to luxury temples and high-end furniture.</p>
                 <div className={styles.woodTags}>
-                  <span>Natural Grain</span>
-                  <span>Premium Look</span>
+                  <span>Natural Look</span>
+                  <span>Generational Life</span>
+                </div>
+              </div>
+            </div>
+            <div className={styles.woodCard}>
+              <div className={`${styles.woodSwatch} ${styles.acrylic}`}></div>
+              <div className={styles.woodBody}>
+                <h3>Acrylic Sheet</h3>
+                <p>Glossy polymer sheet — best for custom name plates, branding logos, and backlit inserts.</p>
+                <div className={styles.woodTags}>
+                  <span>Glossy Finish</span>
+                  <span>Colour Varieties</span>
+                </div>
+              </div>
+            </div>
+            <div className={styles.woodCard}>
+              <div className={`${styles.woodSwatch} ${styles.pvc}`}></div>
+              <div className={styles.woodBody}>
+                <h3>PVC Foam Board</h3>
+                <p>Lightweight polymer foam — waterproof sheets best for signs and damp-resistant items.</p>
+                <div className={styles.woodTags}>
+                  <span>100% Waterproof</span>
+                  <span>Termite Proof</span>
                 </div>
               </div>
             </div>

@@ -32,7 +32,7 @@
 
 /* Page Hero */
 .pageHero {
-  padding: 70px 0 50px;
+  padding: 40px 0 20px;
   position: relative;
   overflow: hidden;
 }
@@ -55,7 +55,7 @@
 }
 
 .sectionPadding {
-  padding: 90px 0;
+  padding: 60px 0;
 }
 
 .sectionHead {
@@ -243,6 +243,8 @@
   color: var(--brass);
   flex: none;
   margin-top: 2px;
+  width: 20px;
+  height: 20px;
 }
 
 .infoRow b {

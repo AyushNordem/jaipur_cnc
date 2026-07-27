@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { Phone, Mail, ArrowRight, ChevronDown } from 'lucide-react';
+import { Phone, Mail, ArrowRight, ChevronDown, MapPin } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import PageHeader from '../components/PageHeader';
 import { SiteContext } from '../context/SiteContext';
@@ -16,20 +16,44 @@ const Contact = () => {
 
   const faqs = [
     {
-      q: "How do I send my design?",
-      a: "Share a photo, sketch, or file (CDR, AI, PDF, or even a hand-drawn image) over WhatsApp or email — we'll confirm it's cuttable and quote you."
+      q: "What materials do you work with?",
+      a: "MDF, HDHMR Board, Plywood, Solid Wood (Teak, Sheesham, Pine), Acrylic Sheet, and PVC Foam Board. We'll recommend the right one based on your design and where it'll be used."
+    },
+    {
+      q: "Can you cut both 2D and 3D designs?",
+      a: "Yes — flat 2D patterns (jali screens, name boards, rangoli panels, signage) as well as sculpted 3D relief carving."
+    },
+    {
+      q: "How do I send you my design?",
+      a: "Share a photo, hand sketch, or file (CDR, AI, PDF, DXF) over WhatsApp — most clients just send a picture and describe what they want, in Hindi or English."
+    },
+    {
+      q: "What size pieces can you cut?",
+      a: "Up to 1300×2500mm on our machine bed, material thickness up to 40mm. Bigger designs can be cut in joined panels."
+    },
+    {
+      q: "How much will my order cost, and is GST included?",
+      a: "Cost depends on material, size, design detail, and quantity. We'll send a clear quote in ₹ over WhatsApp, and can provide a GST bill if needed for your business."
+    },
+    {
+      q: "What payment methods do you accept?",
+      a: "UPI (GPay/PhonePe/Paytm), bank transfer, and cash. For custom orders, we usually ask for 50% advance and the balance on delivery/pickup."
     },
     {
       q: "How long does an order take?",
-      a: "Most single pieces are ready in 3–5 working days. Bulk orders depend on quantity — we'll confirm a timeline with your quote."
+      a: "3–5 working days for single pieces. Bulk orders depend on quantity — we'll confirm the timeline when we quote, and flag if festival-season demand affects it."
     },
     {
       q: "Do you deliver outside Jaipur?",
-      a: "Yes, we ship pan-India. Delivery cost and time depend on size and destination — we'll include it in your quote."
+      a: "Yes, pan-India via courier/transport. Delivery charges depend on size, weight, and your pin code — included in your quote."
     },
     {
-      q: "Which wood should I choose?",
-      a: "If you're unsure, tell us where the piece will be used — indoors, outdoors, painted or natural finish — and we'll recommend MDF, Plywood or Pine accordingly."
+      q: "Do you take bulk/wholesale orders for shops or events?",
+      a: "Yes — for showrooms, interior designers, and retailers, with consistent quality across every piece. Special pricing available for bulk quantities."
+    },
+    {
+      q: "Can I see samples or visit your workshop before ordering?",
+      a: "Yes, you're welcome to visit our Jaipur workshop by appointment, or we can share photos/videos of similar past work over WhatsApp before you confirm your order."
     }
   ];
 
@@ -102,11 +126,14 @@ const Contact = () => {
               </div>
               <div className={styles.formRow}>
                 <div className={styles.field}>
-                  <label>Wood Type</label>
+                  <label>Wood Type / Material</label>
                   <select>
-                    <option>MDF</option>
+                    <option>MDF (Medium Density Fibreboard)</option>
+                    <option>HDHMR Board (High Density High Moisture Resistant)</option>
                     <option>Plywood</option>
-                    <option>Pine</option>
+                    <option>Solid Wood (Teak, Sheesham, Pine)</option>
+                    <option>Acrylic Sheet</option>
+                    <option>PVC Foam Board</option>
                     <option>Not sure — need advice</option>
                   </select>
                 </div>
@@ -136,7 +163,7 @@ const Contact = () => {
             <div className={styles.infoCard}>
               <div className={styles.eyebrow} style={{ color: 'var(--brass)' }}>Workshop</div>
               <div className={styles.infoRow}>
-                <MapPinIcon className={styles.infoIcon} />
+                <MapPin size={20} className={styles.infoIcon} />
                 <div>
                   <b>Address</b>
                   <span>{address}</span>
@@ -161,12 +188,8 @@ const Contact = () => {
             <div className={styles.hoursCard}>
               <h3>Working Hours</h3>
               <div className={styles.hoursRow}>
-                <span>Monday – Saturday</span>
-                <span>9:00 – 19:00</span>
-              </div>
-              <div className={styles.hoursRow}>
-                <span>Sunday</span>
-                <span>Closed</span>
+                <span>Monday – Sunday</span>
+                <span>10:00 – 21:00</span>
               </div>
             </div>
           </div>
@@ -230,13 +253,5 @@ const Contact = () => {
     </div>
   );
 };
-
-// Helper Map Pin Icon component
-const MapPinIcon = ({ className }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 10c0 7-9 12-9 12S3 17 3 10a9 9 0 0 1 18 0z" />
-    <circle cx="12" cy="10" r="3" />
-  </svg>
-);
 
 export default Contact;
