@@ -160,7 +160,9 @@ const Home = () => {
           </div>
           <div className={styles.woodGrid}>
             <div className={styles.woodCard}>
-              <div className={`${styles.woodSwatch} ${styles.mdf}`}></div>
+              <div className={styles.woodSwatch}>
+                <img src="/MDF.png" alt="MDF Board" />
+              </div>
               <div className={styles.woodBody}>
                 <h3>MDF</h3>
                 <p>Smooth, uniform surface — best for decorative jali, mandirs, and intricate wall panels.</p>
@@ -171,7 +173,9 @@ const Home = () => {
               </div>
             </div>
             <div className={styles.woodCard}>
-              <div className={`${styles.woodSwatch} ${styles.hdhmr}`}></div>
+              <div className={styles.woodSwatch}>
+                <img src="/HDHMR Board.png" alt="HDHMR Board" />
+              </div>
               <div className={styles.woodBody}>
                 <h3>HDHMR Board</h3>
                 <p>High Density High Moisture Resistant — ideal for premium furniture and durable mandirs.</p>
@@ -182,7 +186,9 @@ const Home = () => {
               </div>
             </div>
             <div className={styles.woodCard}>
-              <div className={`${styles.woodSwatch} ${styles.ply}`}></div>
+              <div className={styles.woodSwatch}>
+                <img src="/Plywood.png" alt="Plywood" />
+              </div>
               <div className={styles.woodBody}>
                 <h3>Plywood</h3>
                 <p>Cross-layered veneer sheet — best for structural furniture, cabinets and sub-bases.</p>
@@ -193,7 +199,9 @@ const Home = () => {
               </div>
             </div>
             <div className={styles.woodCard}>
-              <div className={`${styles.woodSwatch} ${styles.solidwood}`}></div>
+              <div className={styles.woodSwatch}>
+                <img src="/Solid Wood.png" alt="Solid Wood" />
+              </div>
               <div className={styles.woodBody}>
                 <h3>Solid Wood</h3>
                 <p>Teak, Sheesham, Pine — premium natural logs suited to luxury temples and high-end furniture.</p>
@@ -204,7 +212,9 @@ const Home = () => {
               </div>
             </div>
             <div className={styles.woodCard}>
-              <div className={`${styles.woodSwatch} ${styles.acrylic}`}></div>
+              <div className={styles.woodSwatch}>
+                <img src="/Acrylic Sheet.png" alt="Acrylic Sheet" />
+              </div>
               <div className={styles.woodBody}>
                 <h3>Acrylic Sheet</h3>
                 <p>Glossy polymer sheet — best for custom name plates, branding logos, and backlit inserts.</p>
@@ -215,7 +225,9 @@ const Home = () => {
               </div>
             </div>
             <div className={styles.woodCard}>
-              <div className={`${styles.woodSwatch} ${styles.pvc}`}></div>
+              <div className={styles.woodSwatch}>
+                <img src="/PVC Foam Board.png" alt="PVC Foam Board" />
+              </div>
               <div className={styles.woodBody}>
                 <h3>PVC Foam Board</h3>
                 <p>Lightweight polymer foam — waterproof sheets best for signs and damp-resistant items.</p>

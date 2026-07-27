@@ -287,39 +287,21 @@
 }
 
 .woodSwatch {
-  height: 150px;
+  height: 180px;
   position: relative;
+  overflow: hidden;
 }
 
-.mdf {
-  background: linear-gradient(120deg, #8a6b45, #6b4e2c);
+.woodSwatch img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
 }
 
-.hdhmr {
-  background: linear-gradient(120deg, #2b4c3f, #1b352a);
-}
-
-.ply {
-  background: linear-gradient(120deg, #a9835a, #7d5c37);
-}
-
-.solidwood {
-  background: linear-gradient(120deg, #8b4513, #5c2c06);
-}
-
-.acrylic {
-  background: linear-gradient(120deg, #51a8f9, #d0e7ff);
-}
-
-.pvc {
-  background: linear-gradient(120deg, #e5e5e5, #ffffff);
-}
-
-.woodSwatch::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.08) 0 2px, transparent 2px 14px);
+.woodCard:hover .woodSwatch img {
+  transform: scale(1.05);
 }
 
 .woodBody {

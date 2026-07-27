@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { Phone, Mail, ArrowRight, ChevronDown, MapPin } from 'lucide-react';
+import { Phone, Mail, ArrowRight, ArrowLeft, ChevronDown, MapPin, Star } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import PageHeader from '../components/PageHeader';
 import { SiteContext } from '../context/SiteContext';
@@ -8,11 +8,63 @@ import styles from './Contact.module.css';
 const Contact = () => {
   const { siteData } = useContext(SiteContext);
   const [openFaq, setOpenFaq] = useState(-1);
+  const [activeReview, setActiveReview] = useState(0);
 
   const contactPhone = siteData?.contactPhone || '+91 90010 21857';
   const contactEmail = siteData?.contactEmail || 'hello@jaipurartcnc.com';
   const address = siteData?.address || 'Workshop No. 12, Vishwakarma Industrial Area, Jaipur, Rajasthan 302013';
   const whatsappUrl = siteData?.whatsappUrl || 'https://wa.me/919001021857';
+
+  const reviews = [
+    {
+      name: "Amit Sharma",
+      avatarColor: "#4285F4",
+      badge: "Local Guide",
+      stars: 5,
+      date: "3 weeks ago",
+      text: "Best CNC cutting service in Jaipur! They did a perfect 18mm HDHMR Mandir carving with intricate jali back panels. Very professional work and fair pricing."
+    },
+    {
+      name: "Rajesh K. Meena",
+      avatarColor: "#0F9D58",
+      badge: "Local Guide",
+      stars: 5,
+      date: "1 month ago",
+      text: "Excellent quality MDF jali work for my modular kitchen. The cut lines were sharp with no chipping at all. Fast delivery too!"
+    },
+    {
+      name: "Pooja Jangid",
+      avatarColor: "#DB4437",
+      badge: "Local Guide",
+      stars: 5,
+      date: "2 months ago",
+      text: "Visited their workshop in Vishwakarma Industrial Area. The machines are top-notch and the team is very helpful in designing custom wood relief work. Highly recommend!"
+    },
+    {
+      name: "Vikram Aditya",
+      avatarColor: "#F4B400",
+      badge: "Local Guide",
+      stars: 5,
+      date: "5 days ago",
+      text: "They cut some acrylic nameplates and pine wood signages for our resort. The finish is fantastic. Very reliable and supportive team."
+    },
+    {
+      name: "Sanjay Chaudhary",
+      avatarColor: "#ab47bc",
+      badge: "Local Guide",
+      stars: 5,
+      date: "2 months ago",
+      text: "Superb experience! Shared a photo of a temple over WhatsApp and they manufactured the exact same design. The PU paint finish is amazing."
+    }
+  ];
+
+  const handleNextReview = () => {
+    setActiveReview((prev) => (prev + 1) % reviews.length);
+  };
+
+  const handlePrevReview = () => {
+    setActiveReview((prev) => (prev - 1 + reviews.length) % reviews.length);
+  };
 
   const faqs = [
     {
@@ -208,6 +260,83 @@ const Contact = () => {
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             ></iframe>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= GOOGLE REVIEWS SLIDER ================= */}
+      <section className={`${styles.sectionPadding} ${styles.reviewsSection}`}>
+        <div className={styles.wrap}>
+          <div className={styles.googleHeader}>
+            <div>
+              <div className={styles.eyebrow} style={{ color: 'var(--brick)' }}>Reviews</div>
+              <h2>What our clients say</h2>
+            </div>
+            
+            <div className={styles.googleBadge}>
+              <svg className={styles.googleLogo} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              <div className={styles.googleStats}>
+                <div className={styles.googleScore}>
+                  <span>5.0</span>
+                  <div className={styles.googleStars}>
+                    <Star size={14} fill="#F4B400" stroke="none" />
+                    <Star size={14} fill="#F4B400" stroke="none" />
+                    <Star size={14} fill="#F4B400" stroke="none" />
+                    <Star size={14} fill="#F4B400" stroke="none" />
+                    <Star size={14} fill="#F4B400" stroke="none" />
+                  </div>
+                </div>
+                <div className={styles.googleCount}>Based on 48 Google reviews</div>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.sliderContainer}>
+            <div className={styles.reviewCard}>
+              <div className={styles.cardTop}>
+                <div className={styles.userInfo}>
+                  <div className={styles.avatar} style={{ backgroundColor: reviews[activeReview].avatarColor }}>
+                    {reviews[activeReview].name.charAt(0)}
+                  </div>
+                  <div className={styles.userMeta}>
+                    <h4>{reviews[activeReview].name}</h4>
+                    <span>{reviews[activeReview].badge}</span>
+                  </div>
+                </div>
+                <svg className={styles.googleGIcon} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+              </div>
+
+              <div className={styles.reviewBody}>
+                <div className={styles.reviewStars}>
+                  <Star size={16} fill="#F4B400" stroke="none" />
+                  <Star size={16} fill="#F4B400" stroke="none" />
+                  <Star size={16} fill="#F4B400" stroke="none" />
+                  <Star size={16} fill="#F4B400" stroke="none" />
+                  <Star size={16} fill="#F4B400" stroke="none" />
+                  <span className={styles.reviewDate}>{reviews[activeReview].date}</span>
+                </div>
+                <p className={styles.reviewText}>"{reviews[activeReview].text}"</p>
+              </div>
+            </div>
+
+            <div className={styles.sliderNav}>
+              <button onClick={handlePrevReview} className={styles.navBtn} aria-label="Previous Review">
+                <ArrowLeft size={18} />
+              </button>
+              <button onClick={handleNextReview} className={styles.navBtn} aria-label="Next Review">
+                <ArrowRight size={18} />
+              </button>
+            </div>
           </div>
         </div>
       </section>
