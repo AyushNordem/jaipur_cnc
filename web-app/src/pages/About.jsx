@@ -71,7 +71,7 @@ const About = () => {
                 <polyline points="2 12 12 17 22 12" />
               </svg>
               <h3>Right Wood for the Job</h3>
-              <p>We advise honestly on MDF, Plywood or Pine based on your design and where it'll be used.</p>
+              <p>We advise honestly on MDF, HDHMR, Plywood, Solid Wood, Acrylic or PVC Foam based on your design and where it'll be used.</p>
             </div>
             <div className={styles.valueCard}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block' }}>

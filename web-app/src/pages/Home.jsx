@@ -58,7 +58,7 @@ const Home = () => {
                 We cut wood<br />into <em>art</em>, precisely.
               </h1>
               <p className={styles.ledeLight}>
-                From intricate 2D jali patterns to sculpted 3D reliefs — MDF, Plywood or Pine, cut to your exact design and size.
+                From intricate 2D jali patterns to sculpted 3D reliefs — MDF, HDHMR, Plywood, Solid Wood, Acrylic or PVC Foam, cut to your exact design and size.
               </p>
               <div className={styles.heroCta}>
                 <Link to="/contact" className="btn btn-primary">Get a Custom Quote</Link>
