@@ -310,6 +310,77 @@
   stroke: var(--brick);
 }
 
+/* Full-Width Dark Metrics Banner (Placed After Review Section) */
+.darkMetricsSection {
+  position: relative;
+  background-image: url('/cnc_about_hero.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: #FFFFFF;
+  padding: 90px 0;
+  text-align: center;
+  overflow: hidden;
+  margin: -36px 0 40px;
+}
+
+.darkMetricsOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(18, 12, 8, 0.88) 0%, rgba(36, 24, 16, 0.84) 100%);
+  z-index: 1;
+}
+
+.darkMetricsContent {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.darkMetricsTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  margin-bottom: 44px;
+  font-weight: 600;
+}
+
+.darkMetricsGrid {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 28px;
+}
+
+.darkMetricItem {
+  flex: 1;
+  min-width: 160px;
+  text-align: center;
+}
+
+.darkMetricNumber {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 2.6vw, 2.3rem);
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.1;
+  margin-bottom: 8px;
+  letter-spacing: 0.04em;
+}
+
+.darkMetricLabel {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #E2D5C3;
+  font-weight: 500;
+}
+
 /* Shell Settings */
 .sectionPadding {
   padding: 60px 0;

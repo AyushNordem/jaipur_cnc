@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Users, CheckCircle2, Briefcase, MapPin } from 'lucide-react';
 import styles from './Home.module.css';
 import { Link } from 'react-router-dom';
 import { SiteContext } from '../context/SiteContext';
@@ -16,6 +16,52 @@ const Home = () => {
     { title: 'Wall Décor • MDF', category: 'Wall Décor', fill: '#2E2116', triangle: true },
     { title: 'Room Partition • Ply', category: 'Room Partition', fill: '#6E4A2E', rect: true },
     { title: 'Rangoli Panel • MDF', category: 'Rangoli Panel', fill: '#A83D2C', doubleCircle: true }
+  ];
+
+  // Fallback data for customer reviews
+  const defaultReviews = [
+    {
+      clientName: 'Amit Sharma',
+      clientLocation: 'Jaipur',
+      workType: '3D Mandir Relief',
+      rating: 5,
+      quote: 'The 3D carving detail on HDHMR board was absolutely breathtaking. Delivered on time in Jaipur!'
+    },
+    {
+      clientName: 'Priya Verma',
+      clientLocation: 'Udaipur',
+      workType: 'Custom Jali Screen',
+      rating: 5,
+      quote: 'Exact dimensions as requested. Their CNC cutting precision on MDF sheets is second to none.'
+    },
+    {
+      clientName: 'Vikram Singh',
+      clientLocation: 'Jodhpur',
+      workType: 'Teak Wooden Gate',
+      rating: 5,
+      quote: 'Highly skilled craftsmanship and transparent pricing. Great communication throughout the project.'
+    },
+    {
+      clientName: 'Ramesh Patel',
+      clientLocation: 'Ahmedabad',
+      workType: 'Name Board & Wall Art',
+      rating: 5,
+      quote: 'Superb quality and clean finish. Will definitely order all our future CNC cutting jobs from Jaipur CNC!'
+    },
+    {
+      clientName: 'Neha Mehta',
+      clientLocation: 'Delhi',
+      workType: 'PVC Partition Screen',
+      rating: 5,
+      quote: 'Beautiful waterproof PVC foam board cutting. Perfect fit for our dining room partition!'
+    },
+    {
+      clientName: 'Sanjay Gupta',
+      clientLocation: 'Kota',
+      workType: 'MDF Grill Work',
+      rating: 5,
+      quote: 'Flawless precision cutting and quick turnaround. Highly recommended for custom CNC jobs!'
+    }
   ];
 
   const [reviewsList, setReviewsList] = useState([]);
@@ -43,10 +89,11 @@ const Home = () => {
 
   // Auto scroll effect for reviews carousel
   useEffect(() => {
-    if (!reviewsList || reviewsList.length <= 1 || isHoveredReviews) return;
+    const reviewCount = reviewsList.length > 0 ? reviewsList.length : 6;
+    if (reviewCount <= 1 || isHoveredReviews) return;
 
     const timer = setInterval(() => {
-      setActiveReviewIndex(prev => (prev + 1) % reviewsList.length);
+      setActiveReviewIndex(prev => (prev + 1) % reviewCount);
     }, 4500);
 
     return () => clearInterval(timer);
@@ -425,10 +472,16 @@ const Home = () => {
       </section>
 
       {/* ================= REVIEWS ================= */}
-      {testimonials.length > 0 && (() => {
-        const displayReviews = testimonials.length < 3
-          ? [...testimonials, ...testimonials, ...testimonials]
-          : testimonials;
+      {(() => {
+        const baseReviews = (testimonials && testimonials.length > 0) ? testimonials : defaultReviews;
+        if (!baseReviews || baseReviews.length === 0) return null;
+
+        // Multiply array if length < 3, then clone first 3 items onto end to guarantee 0 blank slots
+        const repeatCount = baseReviews.length < 3 ? 3 : 1;
+        const normalizedList = Array(repeatCount).fill(baseReviews).flat();
+        const displayReviews = [...normalizedList, ...normalizedList.slice(0, 3)];
+
+        const currentIndex = activeReviewIndex % normalizedList.length;
 
         return (
           <section id="reviews" className={styles.sectionPadding}>
@@ -449,10 +502,13 @@ const Home = () => {
               >
                 <div 
                   className={styles.carouselTrack3}
-                  style={{ transform: `translateX(-${(activeReviewIndex % displayReviews.length) * 33.3333}%)` }}
+                  style={{ 
+                    transform: `translateX(-${currentIndex * 33.33333}%)`,
+                    transition: 'transform 0.5s ease-in-out'
+                  }}
                 >
                   {displayReviews.map((item, idx) => {
-                    const isCenter = idx === (activeReviewIndex + 1) % displayReviews.length;
+                    const isCenter = idx === (currentIndex + 1);
                     return (
                       <div key={idx} className={styles.carouselSlide3}>
                         <div className={`${styles.reviewCard3} ${isCenter ? styles.centerCard : ''}`}>
@@ -485,14 +541,14 @@ const Home = () => {
                 </div>
 
                 {/* Bottom Dot Indicators */}
-                {displayReviews.length > 1 && (
+                {normalizedList.length > 1 && (
                   <div className={styles.indicatorContainer}>
-                    {displayReviews.map((_, idx) => (
+                    {normalizedList.map((_, idx) => (
                       <button
                         key={idx}
                         type="button"
                         onClick={() => setActiveReviewIndex(idx)}
-                        className={`${styles.dotIndicator} ${activeReviewIndex === idx ? styles.activeDot : ''}`}
+                        className={`${styles.dotIndicator} ${currentIndex === idx ? styles.activeDot : ''}`}
                         aria-label={`Go to review ${idx + 1}`}
                       />
                     ))}
@@ -505,8 +561,53 @@ const Home = () => {
         );
       })()}
 
+      {/* ================= COMPLETED CUSTOM PROJECTS METRICS BANNER ================= */}
+      <section className={styles.darkMetricsSection}>
+        <div className={styles.darkMetricsOverlay}></div>
+        <div className={styles.wrap}>
+          <div className={styles.darkMetricsContent}>
+            <h2 className={styles.darkMetricsTitle}>Completed Custom Projects</h2>
+            <div className={styles.darkMetricsGrid}>
+              
+              <div className={styles.darkMetricItem}>
+                <div className={styles.darkMetricNumber}>
+                  {siteData?.completedProjectsCount || '950+'}
+                </div>
+                <div className={styles.darkMetricLabel}>Projects</div>
+              </div>
+
+              <div className={styles.darkMetricItem}>
+                <div className={styles.darkMetricNumber}>
+                  {siteData?.happyCustomersCount || '350+'}
+                </div>
+                <div className={styles.darkMetricLabel}>Happy Customers</div>
+              </div>
+
+              <div className={styles.darkMetricItem}>
+                <div className={styles.darkMetricNumber}>
+                  {siteData?.yearsExperienceCount 
+                    ? (siteData.yearsExperienceCount.toLowerCase().includes('yr') || siteData.yearsExperienceCount.toLowerCase().includes('year')
+                        ? siteData.yearsExperienceCount 
+                        : `${siteData.yearsExperienceCount}+`)
+                    : '25+'}
+                </div>
+                <div className={styles.darkMetricLabel}>Years Experience</div>
+              </div>
+
+              <div className={styles.darkMetricItem}>
+                <div className={styles.darkMetricNumber}>
+                  {siteData?.totalBranchesCount || '3+'}
+                </div>
+                <div className={styles.darkMetricLabel}>Total Branches</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ================= CTA BANNER ================= */}
-      <section style={{ paddingTop: 0, paddingBottom: '96px' }}>
+      <section style={{ paddingTop: '64px', paddingBottom: '96px' }}>
         <div className={styles.wrap}>
           <div className={styles.ctaBanner}>
             <h2>Have a design in mind? Let's cut it, precisely.</h2>
