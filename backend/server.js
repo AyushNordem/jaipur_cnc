@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
@@ -8,11 +7,11 @@ require('dotenv').config();
 const connectDB = require('./config/db');
 const SiteContent = require('./models/SiteContent');
 const errorHandler = require('./middleware/errorHandler');
-const sendResponse = require('./utils/responseHandler');
 
 // Import Modular Routers
 const authRoutes = require('./routes/authRoutes');
 const settingsRoutes = require('./routes/settingsRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -33,20 +32,10 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-// Multer Storage Configuration
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-const upload = multer({ storage });
-
 // -- MOUNT ROUTERS --
 app.use('/api/auth', authRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Legacy `/api/content` routes for backward compatibility
 app.get('/api/content', async (req, res) => {
@@ -73,15 +62,6 @@ app.put('/api/content', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Server Error', error: error.message });
   }
-});
-
-// File Upload Endpoint
-app.post('/api/upload', upload.single('image'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ status: 400, error: 'No file uploaded', success: false });
-  }
-  const imageUrl = `/uploads/${req.file.filename}`;
-  sendResponse(res, 200, 'File uploaded successfully', { url: imageUrl });
 });
 
 // Global Centralized Error Handler Middleware

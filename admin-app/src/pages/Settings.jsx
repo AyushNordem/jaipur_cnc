@@ -35,7 +35,8 @@ const Settings = () => {
       const uploadRes = await axios.post('http://localhost:5000/api/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      setContent(prev => ({ ...(prev || {}), [fieldName]: uploadRes.data.url }));
+      const uploadedUrl = uploadRes.data.data?.url || uploadRes.data.url;
+      setContent(prev => ({ ...(prev || {}), [fieldName]: uploadedUrl }));
     } catch (err) {
       alert('Error uploading image');
     }
