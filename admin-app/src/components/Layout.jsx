@@ -21,8 +21,8 @@ const Layout = ({ children, onLogout }) => {
 
   const menuItems = [
     { name: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
-    { name: 'Inquiries Manager', path: '/inquiries', icon: <MessageSquare size={20} /> },
     { name: 'Global Settings', path: '/settings', icon: <Settings size={20} /> },
+    { name: 'Inquiries Manager', path: '/inquiries', icon: <MessageSquare size={20} /> },
     { name: 'Review Section', path: '/reviews', icon: <FileText size={20} /> },
     { name: 'Gallery Manager', path: '/gallery', icon: <Image size={20} /> },
   ];
