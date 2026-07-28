@@ -5,6 +5,30 @@ import styles from './Home.module.css';
 import { Link } from 'react-router-dom';
 import { SiteContext } from '../context/SiteContext';
 
+// Standalone component defined outside Home to prevent component unmounting/remounting on parent state updates
+const ShimmerCreationItem = ({ src, alt, label }) => {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <div className={styles.gItem}>
+      {!loaded && <div className={styles.shimmerBox} style={{ position: 'absolute', inset: 0, zIndex: 1 }} />}
+      <img
+        src={src}
+        alt={alt}
+        onLoad={() => setLoaded(true)}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          display: 'block',
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 0.4s ease'
+        }}
+      />
+      <span className={styles.gLabel}>{label}</span>
+    </div>
+  );
+};
+
 const Home = () => {
   const { siteData } = useContext(SiteContext);
 
@@ -15,7 +39,9 @@ const Home = () => {
     { title: 'Name Board • Plywood', category: 'Name Board', fill: '#B8892B', circle: true },
     { title: 'Wall Décor • MDF', category: 'Wall Décor', fill: '#2E2116', triangle: true },
     { title: 'Room Partition • Ply', category: 'Room Partition', fill: '#6E4A2E', rect: true },
-    { title: 'Rangoli Panel • MDF', category: 'Rangoli Panel', fill: '#A83D2C', doubleCircle: true }
+    { title: 'Rangoli Panel • MDF', category: 'Rangoli Panel', fill: '#A83D2C', doubleCircle: true },
+    { title: 'Mandir Pillar • Teak Wood', category: 'Mandir Pillar', fill: '#8C5A37', pattern: true },
+    { title: 'Floral Grille • HDHMR', category: 'Floral Grille', fill: '#5C3820', path: true }
   ];
 
   // Fallback data for customer reviews
@@ -102,29 +128,6 @@ const Home = () => {
   const getFullImageUrl = (url) => {
     if (!url) return '';
     return url.startsWith('http') ? url : `http://localhost:5000${url}`;
-  };
-
-  const ShimmerCreationItem = ({ src, alt, label }) => {
-    const [loaded, setLoaded] = useState(false);
-    return (
-      <div className={styles.gItem}>
-        {!loaded && <div className={styles.shimmerBox} style={{ position: 'absolute', inset: 0, zIndex: 1 }} />}
-        <img
-          src={src}
-          alt={alt}
-          onLoad={() => setLoaded(true)}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            display: 'block',
-            opacity: loaded ? 1 : 0,
-            transition: 'opacity 0.4s ease'
-          }}
-        />
-        <span className={styles.gLabel}>{label}</span>
-      </div>
-    );
   };
 
   const testimonials = reviewsList;
@@ -384,50 +387,62 @@ const Home = () => {
           </div>
           <div className={styles.galleryGrid}>
             {loadingCreations ? (
-              Array.from({ length: 6 }).map((_, idx) => (
+              Array.from({ length: 8 }).map((_, idx) => (
                 <div key={idx} className={styles.gItemShimmer}>
                   <div className={styles.shimmerBox} />
                 </div>
               ))
-            ) : creationsList.length > 0 ? (
-              creationsList.slice(0, 6).map((item, idx) => (
-                <ShimmerCreationItem
-                  key={item._id || idx}
-                  src={getFullImageUrl(item.imageUrl)}
-                  alt={item.title || 'CNC Creation'}
-                  label={`${item.title} ${item.category ? `• ${item.category}` : ''}`}
-                />
-              ))
-            ) : (
-              defaultGalleryItems.map((item, idx) => (
-                <div key={idx} className={styles.gItem}>
-                  <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%', display: 'block' }}>
-                    <rect width="200" height="200" fill={item.fill} />
-                    {item.pattern && (
-                      <>
-                        <defs>
-                          <pattern id="galleryPat" width="28" height="28" patternUnits="userSpaceOnUse">
-                            <circle cx="14" cy="14" r="9" fill="none" stroke="#F2EADC" strokeWidth="1.2" opacity="0.6" />
-                          </pattern>
-                        </defs>
-                        <rect width="200" height="200" fill="url(#galleryPat)" />
-                      </>
-                    )}
-                    {item.path && <path d="M0 100 100 0 200 100 100 200Z" fill="#F2EADC" opacity="0.18" />}
-                    {item.circle && <circle cx="100" cy="100" r="55" fill="none" stroke="#2E2116" strokeWidth="2" opacity="0.4" />}
-                    {item.triangle && <path d="M20 180 L100 20 L180 180 Z" fill="none" stroke="#B8892B" strokeWidth="2" />}
-                    {item.rect && <rect x="40" y="40" width="120" height="120" fill="none" stroke="#F2EADC" strokeWidth="1.4" opacity="0.5" />}
-                    {item.doubleCircle && (
-                      <>
-                        <circle cx="60" cy="60" r="14" fill="#F2EADC" opacity="0.3" />
-                        <circle cx="140" cy="140" r="14" fill="#F2EADC" opacity="0.3" />
-                      </>
-                    )}
-                  </svg>
-                  <span className={styles.gLabel}>{item.title}</span>
-                </div>
-              ))
-            )}
+            ) : (() => {
+              // Combine creationsList with defaultGalleryItems up to 8 items so all 8 grid slots are filled with 0 blank spaces
+              const combinedList = [...creationsList];
+              let defaultIdx = 0;
+              while (combinedList.length < 8 && defaultIdx < defaultGalleryItems.length) {
+                combinedList.push(defaultGalleryItems[defaultIdx]);
+                defaultIdx++;
+              }
+              const displayList = combinedList.slice(0, 8);
+
+              return displayList.map((item, idx) => {
+                if (item.imageUrl) {
+                  return (
+                    <ShimmerCreationItem
+                      key={item._id || idx}
+                      src={getFullImageUrl(item.imageUrl)}
+                      alt={item.title || 'CNC Creation'}
+                      label={`${item.title} ${item.category ? `• ${item.category}` : ''}`}
+                    />
+                  );
+                }
+                return (
+                  <div key={idx} className={styles.gItem}>
+                    <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%', display: 'block' }}>
+                      <rect width="200" height="200" fill={item.fill || '#6E4A2E'} />
+                      {item.pattern && (
+                        <>
+                          <defs>
+                            <pattern id={`galleryPat_${idx}`} width="28" height="28" patternUnits="userSpaceOnUse">
+                              <circle cx="14" cy="14" r="9" fill="none" stroke="#F2EADC" strokeWidth="1.2" opacity="0.6" />
+                            </pattern>
+                          </defs>
+                          <rect width="200" height="200" fill={`url(#galleryPat_${idx})`} />
+                        </>
+                      )}
+                      {item.path && <path d="M0 100 100 0 200 100 100 200Z" fill="#F2EADC" opacity="0.18" />}
+                      {item.circle && <circle cx="100" cy="100" r="55" fill="none" stroke="#2E2116" strokeWidth="2" opacity="0.4" />}
+                      {item.triangle && <path d="M20 180 L100 20 L180 180 Z" fill="none" stroke="#B8892B" strokeWidth="2" />}
+                      {item.rect && <rect x="40" y="40" width="120" height="120" fill="none" stroke="#F2EADC" strokeWidth="1.4" opacity="0.5" />}
+                      {item.doubleCircle && (
+                        <>
+                          <circle cx="60" cy="60" r="14" fill="#F2EADC" opacity="0.3" />
+                          <circle cx="140" cy="140" r="14" fill="#F2EADC" opacity="0.3" />
+                        </>
+                      )}
+                    </svg>
+                    <span className={styles.gLabel}>{item.title}</span>
+                  </div>
+                );
+              });
+            })()}
           </div>
           <div style={{ textAlign: 'center', marginTop: '40px' }}>
             <Link to="/gallery" className="btn btn-outline">

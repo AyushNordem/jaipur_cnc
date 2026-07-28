@@ -60,7 +60,7 @@ const Navbar = () => {
         <nav className={styles.navLinks}>
           <NavLink to="/" className={({isActive}) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>Home</NavLink>
           <NavLink to="/services" className={({isActive}) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>Services</NavLink>
-          <NavLink to="/gallery" className={({isActive}) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>Gallery</NavLink>
+          <NavLink to="/gallery" className={({isActive}) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>Creations</NavLink>
           <NavLink to="/about" className={({isActive}) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>About Us</NavLink>
           <NavLink to="/contact" className={({isActive}) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>Contact</NavLink>
         </nav>
@@ -81,7 +81,7 @@ const Navbar = () => {
       <div className={`${styles.mobileNav} ${isMobileMenuOpen ? styles.mobileNavOpen : ''}`}>
         <NavLink to="/" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Home</NavLink>
         <NavLink to="/services" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Services</NavLink>
-        <NavLink to="/gallery" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Gallery</NavLink>
+        <NavLink to="/gallery" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Creations</NavLink>
         <NavLink to="/about" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>About Us</NavLink>
         <NavLink to="/contact" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Contact</NavLink>
       </div>
