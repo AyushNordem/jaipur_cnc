@@ -134,7 +134,11 @@ const Services = () => {
             </div>
             <div className={styles.prepImage}>
               <video 
-                src="/Jaipur_Arts_CNC_promotional_video_202605071220.mp4" 
+                src={
+                  siteData?.servicesVideoUrl 
+                    ? (siteData.servicesVideoUrl.startsWith('http') ? siteData.servicesVideoUrl : `http://localhost:5000${siteData.servicesVideoUrl}`)
+                    : "/Jaipur_Arts_CNC_promotional_video_202605071220.mp4"
+                } 
                 autoPlay 
                 loop 
                 muted 

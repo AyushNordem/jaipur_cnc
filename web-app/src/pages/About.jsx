@@ -28,7 +28,14 @@ const About = () => {
       <section className={styles.sectionPadding}>
         <div className={`${styles.wrap} ${styles.storyGrid}`}>
           <div className={styles.storyVisual}>
-            <img src="/ganeshji.jpg" alt="Ganeshji Wood Carving - Jaipur Art CNC" />
+            <img 
+              src={
+                siteData?.ourStoryImage 
+                  ? (siteData.ourStoryImage.startsWith('http') ? siteData.ourStoryImage : `http://localhost:5000${siteData.ourStoryImage}`)
+                  : "/ganeshji.jpg"
+              } 
+              alt="Ganeshji Wood Carving - Jaipur Art CNC" 
+            />
           </div>
           <div className={styles.storyCopy}>
             <div className={styles.eyebrow}>Our Story</div>
