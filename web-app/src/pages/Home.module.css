@@ -957,4 +957,78 @@
   .centerCard {
     transform: scale(1) !important;
   }
+
+  /* Gallery Grid Mobile Perfection */
+  .galleryGrid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .gItem, .gItemShimmer {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+    height: 280px !important;
+  }
+  .gItem:nth-child(1), .gItemShimmer:nth-child(1) {
+    height: 320px !important;
+  }
+
+  /* Dark Metrics Section Mobile Perfection */
+  .darkMetricsSection {
+    padding: 50px 16px !important;
+    margin-top: -20px !important;
+    margin-bottom: 24px !important;
+  }
+  .darkMetricsGrid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 24px 12px !important;
+  }
+  .darkMetricsTitle {
+    font-size: 0.92rem !important;
+    margin-bottom: 28px !important;
+    letter-spacing: 0.14em !important;
+  }
+  .darkMetricNumber {
+    font-size: 1.85rem !important;
+  }
+  .darkMetricLabel {
+    font-size: 0.72rem !important;
+    letter-spacing: 0.12em !important;
+  }
+
+  /* CTA Banner Mobile */
+  .ctaBanner {
+    padding: 40px 24px !important;
+    text-align: center;
+    justify-content: center;
+  }
+  .ctaBanner h2 {
+    font-size: 1.6rem !important;
+  }
+  .ctaBanner p {
+    font-size: 0.95rem !important;
+  }
+
+  /* Hero Section Mobile */
+  .heroVideoBg {
+    height: 100% !important;
+  }
+  .heroStat {
+    padding: 16px 14px !important;
+  }
+  .heroStatNum {
+    font-size: 1.6rem !important;
+  }
+
+  /* Floating WhatsApp Button Safety */
+  .waFloat {
+    width: 50px !important;
+    height: 50px !important;
+    right: 16px !important;
+    bottom: 16px !important;
+  }
+  .waFloat svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
 }

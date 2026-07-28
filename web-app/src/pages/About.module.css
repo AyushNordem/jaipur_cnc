@@ -398,3 +398,50 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+@media (max-width: 600px) {
+  .wrap {
+    padding: 0 16px !important;
+  }
+
+  .specGrid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .specCard {
+    padding: 18px 16px !important;
+  }
+
+  .specCard b {
+    font-size: 1.25rem !important;
+    word-break: break-word;
+  }
+
+  .quoteBlock {
+    padding: 28px 20px !important;
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 20px !important;
+  }
+
+  .quoteText p {
+    font-size: 1.1rem !important;
+  }
+
+  .tItem p {
+    font-size: 13.5px !important;
+  }
+
+  .waFloat {
+    width: 50px !important;
+    height: 50px !important;
+    right: 16px !important;
+    bottom: 16px !important;
+  }
+
+  .waFloat svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
+}

@@ -95,6 +95,13 @@ const Home = () => {
   const [loadingCreations, setLoadingCreations] = useState(true);
   const [activeReviewIndex, setActiveReviewIndex] = useState(0);
   const [isHoveredReviews, setIsHoveredReviews] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/reviews')
@@ -497,6 +504,8 @@ const Home = () => {
         const displayReviews = [...normalizedList, ...normalizedList.slice(0, 3)];
 
         const currentIndex = activeReviewIndex % normalizedList.length;
+        const cardsInView = windowWidth <= 600 ? 1 : (windowWidth <= 900 ? 2 : 3);
+        const slideStep = 100 / cardsInView;
 
         return (
           <section id="reviews" className={styles.sectionPadding}>
@@ -518,12 +527,12 @@ const Home = () => {
                 <div 
                   className={styles.carouselTrack3}
                   style={{ 
-                    transform: `translateX(-${currentIndex * 33.33333}%)`,
+                    transform: `translateX(-${currentIndex * slideStep}%)`,
                     transition: 'transform 0.5s ease-in-out'
                   }}
                 >
                   {displayReviews.map((item, idx) => {
-                    const isCenter = idx === (currentIndex + 1);
+                    const isCenter = cardsInView === 1 ? (idx === currentIndex) : (idx === currentIndex + 1);
                     return (
                       <div key={idx} className={styles.carouselSlide3}>
                         <div className={`${styles.reviewCard3} ${isCenter ? styles.centerCard : ''}`}>

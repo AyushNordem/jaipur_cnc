@@ -39,6 +39,15 @@
   flex: none;
 }
 
+.logoImg {
+  height: 52px;
+  max-height: 52px;
+  width: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+  display: block;
+}
+
 .logoText {
   font-family: var(--font-heading);
   font-weight: 700;
@@ -178,8 +187,48 @@
   }
 }
 
+.desktopQuoteBtn {
+  display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .desktopQuoteBtn {
+    display: none !important;
+  }
+}
+
 @media (max-width: 640px) {
   .nav {
-    padding: 14px 20px;
+    padding: 10px 16px;
+  }
+  .logo {
+    max-width: calc(100% - 50px);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .logoMark {
+    width: 32px !important;
+    height: 32px !important;
+    flex-shrink: 0;
+  }
+  .logoImg {
+    height: 32px !important;
+    max-height: 32px !important;
+    flex-shrink: 0;
+  }
+  .logoText {
+    font-size: 14.5px;
+    line-height: 1.15;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .logoText span {
+    font-size: 8.5px;
+    letter-spacing: 0.1em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }

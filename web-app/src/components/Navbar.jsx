@@ -33,7 +33,7 @@ const Navbar = () => {
               <img 
                 src={siteData.logoUrl} 
                 alt={siteData?.siteName || "Jaipur Art CNC"} 
-                style={{ height: '58px', width: 'auto', maxHeight: '58px', objectFit: 'contain' }} 
+                className={styles.logoImg} 
               />
               <div className={styles.logoText}>
                 {siteData?.siteName || 'Jaipur Art CNC'}
@@ -67,10 +67,11 @@ const Navbar = () => {
 
         <div className={styles.navRight}>
           <span className={styles.phone}>{siteData?.contactPhone || '+91 90010 21857'}</span>
-          <Link to="/contact" className="btn btn-primary">Get a Quote</Link>
+          <Link to="/contact" className={`btn btn-primary ${styles.desktopQuoteBtn}`}>Get a Quote</Link>
           <button 
             className={styles.mobileMenuToggle}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle mobile navigation menu"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -84,6 +85,15 @@ const Navbar = () => {
         <NavLink to="/gallery" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Creations</NavLink>
         <NavLink to="/about" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>About Us</NavLink>
         <NavLink to="/contact" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Contact</NavLink>
+
+        <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <Link to="/contact" className="btn btn-primary" style={{ textAlign: 'center', width: '100%', padding: '14px' }} onClick={() => setIsMobileMenuOpen(false)}>
+            Get a Free Quote
+          </Link>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--walnut)', textAlign: 'center', marginTop: '4px' }}>
+            {siteData?.contactPhone || '+91 90010 21857'}
+          </span>
+        </div>
       </div>
     </header>
   );

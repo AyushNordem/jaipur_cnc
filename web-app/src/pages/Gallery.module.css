@@ -125,3 +125,44 @@
   text-align: center;
   margin-top: 60px;
 }
+
+/* Mobile Responsive Optimizations for Creations Page */
+@media (max-width: 768px) {
+  .filters {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 10px;
+    padding-bottom: 8px;
+    margin-bottom: 28px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filters button {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 8px 18px;
+    font-size: 0.9rem;
+  }
+
+  .masonryGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .portfolioCard {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .imageWrapper {
+    height: 280px;
+  }
+}
