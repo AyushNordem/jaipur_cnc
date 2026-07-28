@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Phone, Mail, MessageSquare, Trash2, CheckCircle2, Clock, Filter, AlertTriangle, AlertCircle, Calendar, Tag, User, Layers, Box, Check, RefreshCw } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 const WhatsAppIcon = ({ size = 14 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
@@ -23,7 +24,7 @@ const InquiryManager = () => {
   const fetchInquiries = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/inquiries');
+      const res = await axios.get(`${API_BASE_URL}/api/inquiries`);
       const data = res.data.data || res.data || [];
       setInquiries(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -39,7 +40,7 @@ const InquiryManager = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      await axios.put(`http://localhost:5000/api/inquiries/${id}`, { status: newStatus });
+      await axios.put(`${API_BASE_URL}/api/inquiries/${id}`, { status: newStatus });
       setInquiries(prev => prev.map(item => item._id === id ? { ...item, status: newStatus } : item));
       setNotification({
         type: 'success',
@@ -59,7 +60,7 @@ const InquiryManager = () => {
     if (!window.confirm(`Are you sure you want to delete inquiry from "${name}"?`)) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/inquiries/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/inquiries/${id}`);
       setInquiries(prev => prev.filter(item => item._id !== id));
       setNotification({
         type: 'success',

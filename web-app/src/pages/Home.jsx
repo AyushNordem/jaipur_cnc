@@ -4,6 +4,7 @@ import { ArrowRight, Users, CheckCircle2, Briefcase, MapPin } from 'lucide-react
 import styles from './Home.module.css';
 import { Link } from 'react-router-dom';
 import { SiteContext } from '../context/SiteContext';
+import { API_BASE_URL, getFullMediaUrl } from '../config';
 
 // Standalone component defined outside Home to prevent component unmounting/remounting on parent state updates
 const ShimmerCreationItem = ({ src, alt, label }) => {
@@ -104,14 +105,14 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/reviews')
+    axios.get(`${API_BASE_URL}/api/reviews`)
       .then(res => {
         const data = res.data.data || res.data || [];
         setReviewsList(Array.isArray(data) ? data : []);
       })
       .catch(err => console.error('Error fetching reviews:', err));
 
-    axios.get('http://localhost:5000/api/gallery')
+    axios.get(`${API_BASE_URL}/api/gallery`)
       .then(res => {
         const data = res.data.data || res.data || [];
         setCreationsList(Array.isArray(data) ? data : []);
@@ -132,10 +133,7 @@ const Home = () => {
     return () => clearInterval(timer);
   }, [reviewsList, isHoveredReviews]);
 
-  const getFullImageUrl = (url) => {
-    if (!url) return '';
-    return url.startsWith('http') ? url : `http://localhost:5000${url}`;
-  };
+  const getFullImageUrl = (url) => getFullMediaUrl(url);
 
   const testimonials = reviewsList;
 

@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { SiteContext } from '../context/SiteContext';
+import { getFullMediaUrl } from '../config';
 import styles from './PageHeader.module.css';
 
 const PageHeader = ({ title, breadcrumb, pageKey, bgImage }) => {
@@ -26,7 +27,7 @@ const PageHeader = ({ title, breadcrumb, pageKey, bgImage }) => {
     }
 
     if (dynamicImage) {
-      return dynamicImage.startsWith('http') ? dynamicImage : `http://localhost:5000${dynamicImage}`;
+      return getFullMediaUrl(dynamicImage);
     }
 
     // 3. Fallback to default header background image

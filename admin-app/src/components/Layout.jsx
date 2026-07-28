@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Settings, Image, FileText, MessageSquare, LogOut, Menu } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 const Layout = ({ children, onLogout }) => {
   const location = useLocation();
@@ -9,7 +10,7 @@ const Layout = ({ children, onLogout }) => {
   const [siteName, setSiteName] = useState('Jaipur Art CNC');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/settings')
+    axios.get(`${API_BASE_URL}/api/settings`)
       .then(res => {
         const data = res.data?.data || res.data?.settings || res.data || {};
         if (data.siteName) {

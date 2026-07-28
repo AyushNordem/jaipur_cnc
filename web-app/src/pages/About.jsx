@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { SiteContext } from '../context/SiteContext';
+import { getFullMediaUrl } from '../config';
 import styles from './About.module.css';
 
 const About = () => {
@@ -31,7 +32,7 @@ const About = () => {
             <img 
               src={
                 siteData?.ourStoryImage 
-                  ? (siteData.ourStoryImage.startsWith('http') ? siteData.ourStoryImage : `http://localhost:5000${siteData.ourStoryImage}`)
+                  ? getFullMediaUrl(siteData.ourStoryImage)
                   : "/ganeshji.jpg"
               } 
               alt="Ganeshji Wood Carving - Jaipur Art CNC" 

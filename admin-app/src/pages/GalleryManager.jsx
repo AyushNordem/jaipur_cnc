@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Upload, Trash2, Edit2, Plus, Image as ImageIcon, Tag, Grid, AlertCircle, AlertTriangle, CheckCircle2, X, Filter } from 'lucide-react';
+import { API_BASE_URL, getFullMediaUrl } from '../config';
 
 const CATEGORIES = [
   'General',
@@ -38,7 +39,7 @@ const GalleryManager = () => {
   const fetchGalleryItems = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/gallery');
+      const res = await axios.get(`${API_BASE_URL}/api/gallery`);
       const data = res.data.data || res.data || [];
       setItems(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -74,7 +75,7 @@ const GalleryManager = () => {
     uploadForm.append('image', file);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/upload', uploadForm, {
+      const res = await axios.post(`${API_BASE_URL}/api/upload`, uploadForm, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       const url = res.data.data?.url || res.data.url;
@@ -133,7 +134,7 @@ const GalleryManager = () => {
     try {
       if (editingId) {
         // Update item
-        await axios.put(`http://localhost:5000/api/gallery/${editingId}`, formData);
+        await axios.put(`${API_BASE_URL}/api/gallery/${editingId}`, formData);
         setNotification({
           type: 'success',
           title: 'Creation Updated',
@@ -141,7 +142,7 @@ const GalleryManager = () => {
         });
       } else {
         // Create new item
-        await axios.post('http://localhost:5000/api/gallery', formData);
+        await axios.post(`${API_BASE_URL}/api/gallery`, formData);
         setNotification({
           type: 'success',
           title: 'Creation Added',
@@ -177,7 +178,7 @@ const GalleryManager = () => {
     if (!window.confirm(`Are you sure you want to delete "${title}" from gallery?`)) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/gallery/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/gallery/${id}`);
       setNotification({
         type: 'success',
         title: 'Creation Deleted',

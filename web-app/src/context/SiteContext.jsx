@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 export const SiteContext = createContext();
 
@@ -9,7 +10,7 @@ export const SiteProvider = ({ children }) => {
 
   useEffect(() => {
     // Fetch dynamic global site settings from backend API
-    axios.get('http://localhost:5000/api/settings')
+    axios.get(`${API_BASE_URL}/api/settings`)
       .then(res => {
         const settingsData = res.data?.data || res.data?.settings || res.data || {};
         setSiteData(settingsData);
@@ -21,7 +22,7 @@ export const SiteProvider = ({ children }) => {
       });
 
     // Track real-time daily visitor hit
-    axios.post('http://localhost:5000/api/analytics/track')
+    axios.post(`${API_BASE_URL}/api/analytics/track`)
       .catch(() => {});
   }, []);
 

@@ -4,6 +4,7 @@ import { Phone, Mail, ArrowRight, ChevronDown, MapPin, CheckCircle2 } from 'luci
 import { FaWhatsapp } from 'react-icons/fa';
 import PageHeader from '../components/PageHeader';
 import { SiteContext } from '../context/SiteContext';
+import { API_BASE_URL } from '../config';
 import styles from './Contact.module.css';
 
 const Contact = () => {
@@ -59,7 +60,7 @@ const Contact = () => {
 
     setSubmitting(true);
     try {
-      await axios.post('http://localhost:5000/api/inquiries', formData);
+      await axios.post(`${API_BASE_URL}/api/inquiries`, formData);
       setSubmitted(true);
       setFormData({
         fullName: '',

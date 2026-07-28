@@ -3,6 +3,7 @@ import axios from 'axios';
 import PageHeader from '../components/PageHeader';
 import { ArrowRight, Image as ImageIcon, ZoomIn } from 'lucide-react';
 import styles from './Gallery.module.css';
+import { API_BASE_URL, getFullMediaUrl } from '../config';
 
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState('All');
@@ -10,7 +11,7 @@ const Gallery = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/gallery')
+    axios.get(`${API_BASE_URL}/api/gallery`)
       .then(res => {
         const data = res.data.data || res.data || [];
         setCreations(Array.isArray(data) ? data : []);
@@ -30,10 +31,7 @@ const Gallery = () => {
     ? creations 
     : creations.filter(item => item.category === activeCategory);
 
-  const getFullImageUrl = (url) => {
-    if (!url) return '';
-    return url.startsWith('http') ? url : `http://localhost:5000${url}`;
-  };
+  const getFullImageUrl = (url) => getFullMediaUrl(url);
 
   return (
     <div className="page-container" style={{ minHeight: '100vh', backgroundColor: 'var(--paper)', paddingBottom: '80px' }}>

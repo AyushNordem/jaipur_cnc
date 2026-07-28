@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Trash2, Edit2, Plus, Star, MessageSquare, TrendingUp, Calendar, User, MapPin, UploadCloud, AlertCircle, AlertTriangle, CheckCircle2, X } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 const ReviewManager = () => {
   const [reviews, setReviews] = useState([]);
@@ -29,7 +30,7 @@ const ReviewManager = () => {
   const fetchReviews = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/reviews');
+      const res = await axios.get(`${API_BASE_URL}/api/reviews`);
       const data = res.data.data || res.data || [];
       setReviews(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -65,7 +66,7 @@ const ReviewManager = () => {
     uploadForm.append('image', file);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/upload', uploadForm, {
+      const res = await axios.post(`${API_BASE_URL}/api/upload`, uploadForm, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       const url = res.data.data?.url || res.data.url;
@@ -114,7 +115,7 @@ const ReviewManager = () => {
     try {
       if (editingId) {
         // Update API call
-        const res = await axios.put(`http://localhost:5000/api/reviews/${editingId}`, formData);
+        const res = await axios.put(`${API_BASE_URL}/api/reviews/${editingId}`, formData);
         setNotification({
           type: 'success',
           title: 'Review Updated',
@@ -122,7 +123,7 @@ const ReviewManager = () => {
         });
       } else {
         // Add API call
-        const res = await axios.post('http://localhost:5000/api/reviews', formData);
+        const res = await axios.post(`${API_BASE_URL}/api/reviews`, formData);
         setNotification({
           type: 'success',
           title: 'Review Added',
@@ -161,7 +162,7 @@ const ReviewManager = () => {
     if (!window.confirm(`Are you sure you want to delete the review by "${name}"?`)) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/reviews/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/reviews/${id}`);
       setNotification({
         type: 'success',
         title: 'Review Deleted',

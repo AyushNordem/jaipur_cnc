@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Building2, Share2, Image as ImageIcon, Save, UploadCloud, BarChart2, Video, AlertTriangle, CheckCircle2, AlertCircle } from 'lucide-react';
+import { API_BASE_URL, getFullMediaUrl } from '../config';
 
 const Settings = () => {
   const [content, setContent] = useState(null);
@@ -10,7 +11,7 @@ const Settings = () => {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/settings')
+    axios.get(`${API_BASE_URL}/api/settings`)
       .then(res => {
         const data = res.data.settings || res.data.data || res.data || {};
         setContent(data);
@@ -42,7 +43,7 @@ const Settings = () => {
     formData.append('image', file);
 
     try {
-      const uploadRes = await axios.post('http://localhost:5000/api/upload', formData, {
+      const uploadRes = await axios.post(`${API_BASE_URL}/api/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       const uploadedUrl = uploadRes.data.data?.url || uploadRes.data.url;
@@ -56,19 +57,16 @@ const Settings = () => {
         });
       }
 
-      const isCloudinary = uploadedUrl && uploadedUrl.startsWith('http');
       setNotification({
         type: 'success',
-        title: isCloudinary ? 'Cloudinary Uploaded' : 'Media Uploaded',
-        message: isCloudinary 
-          ? 'File successfully uploaded to Cloudinary!' 
-          : 'File saved locally to server uploads!'
+        title: 'Media Uploaded',
+        message: 'File successfully uploaded to Cloudinary CDN!'
       });
     } catch (err) {
       setNotification({
         type: 'error',
-        title: 'Upload Error',
-        message: err.response?.data?.error || err.response?.data?.message || err.message || 'Failed to upload image or video file. Please try again.'
+        title: 'Upload Failed',
+        message: 'Failed to upload media file. Please try again.'
       });
     }
     setUploadingImage(null);
@@ -77,27 +75,34 @@ const Settings = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     
-    // Validate Business Details & Business Metrics required fields
-    const requiredFields = [
-      { name: 'logoUrl', label: 'Website Logo' },
-      { name: 'siteName', label: 'Site/Business Name' },
-      { name: 'contactPhone', label: 'Contact Number' },
-      { name: 'contactEmail', label: 'Contact Email' },
-      { name: 'whatsappUrl', label: 'WhatsApp Number' },
-      { name: 'address', label: 'Physical Address' },
-      { name: 'locationUrl', label: 'Location URL' },
-      { name: 'happyCustomersCount', label: 'Happy Customers Count' },
-      { name: 'completedProjectsCount', label: 'Completed Projects Count' },
-      { name: 'yearsExperienceCount', label: 'Years Experience' },
-      { name: 'totalBranchesCount', label: 'Total Branches Count' },
-    ];
-
+    // Field-level validation
     const newErrors = {};
-    requiredFields.forEach(field => {
-      if (!content[field.name] || !String(content[field.name]).trim()) {
-        newErrors[field.name] = `${field.label} is required`;
-      }
-    });
+    if (!content.siteName || !content.siteName.trim()) {
+      newErrors.siteName = 'Business / Site Name is required';
+    }
+    if (!content.contactPhone || !content.contactPhone.trim()) {
+      newErrors.contactPhone = 'Primary Contact Phone is required';
+    }
+    if (!content.contactEmail || !content.contactEmail.trim()) {
+      newErrors.contactEmail = 'Contact Email is required';
+    }
+    if (!content.address || !content.address.trim()) {
+      newErrors.address = 'Business Workshop Address is required';
+    }
+
+    // Validate metrics
+    if (!content.happyCustomersCount || !content.happyCustomersCount.trim()) {
+      newErrors.happyCustomersCount = 'Happy Customers Count is required';
+    }
+    if (!content.completedProjectsCount || !content.completedProjectsCount.trim()) {
+      newErrors.completedProjectsCount = 'Completed Projects Count is required';
+    }
+    if (!content.yearsExperienceCount || !content.yearsExperienceCount.trim()) {
+      newErrors.yearsExperienceCount = 'Years Experience is required';
+    }
+    if (!content.totalBranchesCount || !content.totalBranchesCount.trim()) {
+      newErrors.totalBranchesCount = 'Total Branches Count is required';
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -113,7 +118,7 @@ const Settings = () => {
     setErrors({});
     setSaving(true);
     try {
-      const res = await axios.put('http://localhost:5000/api/settings', content);
+      const res = await axios.put(`${API_BASE_URL}/api/settings`, content);
       if (res.data && (res.data.settings || res.data.data)) {
         setContent(res.data.settings || res.data.data);
       }
@@ -179,38 +184,35 @@ const Settings = () => {
 
   const renderError = (fieldName) => (
     errors[fieldName] ? (
-      <span style={{ color: 'var(--brick)', fontSize: '0.81rem', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
-        <AlertCircle size={14} /> {errors[fieldName]}
+      <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--brick)', fontSize: '12px', marginTop: '6px', fontWeight: '500' }}>
+        <AlertCircle size={13} /> {errors[fieldName]}
       </span>
     ) : null
   );
 
-  const MediaUploader = ({ label, fieldName, required }) => {
-    const rawUrl = content ? content[fieldName] : '';
-    const mediaUrl = typeof rawUrl === 'string' ? rawUrl : '';
-    const isVideo = Boolean(mediaUrl && (mediaUrl.endsWith('.mp4') || mediaUrl.endsWith('.webm') || mediaUrl.includes('video')));
-    const hasError = Boolean(errors[fieldName]);
+  const MediaUploader = ({ label, fieldName, required = false }) => {
+    const mediaUrl = content[fieldName] || '';
+    const isVideo = mediaUrl.endsWith('.mp4') || mediaUrl.endsWith('.webm') || fieldName.toLowerCase().includes('video');
+    const isUploading = uploadingImage === fieldName;
+    const hasError = !!errors[fieldName];
 
     return (
-      <div id={`uploader-${fieldName}`}>
-        <div style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'space-between', 
-          padding: '16px', 
-          background: hasError ? '#FFF9F8' : 'var(--paper)', 
-          border: hasError ? '2px solid var(--brick)' : '1px solid var(--line)', 
-          borderRadius: '6px',
-          boxShadow: hasError ? '0 0 0 3px rgba(168, 61, 44, 0.15)' : 'none',
-          transition: 'border-color 0.2s, box-shadow 0.2s' 
-        }}>
+      <div id={`uploader-${fieldName}`} style={{ 
+        padding: '16px', 
+        background: hasError ? '#FFF9F8' : 'var(--paper)', 
+        border: hasError ? '2px solid var(--brick)' : '1px solid var(--line)', 
+        borderRadius: '6px',
+        boxShadow: hasError ? '0 0 0 3px rgba(168, 61, 44, 0.15)' : 'none',
+        transition: 'border-color 0.2s, box-shadow 0.2s' 
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <div style={{ width: '70px', height: '70px', borderRadius: '6px', background: 'var(--cream)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid var(--line)', flexShrink: 0 }}>
               {mediaUrl ? (
                 isVideo ? (
-                  <video src={mediaUrl.startsWith('/') || mediaUrl.startsWith('http') ? mediaUrl : `http://localhost:5000${mediaUrl}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted />
+                  <video src={getFullMediaUrl(mediaUrl)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted />
                 ) : (
-                  <img src={mediaUrl.startsWith('/') || mediaUrl.startsWith('http') ? mediaUrl : `http://localhost:5000${mediaUrl}`} alt={label} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={getFullMediaUrl(mediaUrl)} alt={label} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 )
               ) : (
                 <ImageIcon size={24} color={hasError ? 'var(--brick)' : 'var(--walnut)'} />
@@ -225,7 +227,7 @@ const Settings = () => {
                   <span>
                     {isVideo ? 'Video active' : 'Image uploaded'} &bull;{' '}
                     <a href={mediaUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--brass)', textDecoration: 'underline', fontWeight: '600' }}>
-                      View Full Cloudinary URL
+                      View Media URL
                     </a>
                   </span>
                 ) : 'No media selected'}

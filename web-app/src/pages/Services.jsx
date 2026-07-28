@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { SiteContext } from '../context/SiteContext';
+import { getFullMediaUrl } from '../config';
 import styles from './Services.module.css';
 
 const Services = () => {
@@ -136,7 +137,7 @@ const Services = () => {
               <video 
                 src={
                   siteData?.servicesVideoUrl 
-                    ? (siteData.servicesVideoUrl.startsWith('http') ? siteData.servicesVideoUrl : `http://localhost:5000${siteData.servicesVideoUrl}`)
+                    ? getFullMediaUrl(siteData.servicesVideoUrl)
                     : "/Jaipur_Arts_CNC_promotional_video_202605071220.mp4"
                 } 
                 autoPlay 

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { Users, CheckCircle, Box, MapPin, Image as ImageIcon, MessageSquare, Briefcase, FileText, TrendingUp } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 const Dashboard = () => {
   const [counts, setCounts] = useState({
@@ -29,11 +30,11 @@ const Dashboard = () => {
 
   useEffect(() => {
     Promise.all([
-      axios.get('http://localhost:5000/api/inquiries').catch(() => ({ data: [] })),
-      axios.get('http://localhost:5000/api/reviews').catch(() => ({ data: [] })),
-      axios.get('http://localhost:5000/api/gallery').catch(() => ({ data: [] })),
-      axios.get('http://localhost:5000/api/settings').catch(() => ({ data: {} })),
-      axios.get('http://localhost:5000/api/analytics/weekly').catch(() => ({ data: [] }))
+      axios.get(`${API_BASE_URL}/api/inquiries`).catch(() => ({ data: [] })),
+      axios.get(`${API_BASE_URL}/api/reviews`).catch(() => ({ data: [] })),
+      axios.get(`${API_BASE_URL}/api/gallery`).catch(() => ({ data: [] })),
+      axios.get(`${API_BASE_URL}/api/settings`).catch(() => ({ data: {} })),
+      axios.get(`${API_BASE_URL}/api/analytics/weekly`).catch(() => ({ data: [] }))
     ]).then(([inquiriesRes, reviewsRes, galleryRes, settingsRes, analyticsRes]) => {
       const inquiriesData = inquiriesRes.data.data || inquiriesRes.data || [];
       const reviewsData = reviewsRes.data.data || reviewsRes.data || [];
