@@ -17,17 +17,22 @@ const Home = () => {
     { title: 'Rangoli Panel • MDF', category: 'Rangoli Panel', fill: '#A83D2C', doubleCircle: true }
   ];
 
+  const [reviewsList, setReviewsList] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/reviews')
+      .then(res => {
+        const data = res.data.data || res.data || [];
+        setReviewsList(Array.isArray(data) ? data : []);
+      })
+      .catch(err => console.error('Error fetching reviews:', err));
+  }, []);
+
   const galleryImages = siteData?.galleryImages && siteData.galleryImages.length > 0
     ? siteData.galleryImages.slice(0, 6)
     : [];
 
-  const testimonials = siteData?.testimonials && siteData.testimonials.length > 0
-    ? siteData.testimonials
-    : [
-        { clientName: 'Ritu Sharma', clientLocation: 'Jaipur', quote: 'Ordered a jali panel for our living room — the detail on the MDF cut was so clean. Exactly what we asked for.' },
-        { clientName: 'Vikram Singh', clientLocation: 'Jodhpur', quote: 'Got a 3D relief piece made from a photo we sent. The finishing and depth of the carving was beyond what we expected.' },
-        { clientName: 'Ankit Verma', clientLocation: 'Delhi', quote: 'Ordered plywood signage in bulk for our showroom. Delivery on time and every piece cut to the same accuracy.' }
-      ];
+  const testimonials = reviewsList;
 
   const whatsappUrl = siteData?.whatsappUrl || 'https://wa.me/919001021857';
 
@@ -355,33 +360,41 @@ const Home = () => {
       </section>
 
       {/* ================= REVIEWS ================= */}
-      <section id="reviews" className={styles.sectionPadding}>
-        <div className={styles.wrap}>
-          <div className={styles.sectionHead}>
-            <div>
-              <div className={styles.eyebrow}>Customer Reviews</div>
-              <h2>What people say</h2>
+      {testimonials.length > 0 && (
+        <section id="reviews" className={styles.sectionPadding}>
+          <div className={styles.wrap}>
+            <div className={styles.sectionHead}>
+              <div>
+                <div className={styles.eyebrow}>Customer Reviews</div>
+                <h2>What people say</h2>
+              </div>
             </div>
-          </div>
-          <div className={styles.reviewsGrid}>
-            {testimonials.slice(0, 3).map((item, idx) => (
-              <div key={idx} className={styles.reviewCard}>
-                <div className={styles.stars}>★★★★★</div>
-                <p>"{item.quote || item.text}"</p>
-                <div className={styles.reviewer}>
-                  <div className={styles.rAvatar}>
-                    {(item.clientName || 'C').charAt(0)}
+            <div className={styles.reviewsGrid}>
+              {testimonials.slice(0, 3).map((item, idx) => (
+                <div key={idx} className={styles.reviewCard}>
+                  <div className={styles.stars}>
+                    {'★'.repeat(item.rating || 5)}
                   </div>
-                  <div>
-                    <div className={styles.rName}>{item.clientName}</div>
-                    <div className={styles.rLoc}>{item.clientLocation || 'India'}</div>
+                  <p>"{item.quote || item.text}"</p>
+                  <div className={styles.reviewer}>
+                    <div className={styles.rAvatar} style={{ overflow: 'hidden' }}>
+                      {item.clientAvatar ? (
+                        <img src={item.clientAvatar} alt={item.clientName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        (item.clientName || 'C').charAt(0)
+                      )}
+                    </div>
+                    <div>
+                      <div className={styles.rName}>{item.clientName}</div>
+                      {item.clientLocation && <div className={styles.rLoc}>{item.clientLocation}</div>}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ================= CTA BANNER ================= */}
       <section style={{ paddingTop: 0, paddingBottom: '96px' }}>
