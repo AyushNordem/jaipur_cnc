@@ -20,6 +20,7 @@ const Home = () => {
 
   const [reviewsList, setReviewsList] = useState([]);
   const [creationsList, setCreationsList] = useState([]);
+  const [loadingCreations, setLoadingCreations] = useState(true);
   const [activeReviewIndex, setActiveReviewIndex] = useState(0);
   const [isHoveredReviews, setIsHoveredReviews] = useState(false);
 
@@ -36,7 +37,8 @@ const Home = () => {
         const data = res.data.data || res.data || [];
         setCreationsList(Array.isArray(data) ? data : []);
       })
-      .catch(err => console.error('Error fetching creation gallery:', err));
+      .catch(err => console.error('Error fetching creation gallery:', err))
+      .finally(() => setLoadingCreations(false));
   }, []);
 
   // Auto scroll effect for reviews carousel
@@ -53,6 +55,29 @@ const Home = () => {
   const getFullImageUrl = (url) => {
     if (!url) return '';
     return url.startsWith('http') ? url : `http://localhost:5000${url}`;
+  };
+
+  const ShimmerCreationItem = ({ src, alt, label }) => {
+    const [loaded, setLoaded] = useState(false);
+    return (
+      <div className={styles.gItem}>
+        {!loaded && <div className={styles.shimmerBox} style={{ position: 'absolute', inset: 0, zIndex: 1 }} />}
+        <img
+          src={src}
+          alt={alt}
+          onLoad={() => setLoaded(true)}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            display: 'block',
+            opacity: loaded ? 1 : 0,
+            transition: 'opacity 0.4s ease'
+          }}
+        />
+        <span className={styles.gLabel}>{label}</span>
+      </div>
+    );
   };
 
   const testimonials = reviewsList;
@@ -311,23 +336,20 @@ const Home = () => {
             <p>A small sample from our portfolio of premium CNC carving and custom cutting.</p>
           </div>
           <div className={styles.galleryGrid}>
-            {creationsList.length > 0 ? (
-              creationsList.slice(0, 6).map((item, idx) => (
-                <div key={item._id || idx} className={styles.gItem}>
-                  <div 
-                    className={styles.gImage} 
-                    style={{ 
-                      backgroundImage: `url(${getFullImageUrl(item.imageUrl)})`, 
-                      backgroundSize: 'cover', 
-                      backgroundPosition: 'center',
-                      width: '100%',
-                      height: '100%'
-                    }}
-                  />
-                  <span className={styles.gLabel}>
-                    {item.title} {item.category ? `• ${item.category}` : ''}
-                  </span>
+            {loadingCreations ? (
+              Array.from({ length: 6 }).map((_, idx) => (
+                <div key={idx} className={styles.gItemShimmer}>
+                  <div className={styles.shimmerBox} />
                 </div>
+              ))
+            ) : creationsList.length > 0 ? (
+              creationsList.slice(0, 6).map((item, idx) => (
+                <ShimmerCreationItem
+                  key={item._id || idx}
+                  src={getFullImageUrl(item.imageUrl)}
+                  alt={item.title || 'CNC Creation'}
+                  label={`${item.title} ${item.category ? `• ${item.category}` : ''}`}
+                />
               ))
             ) : (
               defaultGalleryItems.map((item, idx) => (
