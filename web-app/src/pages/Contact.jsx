@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect, useRef } from 'react';
-import { Phone, Mail, ArrowRight, ChevronDown, MapPin } from 'lucide-react';
+import axios from 'axios';
+import { Phone, Mail, ArrowRight, ChevronDown, MapPin, CheckCircle2 } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import PageHeader from '../components/PageHeader';
 import { SiteContext } from '../context/SiteContext';
@@ -9,6 +10,18 @@ const Contact = () => {
   const { siteData } = useContext(SiteContext);
   const [openFaq, setOpenFaq] = useState(-1);
 
+  const [formData, setFormData] = useState({
+    fullName: '',
+    phone: '',
+    email: '',
+    material: 'MDF (Medium Density Fibreboard)',
+    patternType: '2D Pattern',
+    sizeQuantity: '',
+    message: ''
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
   const contactPhone = siteData?.contactPhone || '+91 90010 21857';
   const contactEmail = siteData?.contactEmail || 'hello@jaipurartcnc.com';
   const address = siteData?.address || 'Workshop No. 12, Vishwakarma Industrial Area, Jaipur, Rajasthan 302013';
@@ -16,20 +29,15 @@ const Contact = () => {
 
   const widgetRef = useRef(null);
 
-  // Inject Trustindex script INSIDE the widget container so it renders in the right place
   useEffect(() => {
     const container = widgetRef.current;
     if (!container) return;
 
-    // Clear any previous content
     container.innerHTML = '';
-
-    // Create the widget div that Trustindex looks for
     const widgetDiv = document.createElement('div');
     widgetDiv.className = 'trustindex-widget';
     container.appendChild(widgetDiv);
 
-    // Inject the Trustindex script AFTER the widget div
     const script = document.createElement('script');
     script.src = 'https://cdn.trustindex.io/loader.js?ce9b02377a8479580466988f31c';
     script.async = true;
@@ -39,6 +47,34 @@ const Contact = () => {
       container.innerHTML = '';
     };
   }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmitInquiry = async (e) => {
+    e.preventDefault();
+    if (!formData.fullName || !formData.phone) return alert('Name and Phone Number are required.');
+
+    setSubmitting(true);
+    try {
+      await axios.post('http://localhost:5000/api/inquiries', formData);
+      setSubmitted(true);
+      setFormData({
+        fullName: '',
+        phone: '',
+        email: '',
+        material: 'MDF (Medium Density Fibreboard)',
+        patternType: '2D Pattern',
+        sizeQuantity: '',
+        message: ''
+      });
+    } catch (err) {
+      alert('Failed to submit quote request. Please try again.');
+    }
+    setSubmitting(false);
+  };
 
   const faqs = [
     {
@@ -135,54 +171,67 @@ const Contact = () => {
             <h2>Request a quote</h2>
             <p>Fill in a few details and attach a design if you have one — we'll get back with pricing and timeline.</p>
 
-            <form onSubmit={(e) => e.preventDefault()}>
-              <div className={styles.formRow}>
-                <div className={styles.field}>
-                  <label>Full Name</label>
-                  <input type="text" placeholder="Your name" required />
+            {submitted ? (
+              <div style={{ textAlign: 'center', padding: '40px 20px', background: 'var(--cream)', borderRadius: '8px', border: '1px solid var(--brass)' }}>
+                <CheckCircle2 size={48} color="var(--brass)" style={{ margin: '0 auto 16px auto', display: 'block' }} />
+                <h3 style={{ margin: '0 0 8px 0', color: 'var(--espresso)', fontFamily: 'var(--font-heading)' }}>Inquiry Received!</h3>
+                <p style={{ margin: '0 0 20px 0', color: 'var(--walnut)' }}>Thank you for reaching out. Our team will review your inquiry and get back to you shortly.</p>
+                <button type="button" onClick={() => setSubmitted(false)} className="btn btn-primary">
+                  Send Another Inquiry
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmitInquiry}>
+                <div className={styles.formRow}>
+                  <div className={styles.field}>
+                    <label>Full Name *</label>
+                    <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Your name" required />
+                  </div>
+                  <div className={styles.field}>
+                    <label>Phone Number *</label>
+                    <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="+91 " required />
+                  </div>
                 </div>
                 <div className={styles.field}>
-                  <label>Phone Number</label>
-                  <input type="tel" placeholder="+91 " required />
+                  <label>Email Address</label>
+                  <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="you@example.com" />
                 </div>
-              </div>
-              <div className={styles.field}>
-                <label>Email</label>
-                <input type="email" placeholder="you@example.com" />
-              </div>
-              <div className={styles.formRow}>
+                <div className={styles.formRow}>
+                  <div className={styles.field}>
+                    <label>Wood Type / Material</label>
+                    <select name="material" value={formData.material} onChange={handleChange}>
+                      <option value="MDF (Medium Density Fibreboard)">MDF (Medium Density Fibreboard)</option>
+                      <option value="HDHMR Board (High Density High Moisture Resistant)">HDHMR Board (High Density High Moisture Resistant)</option>
+                      <option value="Plywood">Plywood</option>
+                      <option value="Solid Wood (Teak, Sheesham, Pine)">Solid Wood (Teak, Sheesham, Pine)</option>
+                      <option value="Acrylic Sheet">Acrylic Sheet</option>
+                      <option value="PVC Foam Board">PVC Foam Board</option>
+                      <option value="Not sure — need advice">Not sure — need advice</option>
+                    </select>
+                  </div>
+                  <div className={styles.field}>
+                    <label>Pattern Type</label>
+                    <select name="patternType" value={formData.patternType} onChange={handleChange}>
+                      <option value="2D Pattern">2D Pattern</option>
+                      <option value="3D Relief">3D Relief</option>
+                      <option value="Custom / Not sure">Custom / Not sure</option>
+                    </select>
+                  </div>
+                </div>
                 <div className={styles.field}>
-                  <label>Wood Type / Material</label>
-                  <select>
-                    <option>MDF (Medium Density Fibreboard)</option>
-                    <option>HDHMR Board (High Density High Moisture Resistant)</option>
-                    <option>Plywood</option>
-                    <option>Solid Wood (Teak, Sheesham, Pine)</option>
-                    <option>Acrylic Sheet</option>
-                    <option>PVC Foam Board</option>
-                    <option>Not sure — need advice</option>
-                  </select>
+                  <label>Size / Quantity (if known)</label>
+                  <input type="text" name="sizeQuantity" value={formData.sizeQuantity} onChange={handleChange} placeholder="e.g. 3ft x 2ft, 1 piece" />
                 </div>
                 <div className={styles.field}>
-                  <label>Pattern Type</label>
-                  <select>
-                    <option>2D Pattern</option>
-                    <option>3D Relief</option>
-                    <option>Custom / Not sure</option>
-                  </select>
+                  <label>Tell us about your design</label>
+                  <textarea name="message" value={formData.message} onChange={handleChange} rows={4} placeholder="Describe what you'd like cut, or mention that you'll share a photo/file over WhatsApp"></textarea>
                 </div>
-              </div>
-              <div className={styles.field}>
-                <label>Size / Quantity (if known)</label>
-                <input type="text" placeholder="e.g. 3ft x 2ft, 1 piece" />
-              </div>
-              <div className={styles.field}>
-                <label>Tell us about your design</label>
-                <textarea placeholder="Describe what you'd like cut, or mention that you'll share a photo/file over WhatsApp"></textarea>
-              </div>
-              <button className="btn btn-primary styles.submitBtn" type="submit" style={{ width: '100%' }}>Send Request</button>
-              <p className={styles.formNote}>Prefer WhatsApp? Tap the green button in the corner and send your design directly.</p>
-            </form>
+                <button className="btn btn-primary" type="submit" disabled={submitting} style={{ width: '100%' }}>
+                  {submitting ? 'Submitting Request...' : 'Send Request'}
+                </button>
+                <p className={styles.formNote}>Prefer WhatsApp? Tap the green button in the corner and send your design directly.</p>
+              </form>
+            )}
           </div>
 
           <div>
@@ -248,7 +297,6 @@ const Contact = () => {
             </div>
             <p>Real reviews from our Google Business Profile, updated automatically.</p>
           </div>
-          {/* Trustindex widget renders here — script injected by useEffect */}
           <div className={styles.trustindexWrapper} ref={widgetRef}></div>
         </div>
       </section>
