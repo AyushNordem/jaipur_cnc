@@ -33,7 +33,7 @@ const Navbar = () => {
               <img 
                 src={siteData.logoUrl} 
                 alt={siteData?.siteName || "Jaipur Art CNC"} 
-                style={{ height: '42px', width: 'auto', maxHeight: '42px', objectFit: 'contain' }} 
+                style={{ height: '58px', width: 'auto', maxHeight: '58px', objectFit: 'contain' }} 
               />
               <div className={styles.logoText}>
                 {siteData?.siteName || 'Jaipur Art CNC'}

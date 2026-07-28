@@ -557,6 +557,101 @@
 }
 
 /* Reviews Testimonials */
+/* 3-Card Carousel */
+.carouselWrapper3 {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: 24px 0 32px;
+}
+
+.carouselTrack3 {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  width: 100%;
+}
+
+.carouselSlide3 {
+  min-width: 33.3333%;
+  flex: 0 0 33.3333%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  transition: all 0.4s ease;
+}
+
+.reviewCard3 {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 30px 24px;
+  border-radius: 8px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(46, 33, 22, 0.04);
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  opacity: 0.75;
+  transform: scale(0.95);
+}
+
+.centerCard {
+  opacity: 1 !important;
+  transform: scale(1.05) !important;
+  border: 2px solid var(--brick) !important;
+  box-shadow: 0 16px 36px rgba(168, 61, 44, 0.18) !important;
+  background: #FFFDF9 !important;
+  z-index: 2;
+}
+
+.reviewQuote3 {
+  font-family: var(--font-body);
+  font-size: 0.96rem;
+  line-height: 1.6;
+  color: var(--espresso);
+  margin-bottom: 20px;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.rWork {
+  font-size: 0.8rem;
+  color: var(--brass);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* Indicators at bottom */
+.indicatorContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.dotIndicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--line);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dotIndicator:hover {
+  background: var(--brass);
+}
+
+.activeDot {
+  background: var(--brick) !important;
+  width: 28px;
+  border-radius: 10px;
+}
+
 .reviewsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -733,5 +828,22 @@
 
   .reviewsGrid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .carouselSlide3 {
+    min-width: 50%;
+    flex: 0 0 50%;
+  }
+}
+
+@media (max-width: 600px) {
+  .carouselSlide3 {
+    min-width: 100%;
+    flex: 0 0 100%;
+  }
+  .centerCard {
+    transform: scale(1) !important;
   }
 }

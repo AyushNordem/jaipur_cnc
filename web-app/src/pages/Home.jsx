@@ -19,6 +19,9 @@ const Home = () => {
   ];
 
   const [reviewsList, setReviewsList] = useState([]);
+  const [creationsList, setCreationsList] = useState([]);
+  const [activeReviewIndex, setActiveReviewIndex] = useState(0);
+  const [isHoveredReviews, setIsHoveredReviews] = useState(false);
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/reviews')
@@ -27,11 +30,30 @@ const Home = () => {
         setReviewsList(Array.isArray(data) ? data : []);
       })
       .catch(err => console.error('Error fetching reviews:', err));
+
+    axios.get('http://localhost:5000/api/gallery')
+      .then(res => {
+        const data = res.data.data || res.data || [];
+        setCreationsList(Array.isArray(data) ? data : []);
+      })
+      .catch(err => console.error('Error fetching creation gallery:', err));
   }, []);
 
-  const galleryImages = siteData?.galleryImages && siteData.galleryImages.length > 0
-    ? siteData.galleryImages.slice(0, 6)
-    : [];
+  // Auto scroll effect for reviews carousel
+  useEffect(() => {
+    if (!reviewsList || reviewsList.length <= 1 || isHoveredReviews) return;
+
+    const timer = setInterval(() => {
+      setActiveReviewIndex(prev => (prev + 1) % reviewsList.length);
+    }, 4500);
+
+    return () => clearInterval(timer);
+  }, [reviewsList, isHoveredReviews]);
+
+  const getFullImageUrl = (url) => {
+    if (!url) return '';
+    return url.startsWith('http') ? url : `http://localhost:5000${url}`;
+  };
 
   const testimonials = reviewsList;
 
@@ -71,10 +93,28 @@ const Home = () => {
                 <Link to="/gallery" className="btn btn-outline" style={{ color: '#F2EADC', borderColor: 'rgba(242, 234, 220, 0.4)' }}>View Gallery</Link>
               </div>
               <div className={styles.heroStatsLight}>
-                <div className={styles.hstatLight}><b>500+</b><span>Projects Cut</span></div>
-                <div className={styles.hstatLight}><b>3</b><span>Wood Types</span></div>
-                <div className={styles.hstatLight}><b>2D / 3D</b><span>Both Handled</span></div>
-                <div className={styles.hstatLight}><b>7+ Yrs</b><span>Experience</span></div>
+                <div className={styles.hstatLight}>
+                  <b>{siteData?.completedProjectsCount || '500+'}</b>
+                  <span>Projects Cut</span>
+                </div>
+                <div className={styles.hstatLight}>
+                  <b>3</b>
+                  <span>Wood Types</span>
+                </div>
+                <div className={styles.hstatLight}>
+                  <b>2D / 3D</b>
+                  <span>Both Handled</span>
+                </div>
+                <div className={styles.hstatLight}>
+                  <b>
+                    {siteData?.yearsExperienceCount 
+                      ? (siteData.yearsExperienceCount.toLowerCase().includes('yr') || siteData.yearsExperienceCount.toLowerCase().includes('year')
+                          ? siteData.yearsExperienceCount 
+                          : `${siteData.yearsExperienceCount} Years`)
+                      : '7+ Years'}
+                  </b>
+                  <span>Experience</span>
+                </div>
               </div>
             </div>
 
@@ -271,20 +311,22 @@ const Home = () => {
             <p>A small sample from our portfolio of premium CNC carving and custom cutting.</p>
           </div>
           <div className={styles.galleryGrid}>
-            {galleryImages.length > 0 ? (
-              galleryImages.map((item, idx) => (
-                <div key={idx} className={styles.gItem}>
+            {creationsList.length > 0 ? (
+              creationsList.slice(0, 6).map((item, idx) => (
+                <div key={item._id || idx} className={styles.gItem}>
                   <div 
                     className={styles.gImage} 
                     style={{ 
-                      backgroundImage: `url(http://localhost:5000${item.url})`, 
+                      backgroundImage: `url(${getFullImageUrl(item.imageUrl)})`, 
                       backgroundSize: 'cover', 
                       backgroundPosition: 'center',
                       width: '100%',
                       height: '100%'
                     }}
                   />
-                  <span className={styles.gLabel}>{item.category || item.desc || 'Custom CNC Wood Work'}</span>
+                  <span className={styles.gLabel}>
+                    {item.title} {item.category ? `• ${item.category}` : ''}
+                  </span>
                 </div>
               ))
             ) : (
@@ -361,41 +403,85 @@ const Home = () => {
       </section>
 
       {/* ================= REVIEWS ================= */}
-      {testimonials.length > 0 && (
-        <section id="reviews" className={styles.sectionPadding}>
-          <div className={styles.wrap}>
-            <div className={styles.sectionHead}>
-              <div>
-                <div className={styles.eyebrow}>Customer Reviews</div>
-                <h2>What people say</h2>
-              </div>
-            </div>
-            <div className={styles.reviewsGrid}>
-              {testimonials.slice(0, 3).map((item, idx) => (
-                <div key={idx} className={styles.reviewCard}>
-                  <div className={styles.stars}>
-                    {'★'.repeat(item.rating || 5)}
-                  </div>
-                  <p>"{item.quote || item.text}"</p>
-                  <div className={styles.reviewer}>
-                    <div className={styles.rAvatar} style={{ overflow: 'hidden' }}>
-                      {item.clientAvatar ? (
-                        <img src={item.clientAvatar} alt={item.clientName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      ) : (
-                        (item.clientName || 'C').charAt(0)
-                      )}
-                    </div>
-                    <div>
-                      <div className={styles.rName}>{item.clientName}</div>
-                      {item.clientLocation && <div className={styles.rLoc}>{item.clientLocation}</div>}
-                    </div>
-                  </div>
+      {testimonials.length > 0 && (() => {
+        const displayReviews = testimonials.length < 3
+          ? [...testimonials, ...testimonials, ...testimonials]
+          : testimonials;
+
+        return (
+          <section id="reviews" className={styles.sectionPadding}>
+            <div className={styles.wrap}>
+              <div className={styles.sectionHead}>
+                <div>
+                  <div className={styles.eyebrow}>Customer Reviews</div>
+                  <h2>What people say</h2>
                 </div>
-              ))}
+                <p>Real feedback from our clients across Rajasthan and India.</p>
+              </div>
+
+              {/* 3-Card Auto-Scrolling Carousel Container */}
+              <div 
+                className={styles.carouselWrapper3}
+                onMouseEnter={() => setIsHoveredReviews(true)}
+                onMouseLeave={() => setIsHoveredReviews(false)}
+              >
+                <div 
+                  className={styles.carouselTrack3}
+                  style={{ transform: `translateX(-${(activeReviewIndex % displayReviews.length) * 33.3333}%)` }}
+                >
+                  {displayReviews.map((item, idx) => {
+                    const isCenter = idx === (activeReviewIndex + 1) % displayReviews.length;
+                    return (
+                      <div key={idx} className={styles.carouselSlide3}>
+                        <div className={`${styles.reviewCard3} ${isCenter ? styles.centerCard : ''}`}>
+                          <div>
+                            <div className={styles.stars}>
+                              {'★'.repeat(item.rating || 5)}
+                            </div>
+                            <p className={styles.reviewQuote3}>"{item.quote || item.text}"</p>
+                          </div>
+
+                          <div className={styles.reviewer}>
+                            <div className={styles.rAvatar} style={{ overflow: 'hidden' }}>
+                              {item.clientAvatar ? (
+                                <img src={item.clientAvatar} alt={item.clientName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              ) : (
+                                (item.clientName || 'C').charAt(0)
+                              )}
+                            </div>
+                            <div>
+                              <div className={styles.rName}>{item.clientName}</div>
+                              {item.clientLocation && <div className={styles.rLoc}>{item.clientLocation}</div>}
+                              {item.workType && <div className={styles.rWork}>{item.workType}</div>}
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Bottom Dot Indicators */}
+                {displayReviews.length > 1 && (
+                  <div className={styles.indicatorContainer}>
+                    {displayReviews.map((_, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setActiveReviewIndex(idx)}
+                        className={`${styles.dotIndicator} ${activeReviewIndex === idx ? styles.activeDot : ''}`}
+                        aria-label={`Go to review ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        );
+      })()}
 
       {/* ================= CTA BANNER ================= */}
       <section style={{ paddingTop: 0, paddingBottom: '96px' }}>
