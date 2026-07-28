@@ -1,91 +1,91 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import PageHeader from '../components/PageHeader';
-import { ArrowRight, Image as ImageIcon, ZoomIn, Play } from 'lucide-react';
+import { ArrowRight, Image as ImageIcon, ZoomIn } from 'lucide-react';
 import styles from './Gallery.module.css';
-import { SiteContext } from '../context/SiteContext';
-
-const galleryItems = [
-  { id: 1, category: 'furniture', title: 'Modern TV Unit', desc: 'Premium MDF Cutting', type: 'image' },
-  { id: 2, category: 'temple', title: 'Traditional Mandir', desc: 'Detailed 3D Carving', type: 'image' },
-  { id: 3, category: 'panels', title: 'Geometric Wall Panel', desc: 'Acrylic Laser Cut', type: 'image' },
-  { id: 4, category: '3d', title: 'Floral Relief Artwork', desc: 'High-density Wood', type: 'video' },
-  { id: 5, category: 'furniture', title: 'Luxury Center Table', desc: 'CNC Base Design', type: 'image' },
-  { id: 6, category: 'panels', title: 'Room Divider', desc: 'WPC Lattice Pattern', type: 'image' },
-  { id: 7, category: 'temple', title: 'Pooja Room Doors', desc: 'Teak Wood Carving', type: 'image' },
-  { id: 8, category: '3d', title: 'Custom Portrait Carving', desc: 'Solid Wood 3D', type: 'image' }
-];
 
 const Gallery = () => {
-  const { siteData } = useContext(SiteContext);
-  const [activeCategory, setActiveCategory] = useState('all');
-  const [dynamicItems, setDynamicItems] = useState([]);
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [creations, setCreations] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (siteData && siteData.galleryImages) {
-      setDynamicItems(siteData.galleryImages);
-    } else {
-      setDynamicItems(galleryItems); // fallback to static
-    }
-  }, [siteData]);
+    axios.get('http://localhost:5000/api/gallery')
+      .then(res => {
+        const data = res.data.data || res.data || [];
+        setCreations(Array.isArray(data) ? data : []);
+      })
+      .catch(err => console.error('Error fetching creation gallery:', err))
+      .finally(() => setLoading(false));
+  }, []);
 
-  const categories = [{ id: 'all', label: 'All Works' }];
-  
-  // Extract unique categories dynamically
-  dynamicItems.forEach(item => {
-    if (item.category && !categories.find(c => c.id === item.category.toLowerCase())) {
-      categories.push({ id: item.category.toLowerCase(), label: item.category });
+  const categories = ['All'];
+  creations.forEach(item => {
+    if (item.category && !categories.includes(item.category)) {
+      categories.push(item.category);
     }
   });
 
-  const filteredItems = activeCategory === 'all' 
-    ? dynamicItems 
-    : dynamicItems.filter(item => item.category?.toLowerCase() === activeCategory);
+  const filteredItems = activeCategory === 'All' 
+    ? creations 
+    : creations.filter(item => item.category === activeCategory);
+
+  const getFullImageUrl = (url) => {
+    if (!url) return '';
+    return url.startsWith('http') ? url : `http://localhost:5000${url}`;
+  };
 
   return (
-    <div className="page-container" style={{ minHeight: '100vh', backgroundColor: 'var(--color-light-gray)', paddingBottom: '80px' }}>
+    <div className="page-container" style={{ minHeight: '100vh', backgroundColor: 'var(--paper)', paddingBottom: '80px' }}>
       <PageHeader title="Creations" breadcrumb="Creations" />
 
       <div className="container" style={{ marginTop: '40px' }}>
+        
+        {/* Category Filters */}
         <div className={styles.filters}>
           {categories.map(cat => (
             <button 
-              key={cat.id}
-              className={`btn ${activeCategory === cat.id ? 'btn-primary' : 'btn-outline'}`}
-              onClick={() => setActiveCategory(cat.id)}
+              key={cat}
+              className={`btn ${activeCategory === cat ? 'btn-primary' : 'btn-outline'}`}
+              onClick={() => setActiveCategory(cat)}
             >
-              {cat.label}
+              {cat}
             </button>
           ))}
         </div>
 
-        <div className={styles.masonryGrid}>
-          {filteredItems.map((item, idx) => (
-            <div key={idx} className={`glass-card ${styles.portfolioCard}`}>
-              <div className={styles.imageWrapper} style={item.url ? { backgroundImage: `url(http://localhost:5000${item.url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
-                {!item.url && (
-                  <div className={styles.placeholder}>
-                    <ImageIcon size={48} className="text-blue" style={{ opacity: 0.3 }} />
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--walnut)' }}>Loading creations gallery...</div>
+        ) : filteredItems.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--walnut)' }}>
+            No creations found in gallery.
+          </div>
+        ) : (
+          <div className={styles.masonryGrid}>
+            {filteredItems.map((item) => (
+              <div key={item._id} className={`glass-card ${styles.portfolioCard}`}>
+                <div 
+                  className={styles.imageWrapper} 
+                  style={{ 
+                    backgroundImage: `url(${getFullImageUrl(item.imageUrl)})`, 
+                    backgroundSize: 'cover', 
+                    backgroundPosition: 'center' 
+                  }}
+                >
+                  <div className={styles.overlay}>
+                    <a href={getFullImageUrl(item.imageUrl)} target="_blank" rel="noopener noreferrer" className={styles.zoomBtn}>
+                      <ZoomIn size={24} />
+                    </a>
                   </div>
-                )}
-                <div className={styles.overlay}>
-                  <button className={styles.zoomBtn}>
-                    {item.type === 'video' ? <Play size={24} /> : <ZoomIn size={24} />}
-                  </button>
+                </div>
+                <div className={styles.cardContent}>
+                  <h3 style={{ color: 'var(--espresso)', fontFamily: 'var(--font-heading)' }}>{item.title}</h3>
+                  <p style={{ color: 'var(--walnut)' }}>{item.category}{item.description ? ` • ${item.description}` : ''}</p>
                 </div>
               </div>
-              <div className={styles.cardContent}>
-                <h3 style={{ color: 'var(--color-black)' }}>{item.title}</h3>
-                <p style={{ color: 'var(--color-medium-gray)' }}>{item.category || item.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className={styles.loadMore}>
-          <button className="btn btn-outline">
-            Load More Projects <ArrowRight size={18} />
-          </button>
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
