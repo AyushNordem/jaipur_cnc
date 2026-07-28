@@ -1,6 +1,7 @@
+import { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 import { ArrowRight } from 'lucide-react';
 import styles from './Home.module.css';
-import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { SiteContext } from '../context/SiteContext';
 
