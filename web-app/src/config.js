@@ -12,6 +12,12 @@ const formatApiUrl = (url) => {
   if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
     trimmed = `https://${trimmed}`;
   }
+  
+  // Force HTTPS if website is loaded over HTTPS (prevents Mobile Chrome Mixed Content Security Block)
+  if (typeof window !== 'undefined' && window.location.protocol === 'https:' && trimmed.startsWith('http://')) {
+    trimmed = trimmed.replace('http://', 'https://');
+  }
+
   return trimmed.replace(/\/+$/, '');
 };
 
@@ -19,6 +25,11 @@ export const API_BASE_URL = formatApiUrl(rawApiUrl);
 
 export const getFullMediaUrl = (url) => {
   if (!url) return '';
-  if (url.startsWith('http')) return url;
+  if (url.startsWith('http')) {
+    if (typeof window !== 'undefined' && window.location.protocol === 'https:' && url.startsWith('http://')) {
+      return url.replace('http://', 'https://');
+    }
+    return url;
+  }
   return `${API_BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
 };
