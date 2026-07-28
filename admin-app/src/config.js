@@ -1,10 +1,12 @@
-// Centralized API Base URL configuration for Railway & local environments
+// Centralized API Base URL configuration for Vercel, Railway & local environments
+const DEFAULT_RAILWAY_BACKEND = 'https://jaipurcnc-production.up.railway.app';
+
 const rawApiUrl = import.meta.env.VITE_API_URL;
 
 const formatApiUrl = (url) => {
   if (!url || !url.trim()) {
     if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-      return window.location.origin;
+      return DEFAULT_RAILWAY_BACKEND;
     }
     return 'http://localhost:5000';
   }
@@ -13,7 +15,6 @@ const formatApiUrl = (url) => {
     trimmed = `https://${trimmed}`;
   }
   
-  // Force HTTPS if website is loaded over HTTPS (prevents Mobile Chrome Mixed Content Security Block)
   if (typeof window !== 'undefined' && window.location.protocol === 'https:' && trimmed.startsWith('http://')) {
     trimmed = trimmed.replace('http://', 'https://');
   }
