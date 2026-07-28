@@ -1,10 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Settings, Image, FileText, MessageSquare, LogOut, Menu } from 'lucide-react';
+import axios from 'axios';
 
 const Layout = ({ children, onLogout }) => {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [siteName, setSiteName] = useState('Jaipur Art CNC');
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/settings')
+      .then(res => {
+        const data = res.data?.data || res.data?.settings || res.data || {};
+        if (data.siteName) {
+          setSiteName(data.siteName);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const menuItems = [
     { name: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
@@ -32,11 +45,21 @@ const Layout = ({ children, onLogout }) => {
         boxShadow: '4px 0 20px rgba(46,33,22,0.15)',
         zIndex: 10
       }}>
-        <div style={{ padding: '24px', borderBottom: '1px solid rgba(242,234,220,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div>
+        <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(242,234,220,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ width: '100%' }}>
             <span style={{ display: 'block', fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--brass)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>ADMIN PORTAL</span>
-            <h2 style={{ margin: 0, fontSize: '1.25rem', fontFamily: 'var(--font-heading)', color: 'var(--paper)', opacity: isSidebarOpen ? 1 : 0, transition: 'opacity 0.2s' }}>
-              Jaipur Art CNC
+            <h2 style={{ 
+              margin: '4px 0 0 0', 
+              fontSize: '1.15rem', 
+              fontFamily: 'var(--font-heading)', 
+              color: 'var(--paper)', 
+              whiteSpace: 'normal',
+              wordBreak: 'break-word',
+              lineHeight: '1.25',
+              opacity: isSidebarOpen ? 1 : 0, 
+              transition: 'opacity 0.2s' 
+            }}>
+              {siteName}
             </h2>
           </div>
         </div>

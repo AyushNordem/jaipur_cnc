@@ -15,6 +15,7 @@ const uploadRoutes = require('./routes/uploadRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const galleryRoutes = require('./routes/galleryRoutes');
 const inquiryRoutes = require('./routes/inquiryRoutes');
+const analyticsRoutes = require('./routes/analyticsRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -42,6 +43,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/inquiries', inquiryRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // Legacy `/api/content` routes for backward compatibility
 app.get('/api/content', async (req, res) => {

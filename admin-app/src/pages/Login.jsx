@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Login = ({ onLogin }) => {
@@ -6,6 +6,18 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [siteName, setSiteName] = useState('Jaipur Art CNC');
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/settings')
+      .then(res => {
+        const data = res.data?.data || res.data?.settings || res.data || {};
+        if (data.siteName) {
+          setSiteName(data.siteName);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -71,7 +83,7 @@ const Login = ({ onLogin }) => {
             display: 'block',
             marginBottom: '8px'
           }}>JAIPUR, RAJASTHAN</span>
-          <h1 style={{ margin: 0, color: 'var(--espresso)', fontSize: '2rem', fontFamily: 'var(--font-heading)' }}>Jaipur Art CNC</h1>
+          <h1 style={{ margin: 0, color: 'var(--espresso)', fontSize: '2rem', fontFamily: 'var(--font-heading)' }}>{siteName}</h1>
           <p style={{ margin: '8px 0 0 0', color: 'var(--walnut)', fontSize: '14px' }}>Admin Management Portal</p>
         </div>
 

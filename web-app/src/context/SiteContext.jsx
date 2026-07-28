@@ -19,6 +19,10 @@ export const SiteProvider = ({ children }) => {
         console.error("Error fetching site settings:", err);
         setLoading(false);
       });
+
+    // Track real-time daily visitor hit
+    axios.post('http://localhost:5000/api/analytics/track')
+      .catch(() => {});
   }, []);
 
   return (

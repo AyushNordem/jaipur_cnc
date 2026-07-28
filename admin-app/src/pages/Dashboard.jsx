@@ -3,27 +3,20 @@ import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { Users, CheckCircle, Box, MapPin, Image as ImageIcon, MessageSquare, Briefcase, FileText, TrendingUp } from 'lucide-react';
 
-const trafficData = [
-  { name: 'Mon', visitors: 120 },
-  { name: 'Tue', visitors: 150 },
-  { name: 'Wed', visitors: 180 },
-  { name: 'Thu', visitors: 220 },
-  { name: 'Fri', visitors: 300 },
-  { name: 'Sat', visitors: 280 },
-  { name: 'Sun', visitors: 350 },
-];
-
 const Dashboard = () => {
   const [counts, setCounts] = useState({
+    inquiries: 0,
+    reviews: 0,
     gallery: 0,
-    services: 0,
-    reviews: 0
+    services: 3
   });
 
+  const [traffic, setTraffic] = useState([]);
+
   const [metrics, setMetrics] = useState({
-    happyCustomersCount: '5,000+',
-    completedProjectsCount: '500+',
-    yearsExperienceCount: '7+ Yrs',
+    happyCustomersCount: '50+',
+    completedProjectsCount: '15+',
+    yearsExperienceCount: '5',
     totalBranchesCount: '3'
   });
 
@@ -35,22 +28,37 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/content')
-      .then(res => {
-        const data = res.data;
-        setCounts({
-          gallery: data?.galleryImages?.length || 0,
-          services: data?.services?.length || 0,
-          reviews: data?.testimonials?.length || 0
-        });
-        setMetrics({
-          happyCustomersCount: data?.happyCustomersCount || '5,000+',
-          completedProjectsCount: data?.completedProjectsCount || '500+',
-          yearsExperienceCount: data?.yearsExperienceCount || '7+ Yrs',
-          totalBranchesCount: data?.totalBranchesCount || '3'
-        });
-      })
-      .catch(err => console.error("Error fetching live data for dashboard", err));
+    Promise.all([
+      axios.get('http://localhost:5000/api/inquiries').catch(() => ({ data: [] })),
+      axios.get('http://localhost:5000/api/reviews').catch(() => ({ data: [] })),
+      axios.get('http://localhost:5000/api/gallery').catch(() => ({ data: [] })),
+      axios.get('http://localhost:5000/api/settings').catch(() => ({ data: {} })),
+      axios.get('http://localhost:5000/api/analytics/weekly').catch(() => ({ data: [] }))
+    ]).then(([inquiriesRes, reviewsRes, galleryRes, settingsRes, analyticsRes]) => {
+      const inquiriesData = inquiriesRes.data.data || inquiriesRes.data || [];
+      const reviewsData = reviewsRes.data.data || reviewsRes.data || [];
+      const galleryData = galleryRes.data.data || galleryRes.data || [];
+      const settingsData = settingsRes.data.settings || settingsRes.data.data || settingsRes.data || {};
+      const analyticsData = analyticsRes.data.data || analyticsRes.data || [];
+
+      setCounts({
+        inquiries: Array.isArray(inquiriesData) ? inquiriesData.length : 0,
+        reviews: Array.isArray(reviewsData) ? reviewsData.length : 0,
+        gallery: Array.isArray(galleryData) ? galleryData.length : 0,
+        services: 3
+      });
+
+      if (Array.isArray(analyticsData) && analyticsData.length > 0) {
+        setTraffic(analyticsData);
+      }
+
+      setMetrics({
+        happyCustomersCount: settingsData.happyCustomersCount || '50+',
+        completedProjectsCount: settingsData.completedProjectsCount || '15+',
+        yearsExperienceCount: settingsData.yearsExperienceCount || '5',
+        totalBranchesCount: settingsData.totalBranchesCount || '3'
+      });
+    }).catch(err => console.error("Error fetching live data for dashboard", err));
   }, []);
 
   const hour = currentTime.getHours();
@@ -66,7 +74,7 @@ const Dashboard = () => {
         {/* Left Data Boxes */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
           {[
-            { title: 'Total Inquiries', count: '1,248', icon: <MessageSquare size={24} />, color: 'var(--brick)', bg: 'rgba(168, 61, 44, 0.12)' },
+            { title: 'Total Inquiries', count: counts.inquiries, icon: <MessageSquare size={24} />, color: 'var(--brick)', bg: 'rgba(168, 61, 44, 0.12)' },
             { title: 'Customer Reviews', count: counts.reviews, icon: <FileText size={24} />, color: 'var(--brass)', bg: 'rgba(184, 137, 43, 0.12)' },
             { title: 'Gallery Images', count: counts.gallery, icon: <ImageIcon size={24} />, color: 'var(--walnut)', bg: 'rgba(110, 74, 46, 0.12)' },
             { title: 'Active Services', count: counts.services, icon: <Briefcase size={24} />, color: 'var(--espresso)', bg: 'rgba(46, 33, 22, 0.12)' },
@@ -149,7 +157,7 @@ const Dashboard = () => {
         </div>
         <div style={{ height: '300px', width: '100%' }}>
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={trafficData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+            <AreaChart data={traffic} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorVisitors" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#A83D2C" stopOpacity={0.3}/>
