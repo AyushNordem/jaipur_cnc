@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Building2, Share2, Image as ImageIcon, Save, UploadCloud, BarChart2, Video } from 'lucide-react';
+import { Building2, Share2, Image as ImageIcon, Save, UploadCloud, BarChart2, Video, AlertTriangle, CheckCircle2, AlertCircle } from 'lucide-react';
 
 const Settings = () => {
   const [content, setContent] = useState(null);
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(null);
+  const [notification, setNotification] = useState(null);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/settings')
       .then(res => {
-        const data = res.data.settings || res.data || {};
+        const data = res.data.settings || res.data.data || res.data || {};
         setContent(data);
       })
       .catch(err => {
@@ -20,7 +22,15 @@ const Settings = () => {
   }, []);
 
   const handleChange = (e) => {
-    setContent(prev => ({ ...(prev || {}), [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setContent(prev => ({ ...(prev || {}), [name]: value }));
+    if (errors[name] && value.trim()) {
+      setErrors(prev => {
+        const newErr = { ...prev };
+        delete newErr[name];
+        return newErr;
+      });
+    }
   };
 
   const handleImageUpload = async (e, fieldName) => {
@@ -37,23 +47,87 @@ const Settings = () => {
       });
       const uploadedUrl = uploadRes.data.data?.url || uploadRes.data.url;
       setContent(prev => ({ ...(prev || {}), [fieldName]: uploadedUrl }));
+      
+      if (errors[fieldName]) {
+        setErrors(prev => {
+          const newErr = { ...prev };
+          delete newErr[fieldName];
+          return newErr;
+        });
+      }
+
+      const isCloudinary = uploadedUrl && uploadedUrl.startsWith('http');
+      setNotification({
+        type: 'success',
+        title: isCloudinary ? 'Cloudinary Uploaded' : 'Media Uploaded',
+        message: isCloudinary 
+          ? 'File successfully uploaded to Cloudinary!' 
+          : 'File saved locally to server uploads!'
+      });
     } catch (err) {
-      alert('Error uploading image');
+      setNotification({
+        type: 'error',
+        title: 'Upload Error',
+        message: err.response?.data?.error || err.response?.data?.message || err.message || 'Failed to upload image or video file. Please try again.'
+      });
     }
     setUploadingImage(null);
   };
 
   const handleSave = async (e) => {
     e.preventDefault();
+    
+    // Validate Business Details & Business Metrics required fields
+    const requiredFields = [
+      { name: 'logoUrl', label: 'Website Logo' },
+      { name: 'siteName', label: 'Site/Business Name' },
+      { name: 'contactPhone', label: 'Contact Number' },
+      { name: 'contactEmail', label: 'Contact Email' },
+      { name: 'whatsappUrl', label: 'WhatsApp Number' },
+      { name: 'address', label: 'Physical Address' },
+      { name: 'locationUrl', label: 'Location URL' },
+      { name: 'happyCustomersCount', label: 'Happy Customers Count' },
+      { name: 'completedProjectsCount', label: 'Completed Projects Count' },
+      { name: 'yearsExperienceCount', label: 'Years Experience' },
+      { name: 'totalBranchesCount', label: 'Total Branches Count' },
+    ];
+
+    const newErrors = {};
+    requiredFields.forEach(field => {
+      if (!content[field.name] || !String(content[field.name]).trim()) {
+        newErrors[field.name] = `${field.label} is required`;
+      }
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      const firstErrorKey = Object.keys(newErrors)[0];
+      const element = document.querySelector(`[name="${firstErrorKey}"]`) || document.querySelector(`#uploader-${firstErrorKey}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (element.focus) element.focus();
+      }
+      return;
+    }
+
+    setErrors({});
     setSaving(true);
     try {
       const res = await axios.put('http://localhost:5000/api/settings', content);
-      if (res.data && res.data.settings) {
-        setContent(res.data.settings);
+      if (res.data && (res.data.settings || res.data.data)) {
+        setContent(res.data.settings || res.data.data);
       }
-      alert('Global settings saved successfully to MongoDB!');
+      setNotification({
+        type: 'success',
+        title: 'Settings Saved!',
+        message: 'Global settings updated successfully in MongoDB database.'
+      });
     } catch (err) {
-      alert('Error saving settings to MongoDB.');
+      setNotification({
+        type: 'error',
+        title: 'Save Failed',
+        message: 'Error saving settings to MongoDB database. Please try again.'
+      });
     }
     setSaving(false);
   };
@@ -91,50 +165,93 @@ const Settings = () => {
     background: '#ffffff',
     color: 'var(--espresso)',
     fontFamily: 'var(--font-body)',
-    transition: 'border-color 0.2s',
+    transition: 'border-color 0.2s, box-shadow 0.2s',
     outline: 'none',
     boxSizing: 'border-box'
   };
 
-  const MediaUploader = ({ label, fieldName }) => {
+  const getInputStyle = (fieldName) => ({
+    ...inputStyle,
+    borderColor: errors[fieldName] ? 'var(--brick)' : 'var(--line)',
+    boxShadow: errors[fieldName] ? '0 0 0 3px rgba(168, 61, 44, 0.15)' : 'none',
+    backgroundColor: errors[fieldName] ? '#FFF9F8' : '#ffffff'
+  });
+
+  const renderError = (fieldName) => (
+    errors[fieldName] ? (
+      <span style={{ color: 'var(--brick)', fontSize: '0.81rem', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
+        <AlertCircle size={14} /> {errors[fieldName]}
+      </span>
+    ) : null
+  );
+
+  const MediaUploader = ({ label, fieldName, required }) => {
     const rawUrl = content ? content[fieldName] : '';
     const mediaUrl = typeof rawUrl === 'string' ? rawUrl : '';
     const isVideo = Boolean(mediaUrl && (mediaUrl.endsWith('.mp4') || mediaUrl.endsWith('.webm') || mediaUrl.includes('video')));
+    const hasError = Boolean(errors[fieldName]);
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', background: 'var(--paper)', border: '1px solid var(--line)', borderRadius: '6px', transition: 'border-color 0.2s' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ width: '70px', height: '70px', borderRadius: '6px', background: 'var(--cream)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid var(--line)', flexShrink: 0 }}>
-            {mediaUrl ? (
-              isVideo ? (
-                <video src={mediaUrl.startsWith('/') || mediaUrl.startsWith('http') ? mediaUrl : `http://localhost:5000${mediaUrl}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted />
+      <div id={`uploader-${fieldName}`}>
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between', 
+          padding: '16px', 
+          background: hasError ? '#FFF9F8' : 'var(--paper)', 
+          border: hasError ? '2px solid var(--brick)' : '1px solid var(--line)', 
+          borderRadius: '6px',
+          boxShadow: hasError ? '0 0 0 3px rgba(168, 61, 44, 0.15)' : 'none',
+          transition: 'border-color 0.2s, box-shadow 0.2s' 
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ width: '70px', height: '70px', borderRadius: '6px', background: 'var(--cream)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid var(--line)', flexShrink: 0 }}>
+              {mediaUrl ? (
+                isVideo ? (
+                  <video src={mediaUrl.startsWith('/') || mediaUrl.startsWith('http') ? mediaUrl : `http://localhost:5000${mediaUrl}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted />
+                ) : (
+                  <img src={mediaUrl.startsWith('/') || mediaUrl.startsWith('http') ? mediaUrl : `http://localhost:5000${mediaUrl}`} alt={label} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                )
               ) : (
-                <img src={mediaUrl.startsWith('/') || mediaUrl.startsWith('http') ? mediaUrl : `http://localhost:5000${mediaUrl}`} alt={label} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              )
-            ) : (
-              <ImageIcon size={24} color="var(--walnut)" />
-            )}
+                <ImageIcon size={24} color={hasError ? 'var(--brick)' : 'var(--walnut)'} />
+              )}
+            </div>
+            <div>
+              <h4 style={{ margin: '0 0 6px 0', color: 'var(--espresso)', fontSize: '0.95rem', fontWeight: '600', fontFamily: 'var(--font-heading)' }}>
+                {label} {required && <span style={{ color: 'var(--brick)' }}>*</span>}
+              </h4>
+              <p style={{ margin: 0, fontSize: '0.82rem', color: mediaUrl ? 'var(--brass)' : (hasError ? 'var(--brick)' : 'var(--walnut)'), wordBreak: 'break-all' }}>
+                {mediaUrl ? (
+                  <span>
+                    {isVideo ? 'Video active' : 'Image uploaded'} &bull;{' '}
+                    <a href={mediaUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--brass)', textDecoration: 'underline', fontWeight: '600' }}>
+                      View Full Cloudinary URL
+                    </a>
+                  </span>
+                ) : 'No media selected'}
+              </p>
+            </div>
           </div>
-          <div>
-            <h4 style={{ margin: '0 0 6px 0', color: 'var(--espresso)', fontSize: '0.95rem', fontWeight: '600', fontFamily: 'var(--font-heading)' }}>{label}</h4>
-            <p style={{ margin: 0, fontSize: '0.82rem', color: mediaUrl ? 'var(--brass)' : 'var(--walnut)' }}>
-              {mediaUrl ? (isVideo ? 'Video active' : 'Image uploaded') : 'No media selected'}
-            </p>
+          
+          <div style={{ position: 'relative' }}>
+            <input 
+              type="file" 
+              name={fieldName}
+              accept="image/*,video/*" 
+              onChange={(e) => handleImageUpload(e, fieldName)} 
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
+            />
+            <button type="button" style={{ pointerEvents: 'none', background: 'var(--cream)', color: 'var(--espresso)', border: '1px solid var(--line)', padding: '8px 16px', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', fontWeight: '600' }}>
+              <UploadCloud size={16} />
+              {uploadingImage === fieldName ? 'Uploading...' : 'Upload'}
+            </button>
           </div>
         </div>
-        
-        <div style={{ position: 'relative' }}>
-          <input 
-            type="file" 
-            accept="image/*,video/*" 
-            onChange={(e) => handleImageUpload(e, fieldName)} 
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
-          />
-          <button type="button" style={{ pointerEvents: 'none', background: 'var(--cream)', color: 'var(--espresso)', border: '1px solid var(--line)', padding: '8px 16px', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', fontWeight: '600' }}>
-            <UploadCloud size={16} />
-            {uploadingImage === fieldName ? 'Uploading...' : 'Upload'}
-          </button>
-        </div>
+        {hasError && (
+          <span style={{ color: 'var(--brick)', fontSize: '0.81rem', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
+            <AlertCircle size={14} /> {errors[fieldName]}
+          </span>
+        )}
       </div>
     );
   };
@@ -165,31 +282,37 @@ const Settings = () => {
           <h3 style={sectionHeaderStyle}><Building2 color="var(--brick)" /> Business Details</h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
             <div style={{ gridColumn: '1 / -1', marginBottom: '8px' }}>
-              <MediaUploader label="Website Logo" fieldName="logoUrl" />
+              <MediaUploader label="Website Logo" fieldName="logoUrl" required />
             </div>
             <label style={labelStyle}>
-              Site/Business Name
-              <input type="text" name="siteName" value={content.siteName || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. Jaipur Art CNC" />
+              Site/Business Name <span style={{ color: 'var(--brick)' }}>*</span>
+              <input type="text" name="siteName" value={content.siteName || ''} onChange={handleChange} style={getInputStyle('siteName')} placeholder="e.g. Jaipur Art CNC" />
+              {renderError('siteName')}
             </label>
             <label style={labelStyle}>
-              Contact Number
-              <input type="text" name="contactPhone" value={content.contactPhone || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. +91 90010 21857" />
+              Contact Number <span style={{ color: 'var(--brick)' }}>*</span>
+              <input type="text" name="contactPhone" value={content.contactPhone || ''} onChange={handleChange} style={getInputStyle('contactPhone')} placeholder="e.g. +91 90010 21857" />
+              {renderError('contactPhone')}
             </label>
             <label style={labelStyle}>
-              Contact Email
-              <input type="email" name="contactEmail" value={content.contactEmail || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. hello@jaipurartcnc.com" />
+              Contact Email <span style={{ color: 'var(--brick)' }}>*</span>
+              <input type="email" name="contactEmail" value={content.contactEmail || ''} onChange={handleChange} style={getInputStyle('contactEmail')} placeholder="e.g. hello@jaipurartcnc.com" />
+              {renderError('contactEmail')}
             </label>
             <label style={labelStyle}>
-              WhatsApp Number (for direct messages)
-              <input type="text" name="whatsappUrl" value={content.whatsappUrl || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. https://wa.me/919001021857" />
+              WhatsApp Number (for direct messages) <span style={{ color: 'var(--brick)' }}>*</span>
+              <input type="text" name="whatsappUrl" value={content.whatsappUrl || ''} onChange={handleChange} style={getInputStyle('whatsappUrl')} placeholder="e.g. https://wa.me/919001021857" />
+              {renderError('whatsappUrl')}
             </label>
             <label style={{ ...labelStyle, gridColumn: '1 / -1' }}>
-              Physical Address
-              <input type="text" name="address" value={content.address || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. Shop No. 2, Asarpura, Narayan Vihar, Jaipur, Rajasthan 302020" />
+              Physical Address <span style={{ color: 'var(--brick)' }}>*</span>
+              <input type="text" name="address" value={content.address || ''} onChange={handleChange} style={getInputStyle('address')} placeholder="e.g. Shop No. 2, Asarpura, Narayan Vihar, Jaipur, Rajasthan 302020" />
+              {renderError('address')}
             </label>
             <label style={{ ...labelStyle, gridColumn: '1 / -1' }}>
-              Location URL (Google Maps Link)
-              <input type="text" name="locationUrl" value={content.locationUrl || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. https://maps.google.com/?cid=..." />
+              Location URL (Google Maps Link) <span style={{ color: 'var(--brick)' }}>*</span>
+              <input type="text" name="locationUrl" value={content.locationUrl || ''} onChange={handleChange} style={getInputStyle('locationUrl')} placeholder="e.g. https://maps.google.com/?cid=..." />
+              {renderError('locationUrl')}
             </label>
           </div>
         </div>
@@ -200,20 +323,24 @@ const Settings = () => {
           <p style={{ color: 'var(--walnut)', marginBottom: '24px', fontSize: '0.95rem' }}>Update the statistics displayed on your dashboard and public website.</p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
             <label style={labelStyle}>
-              Happy Customers Count
-              <input type="text" name="happyCustomersCount" value={content.happyCustomersCount || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. 5,000+" />
+              Happy Customers Count <span style={{ color: 'var(--brick)' }}>*</span>
+              <input type="text" name="happyCustomersCount" value={content.happyCustomersCount || ''} onChange={handleChange} style={getInputStyle('happyCustomersCount')} placeholder="e.g. 5,000+" />
+              {renderError('happyCustomersCount')}
             </label>
             <label style={labelStyle}>
-              Completed Projects Count
-              <input type="text" name="completedProjectsCount" value={content.completedProjectsCount || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. 500+" />
+              Completed Projects Count <span style={{ color: 'var(--brick)' }}>*</span>
+              <input type="text" name="completedProjectsCount" value={content.completedProjectsCount || ''} onChange={handleChange} style={getInputStyle('completedProjectsCount')} placeholder="e.g. 500+" />
+              {renderError('completedProjectsCount')}
             </label>
             <label style={labelStyle}>
-              Years Experience
-              <input type="text" name="yearsExperienceCount" value={content.yearsExperienceCount || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. 7+ Yrs" />
+              Years Experience <span style={{ color: 'var(--brick)' }}>*</span>
+              <input type="text" name="yearsExperienceCount" value={content.yearsExperienceCount || ''} onChange={handleChange} style={getInputStyle('yearsExperienceCount')} placeholder="e.g. 7+ Yrs" />
+              {renderError('yearsExperienceCount')}
             </label>
             <label style={labelStyle}>
-              Total Branches Count
-              <input type="text" name="totalBranchesCount" value={content.totalBranchesCount || ''} onChange={handleChange} style={inputStyle} placeholder="e.g. 3" />
+              Total Branches Count <span style={{ color: 'var(--brick)' }}>*</span>
+              <input type="text" name="totalBranchesCount" value={content.totalBranchesCount || ''} onChange={handleChange} style={getInputStyle('totalBranchesCount')} placeholder="e.g. 3" />
+              {renderError('totalBranchesCount')}
             </label>
           </div>
         </div>
@@ -288,6 +415,85 @@ const Settings = () => {
           </div>
         </div>
       </form>
+
+      {/* Custom Theme Notification Error/Success Popup Modal */}
+      {notification && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(30, 20, 14, 0.65)',
+          backdropFilter: 'blur(5px)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 9999,
+          padding: '20px'
+        }}>
+          <div style={{
+            backgroundColor: 'var(--paper)',
+            borderRadius: '10px',
+            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.35)',
+            border: `2px solid ${notification.type === 'error' ? 'var(--brick)' : 'var(--brass)'}`,
+            width: '100%',
+            maxWidth: '420px',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            {/* Top Accent Strip */}
+            <div style={{
+              height: '6px',
+              backgroundColor: notification.type === 'error' ? 'var(--brick)' : 'var(--brass)'
+            }} />
+            
+            <div style={{ padding: '28px 24px', textAlign: 'center' }}>
+              <div style={{
+                width: '60px',
+                height: '60px',
+                borderRadius: '50%',
+                backgroundColor: notification.type === 'error' ? 'rgba(168, 61, 44, 0.12)' : 'rgba(184, 137, 43, 0.12)',
+                color: notification.type === 'error' ? 'var(--brick)' : 'var(--brass)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 16px auto'
+              }}>
+                {notification.type === 'error' ? <AlertTriangle size={32} /> : <CheckCircle2 size={32} />}
+              </div>
+
+              <h3 style={{ margin: '0 0 10px 0', fontFamily: 'var(--font-heading)', fontSize: '1.35rem', color: 'var(--espresso)', fontWeight: '700' }}>
+                {notification.title}
+              </h3>
+              <p style={{ margin: '0 0 24px 0', color: 'var(--walnut)', fontSize: '0.98rem', lineHeight: 1.5, fontFamily: 'var(--font-body)' }}>
+                {notification.message}
+              </p>
+
+              <button
+                type="button"
+                onClick={() => setNotification(null)}
+                style={{
+                  width: '100%',
+                  padding: '12px 20px',
+                  backgroundColor: notification.type === 'error' ? 'var(--brick)' : 'var(--espresso)',
+                  color: 'var(--paper)',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontFamily: 'var(--font-body)',
+                  fontWeight: '700',
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                  transition: 'transform 0.1s, opacity 0.2s'
+                }}
+              >
+                Okay, Got it
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
