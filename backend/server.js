@@ -1,3 +1,10 @@
+// Polyfill global crypto for Node versions < 19
+if (!globalThis.crypto) {
+  try {
+    globalThis.crypto = require('crypto').webcrypto || require('crypto');
+  } catch (e) {}
+}
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
