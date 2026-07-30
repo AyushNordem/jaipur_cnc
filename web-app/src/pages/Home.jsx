@@ -1,7 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { ArrowRight, Users, CheckCircle2, Briefcase, MapPin } from 'lucide-react';
+import { ArrowRight, Users, CheckCircle2, Briefcase, MapPin, ShoppingBag, Eye } from 'lucide-react';
 import styles from './Home.module.css';
+import shopStyles from './Shop.module.css';
 import { Link } from 'react-router-dom';
 import { SiteContext } from '../context/SiteContext';
 import { API_BASE_URL, getFullMediaUrl } from '../config';
@@ -93,6 +94,7 @@ const Home = () => {
 
   const [reviewsList, setReviewsList] = useState([]);
   const [creationsList, setCreationsList] = useState([]);
+  const [shopProducts, setShopProducts] = useState([]);
   const [loadingCreations, setLoadingCreations] = useState(true);
   const [activeReviewIndex, setActiveReviewIndex] = useState(0);
   const [isHoveredReviews, setIsHoveredReviews] = useState(false);
@@ -119,6 +121,13 @@ const Home = () => {
       })
       .catch(err => console.error('Error fetching creation gallery:', err))
       .finally(() => setLoadingCreations(false));
+
+    axios.get(`${API_BASE_URL}/api/products`)
+      .then(res => {
+        const data = res.data.data || res.data || [];
+        setShopProducts(Array.isArray(data) ? data : []);
+      })
+      .catch(err => console.error('Error fetching shop products for home:', err));
   }, []);
 
   // Auto scroll effect for reviews carousel
@@ -286,6 +295,113 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* ================= SHOP FEATURED PRODUCTS ================= */}
+      {shopProducts && shopProducts.length > 0 && (
+        <section id="shop" className={styles.sectionPadding} style={{ backgroundColor: 'var(--paper)' }}>
+          <div className={styles.wrap}>
+            <div className={styles.sectionHead}>
+              <div>
+                <div className={styles.eyebrow}>Instant Download Shop</div>
+                <h2>Featured CNC Design Files</h2>
+              </div>
+              <p>Download high quality 3D Artcam RLF, STL relief models &amp; 2D Vector cut files ready for instant purchase.</p>
+            </div>
+
+            <div className={shopStyles.productsGrid}>
+              {shopProducts.slice(0, 4).map((product) => {
+                const productId = product._id || product.designCode;
+                const imgUrl = (product.images && product.images.length > 0) 
+                  ? getFullMediaUrl(product.images[0]) 
+                  : 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&q=80';
+                
+                const phoneNum = (siteData?.contactPhone || '9001021857').replace(/[^0-9]/g, '');
+                const whatsappOrderUrl = `https://wa.me/${phoneNum}?text=${encodeURIComponent(`Hi Jaipur Art CNC, I want to buy Design File: ${product.title} (${product.designCode || productId}) for ₹${product.price}`)}`;
+
+                return (
+                  <div key={productId} className={shopStyles.productCard}>
+                    
+                    <div className={shopStyles.imageBoxWrapper}>
+                      {product.discountPercent && (
+                        <span className={shopStyles.discountBadge}>
+                          -{product.discountPercent}% OFF
+                        </span>
+                      )}
+
+                      <Link to={`/shop/${productId}`} className={shopStyles.imageBox}>
+                        <img src={imgUrl} alt={product.title} loading="lazy" />
+                      </Link>
+
+                      <div className={shopStyles.hoverOverlay}>
+                        <Link to={`/shop/${productId}`} className={shopStyles.overlayQuickBtn}>
+                          <Eye size={16} /> Quick Details
+                        </Link>
+                      </div>
+                    </div>
+
+                    <div className={shopStyles.productMeta}>
+                      <div className={shopStyles.categoryCodeRow}>
+                        <span className={shopStyles.categoryTag}>
+                          {product.category || '3D Design'}
+                        </span>
+                        <span className={shopStyles.designCodePill}>
+                          #{product.designCode || productId}
+                        </span>
+                      </div>
+
+                      <h3 className={shopStyles.productTitle}>
+                        <Link to={`/shop/${productId}`}>{product.title}</Link>
+                      </h3>
+
+                      <div className={shopStyles.specChipsRow}>
+                        <span className={shopStyles.specChip}>8x4 Ft Size</span>
+                        <span className={shopStyles.specChip}>Artcam Relief</span>
+                      </div>
+
+                      <div className={shopStyles.priceRow}>
+                        <div className={shopStyles.priceContainer}>
+                          <span className={shopStyles.currencySymbol}>₹</span>
+                          <span className={shopStyles.salePrice}>{product.price}</span>
+                          {product.originalPrice && (
+                            <span className={shopStyles.originalPrice}>₹{product.originalPrice}</span>
+                          )}
+                        </div>
+
+                        <div className={shopStyles.cardActionsGroup}>
+                          <a 
+                            href={whatsappOrderUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className={shopStyles.whatsappDirectBtn}
+                            title="Instant Order on WhatsApp"
+                          >
+                            Buy File
+                          </a>
+
+                          <Link 
+                            to={`/shop/${productId}`} 
+                            className={shopStyles.cartIconBtn}
+                            title="View Details"
+                          >
+                            <ShoppingBag size={15} />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                );
+              })}
+            </div>
+
+            <div style={{ textAlign: 'center', marginTop: '36px' }}>
+              <Link to="/shop" className="btn btn-primary">
+                Explore All Shop Designs <ArrowRight size={16} />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ================= WOOD TYPES ================= */}
       <section id="wood" className={`${styles.sectionPadding} ${styles.woodSection}`}>
