@@ -23,7 +23,7 @@ const DEFAULT_DESCRIPTION = `<p><strong>Get design files on WhatsApp immediately
 const ProductForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const isEditing = Boolean(id);
+  const isEditing = Boolean(id) && id !== 'new';
 
   const [loading, setLoading] = useState(isEditing);
   const [uploadingMaster, setUploadingMaster] = useState(false);

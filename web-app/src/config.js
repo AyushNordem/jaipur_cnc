@@ -1,26 +1,7 @@
-// Centralized API Base URL configuration for local & production environments
-const DEFAULT_RAILWAY_BACKEND = 'https://jaipurcnc-production.up.railway.app';
-
-const rawApiUrl = import.meta.env.VITE_API_URL;
-
-const formatApiUrl = (url) => {
-  if (!url || !url.trim()) {
-    if (typeof window !== 'undefined') {
-      const host = window.location.hostname;
-      if (host === 'localhost' || host === '127.0.0.1' || host.startsWith('192.168.') || host.startsWith('10.') || host.startsWith('172.')) {
-        return `http://${host}:5000`;
-      }
-    }
-    return DEFAULT_RAILWAY_BACKEND;
-  }
-  let trimmed = url.trim();
-  if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
-    trimmed = `http://${trimmed}`;
-  }
-  return trimmed.replace(/\/+$/, '');
-};
-
-export const API_BASE_URL = formatApiUrl(rawApiUrl);
+// Centralized Live Production API Base URL
+export const API_BASE_URL = (import.meta.env.VITE_API_URL && import.meta.env.VITE_API_URL.trim())
+  ? import.meta.env.VITE_API_URL.trim().replace(/\/+$/, '')
+  : 'https://jaipurcnc-production.up.railway.app';
 
 export const getFullMediaUrl = (url) => {
   if (!url || typeof url !== 'string') return '';
