@@ -5,6 +5,7 @@ import PageHeader from '../components/PageHeader';
 import { API_BASE_URL, getFullMediaUrl } from '../config';
 import { SiteContext } from '../context/SiteContext';
 import styles from './ProductDetail.module.css';
+import shopStyles from './Shop.module.css';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -326,66 +327,66 @@ const ProductDetail = () => {
                   const itemWhatsappUrl = `https://wa.me/${phoneNum}?text=${encodeURIComponent(`Hi Jaipur Art CNC, I want to order Design: ${item.title} (${item.designCode || itemCode}) for ₹${item.price}`)}`;
 
                   return (
-                    <div key={itemCode} className={styles.productCard}>
-                      <div className={styles.imageBoxWrapper}>
+                    <div key={itemCode} className={`${shopStyles.productCard} ${styles.productCard}`}>
+                      <div className={shopStyles.imageBoxWrapper}>
                         {item.discountPercent && (
-                          <span className={styles.discountBadge}>
+                          <span className={shopStyles.discountBadge}>
                             -{item.discountPercent}% OFF
                           </span>
                         )}
 
-                        <Link to={`/shop/${itemCode}`} className={styles.imageBox}>
+                        <Link to={`/shop/${itemCode}`} className={shopStyles.imageBox}>
                           <img src={itemImg} alt={item.title} loading="lazy" />
                         </Link>
 
-                        <div className={styles.hoverOverlay}>
-                          <Link to={`/shop/${itemCode}`} className={styles.overlayQuickBtn}>
+                        <div className={shopStyles.hoverOverlay}>
+                          <Link to={`/shop/${itemCode}`} className={shopStyles.overlayQuickBtn}>
                             <Eye size={16} /> Quick Details
                           </Link>
                         </div>
                       </div>
 
-                      <div className={styles.productMeta}>
-                        <div className={styles.categoryCodeRow}>
-                          <span className={styles.categoryTag}>
+                      <div className={shopStyles.productMeta}>
+                        <div className={shopStyles.categoryCodeRow}>
+                          <span className={shopStyles.categoryTag}>
                             {item.category || 'Design'}
                           </span>
-                          <span className={styles.designCodePill}>
+                          <span className={shopStyles.designCodePill}>
                             #{item.designCode || itemCode}
                           </span>
                         </div>
 
-                        <h3 className={styles.productTitle}>
+                        <h3 className={shopStyles.productTitle}>
                           <Link to={`/shop/${itemCode}`}>{item.title}</Link>
                         </h3>
 
-                        <div className={styles.specChipsRow}>
-                          <span className={styles.specChip}>8x4 Ft Size</span>
-                          <span className={styles.specChip}>Artcam Relief</span>
+                        <div className={shopStyles.specChipsRow}>
+                          <span className={shopStyles.specChip}>8x4 Ft Size</span>
+                          <span className={shopStyles.specChip}>Artcam Relief</span>
                         </div>
 
-                        <div className={styles.priceRow}>
-                          <div className={styles.priceContainer}>
-                            <span className={styles.currencySymbol}>₹</span>
-                            <span className={styles.salePrice}>{item.price}</span>
+                        <div className={shopStyles.priceRow}>
+                          <div className={shopStyles.priceContainer}>
+                            <span className={shopStyles.currencySymbol}>₹</span>
+                            <span className={shopStyles.salePrice}>{item.price}</span>
                             {item.originalPrice && (
-                              <span className={styles.originalPrice}>₹{item.originalPrice}</span>
+                              <span className={shopStyles.originalPrice}>₹{item.originalPrice}</span>
                             )}
                           </div>
 
-                          <div className={styles.cardActionsGroup}>
+                          <div className={shopStyles.cardActionsGroup}>
                             <a 
                               href={itemWhatsappUrl} 
                               target="_blank" 
                               rel="noopener noreferrer" 
-                              className={styles.whatsappDirectBtn}
+                              className={shopStyles.whatsappDirectBtn}
                             >
                               Buy File
                             </a>
 
                             <Link 
                               to={`/shop/${itemCode}`} 
-                              className={styles.cartIconBtn}
+                              className={shopStyles.cartIconBtn}
                             >
                               <ShoppingBag size={15} />
                             </Link>
