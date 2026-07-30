@@ -4,11 +4,13 @@ import PageHeader from '../components/PageHeader';
 import { ArrowRight, Image as ImageIcon, ZoomIn } from 'lucide-react';
 import styles from './Gallery.module.css';
 import { API_BASE_URL, getFullMediaUrl } from '../config';
+import ImageLightbox from '../components/ImageLightbox';
 
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [creations, setCreations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     axios.get(`${API_BASE_URL}/api/gallery`)
@@ -61,7 +63,12 @@ const Gallery = () => {
         ) : (
           <div className={styles.masonryGrid}>
             {filteredItems.map((item) => (
-              <div key={item._id} className={`glass-card ${styles.portfolioCard}`}>
+              <div 
+                key={item._id} 
+                className={`glass-card ${styles.portfolioCard}`}
+                style={{ cursor: 'pointer' }}
+                onClick={() => setSelectedImage({ src: getFullImageUrl(item.imageUrl), title: item.title })}
+              >
                 <div 
                   className={styles.imageWrapper} 
                   style={{ 
@@ -71,9 +78,16 @@ const Gallery = () => {
                   }}
                 >
                   <div className={styles.overlay}>
-                    <a href={getFullImageUrl(item.imageUrl)} target="_blank" rel="noopener noreferrer" className={styles.zoomBtn}>
+                    <button 
+                      className={styles.zoomBtn} 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedImage({ src: getFullImageUrl(item.imageUrl), title: item.title });
+                      }}
+                      aria-label="Zoom image"
+                    >
                       <ZoomIn size={24} />
-                    </a>
+                    </button>
                   </div>
                 </div>
                 <div className={styles.cardContent}>
@@ -85,6 +99,14 @@ const Gallery = () => {
           </div>
         )}
       </div>
+
+      {selectedImage && (
+        <ImageLightbox
+          src={selectedImage.src}
+          alt={selectedImage.title}
+          onClose={() => setSelectedImage(null)}
+        />
+      )}
     </div>
   );
 };
