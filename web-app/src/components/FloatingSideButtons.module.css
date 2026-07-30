@@ -46,11 +46,11 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: var(--brass, #B8892B);
+  background: #25D366;
   color: #FFFFFF;
   padding: 20px 10px;
   border-radius: 0 14px 14px 0;
-  box-shadow: -4px 6px 20px rgba(184, 137, 43, 0.35);
+  box-shadow: -4px 6px 20px rgba(18, 140, 126, 0.35);
   text-decoration: none;
   font-family: var(--font-heading, sans-serif);
   font-weight: 700;
@@ -60,15 +60,15 @@
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-left: none;
   cursor: pointer;
 }
 
 .sideTabWhatsapp:hover {
   transform: rotate(180deg) translateY(4px);
-  background: #A37722;
-  box-shadow: -6px 8px 25px rgba(184, 137, 43, 0.5);
+  background: #0E7367;
+  box-shadow: -6px 8px 25px rgba(18, 140, 126, 0.5);
   color: #FFFFFF;
 }
 
@@ -84,7 +84,7 @@
     transform: none;
     gap: 8px;
   }
-  
+
   .sideTabCall,
   .sideTabWhatsapp {
     padding: 14px 8px;
