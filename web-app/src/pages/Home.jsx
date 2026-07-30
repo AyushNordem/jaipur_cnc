@@ -31,8 +31,84 @@ const ShimmerCreationItem = ({ src, alt, label }) => {
   );
 };
 
+const WOOD_MATERIALS = [
+  {
+    id: 'mdf',
+    name: 'MDF Board',
+    subtitle: 'Medium Density Fibreboard',
+    image: '/MDF.png',
+    finish: 'Ultra-Smooth Finish',
+    bestFor: 'Decorative Jali, Mandir Screens, 2D Wall Art',
+    durability: '85%',
+    precision: '100%',
+    thickness: ['6mm', '8mm', '12mm', '18mm', '25mm'],
+    desc: 'Engineered wood with perfectly smooth & uniform surface. Best suited for intricate jali screens, interior wall panels, and painted mandir backdrops.'
+  },
+  {
+    id: 'hdhmr',
+    name: 'HDHMR Board',
+    subtitle: 'High Density High Moisture Resistant',
+    image: '/HDHMR Board.png',
+    finish: 'Water & Damp Proof',
+    bestFor: 'Premium Mandirs, Kitchen Jali, Heavy 3D Carving',
+    durability: '98%',
+    precision: '99%',
+    thickness: ['12mm', '16mm', '18mm'],
+    desc: 'High-density moisture resistant green board built for extreme durability in humid environments. The gold standard for carved mandir pillars and heavy 3D reliefs.'
+  },
+  {
+    id: 'plywood',
+    name: 'Plywood',
+    subtitle: 'Cross-Layered Hardwood Veneer',
+    image: '/Plywood.png',
+    finish: 'High Tensile Strength',
+    bestFor: 'Structural Furniture, Cabinets, Door Sub-Bases',
+    durability: '95%',
+    precision: '94%',
+    thickness: ['12mm', '18mm', '25mm'],
+    desc: 'Multi-layer wood veneer glued with high pressure. Exceptional load-bearing capacity and screw holding power for structural CNC cutting.'
+  },
+  {
+    id: 'solidwood',
+    name: 'Solid Teak & Pine Wood',
+    subtitle: '100% Natural Hardwood Logs',
+    image: '/Solid Wood.png',
+    finish: 'Rich Grain Texture',
+    bestFor: 'Luxury Temple Arches, Main Doors, Royal Carving',
+    durability: '100%',
+    precision: '96%',
+    thickness: ['25mm', '38mm', '50mm'],
+    desc: 'Natural Teak, Sheesham & Pine wood logs. Offers rich natural grain, generational lifespan, and unmatched luxury for traditional 3D wood relief carving.'
+  },
+  {
+    id: 'acrylic',
+    name: 'Acrylic Polymer Sheet',
+    subtitle: 'High-Gloss Polymer Sheet',
+    image: '/Acrylic Sheet.png',
+    finish: 'High Gloss Mirror Finish',
+    bestFor: 'Brand Logos, Backlit Name Plates, Modern Partitions',
+    durability: '90%',
+    precision: '99%',
+    thickness: ['3mm', '5mm', '8mm', '12mm'],
+    desc: 'Crystal-clear or vibrant colored acrylic sheets. Excellent for laser and CNC cutting sharp logos, backlit mandir panels, and LED nameplates.'
+  },
+  {
+    id: 'pvc',
+    name: 'PVC Foam Board',
+    subtitle: '100% Waterproof Polymer Foam',
+    image: '/PVC Foam Board.png',
+    finish: 'Termite & Water Proof',
+    bestFor: 'Outdoor Partitions, Damp Walls, Exterior Jali',
+    durability: '96%',
+    precision: '95%',
+    thickness: ['8mm', '12mm', '18mm'],
+    desc: 'Lightweight waterproof synthetic board. Completely immune to water, rot, and termites. Ideal for damp walls and outdoor CNC jali screens.'
+  }
+];
+
 const Home = () => {
   const { siteData } = useContext(SiteContext);
+  const [activeWood, setActiveWood] = useState(WOOD_MATERIALS[0]);
 
   // Fallback data for gallery items
   const defaultGalleryItems = [
@@ -403,95 +479,85 @@ const Home = () => {
         </section>
       )}
 
-      {/* ================= WOOD TYPES ================= */}
+      {/* ================= EDITORIAL 3-COLUMN ALTERNATING MATERIAL MOSAIC ================= */}
       <section id="wood" className={`${styles.sectionPadding} ${styles.woodSection}`}>
         <div className={styles.wrap}>
           <div className={styles.sectionHead}>
             <div>
-              <div className={styles.eyebrow}>Materials</div>
-              <h2>Choose your wood</h2>
+              <div className={styles.eyebrow}>Material Craftsmanship</div>
+              <h2>Choose Your Wood &amp; Material</h2>
             </div>
-            <p>Each material suits a different look and use — we'll help you pick the right one for your project.</p>
+            <p>High-precision materials tailored for custom 2D jali screens &amp; 3D relief carving.</p>
           </div>
-          <div className={styles.woodGrid}>
-            <div className={styles.woodCard}>
-              <div className={styles.woodSwatch}>
+
+          <div className={styles.woodMosaicGrid}>
+            
+            {/* Block 1 (Left in Reference): Full Photo with Floating Center Text Card */}
+            <div className={styles.woodMosaicBlock}>
+              <div className={styles.woodMosaicFull}>
                 <img src="/MDF.png" alt="MDF Board" />
-              </div>
-              <div className={styles.woodBody}>
-                <h3>MDF</h3>
-                <p>Smooth, uniform surface — best for decorative jali, mandirs, and intricate wall panels.</p>
-                <div className={styles.woodTags}>
-                  <span>Smooth Finish</span>
-                  <span>Affordable</span>
+                <div className={styles.woodFloatingOverlay}>
+                  <h3>MDF Board</h3>
+                  <p>Engineered smooth surface — best for decorative jali screens, mandir backdrops &amp; 2D wall art.</p>
                 </div>
               </div>
             </div>
-            <div className={styles.woodCard}>
-              <div className={styles.woodSwatch}>
-                <img src="/HDHMR Board.png" alt="HDHMR Board" />
-              </div>
-              <div className={styles.woodBody}>
-                <h3>HDHMR Board</h3>
-                <p>High Density High Moisture Resistant — ideal for premium furniture and durable mandirs.</p>
-                <div className={styles.woodTags}>
-                  <span>Water Resistant</span>
-                  <span>Extremely Strong</span>
-                </div>
-              </div>
-            </div>
-            <div className={styles.woodCard}>
-              <div className={styles.woodSwatch}>
-                <img src="/Plywood.png" alt="Plywood" />
-              </div>
-              <div className={styles.woodBody}>
-                <h3>Plywood</h3>
-                <p>Cross-layered veneer sheet — best for structural furniture, cabinets and sub-bases.</p>
-                <div className={styles.woodTags}>
-                  <span>High Strength</span>
-                  <span>Lightweight</span>
-                </div>
-              </div>
-            </div>
-            <div className={styles.woodCard}>
-              <div className={styles.woodSwatch}>
+
+            {/* Block 2 (Center in Reference): Photo Top, Dark Text Bottom */}
+            <div className={styles.woodMosaicBlock}>
+              <div className={styles.woodMosaicImageHalf}>
                 <img src="/Solid Wood.png" alt="Solid Wood" />
               </div>
-              <div className={styles.woodBody}>
+              <div className={styles.woodMosaicTextHalf}>
                 <h3>Solid Wood</h3>
-                <p>Teak, Sheesham, Pine — premium natural logs suited to luxury temples and high-end furniture.</p>
-                <div className={styles.woodTags}>
-                  <span>Natural Look</span>
-                  <span>Generational Life</span>
-                </div>
+                <p>Natural Teak, Sheesham &amp; Pine logs suited for royal temple arches &amp; generational 3D carving.</p>
               </div>
             </div>
-            <div className={styles.woodCard}>
-              <div className={styles.woodSwatch}>
+
+            {/* Block 3 (Right in Reference): Dark Text Top, Photo Bottom */}
+            <div className={styles.woodMosaicBlock}>
+              <div className={styles.woodMosaicTextHalf} style={{ borderTop: 'none', borderBottom: '1px solid rgba(242, 234, 220, 0.08)' }}>
+                <h3>HDHMR Board</h3>
+                <p>High-density moisture resistant green board built for extreme durability &amp; damp-proof mandirs.</p>
+              </div>
+              <div className={styles.woodMosaicImageHalf}>
+                <img src="/HDHMR Board.png" alt="HDHMR Board" />
+              </div>
+            </div>
+
+            {/* Block 4: Dark Text Top, Photo Bottom */}
+            <div className={styles.woodMosaicBlock}>
+              <div className={styles.woodMosaicTextHalf} style={{ borderTop: 'none', borderBottom: '1px solid rgba(242, 234, 220, 0.08)' }}>
+                <h3>Plywood</h3>
+                <p>Cross-layered hardwood veneer for structural furniture, cabinets &amp; high load-bearing bases.</p>
+              </div>
+              <div className={styles.woodMosaicImageHalf}>
+                <img src="/Plywood.png" alt="Plywood" />
+              </div>
+            </div>
+
+            {/* Block 5: Photo Top, Dark Text Bottom */}
+            <div className={styles.woodMosaicBlock}>
+              <div className={styles.woodMosaicImageHalf}>
                 <img src="/Acrylic Sheet.png" alt="Acrylic Sheet" />
               </div>
-              <div className={styles.woodBody}>
+              <div className={styles.woodMosaicTextHalf}>
                 <h3>Acrylic Sheet</h3>
-                <p>Glossy polymer sheet — best for custom name plates, branding logos, and backlit inserts.</p>
-                <div className={styles.woodTags}>
-                  <span>Glossy Finish</span>
-                  <span>Colour Varieties</span>
-                </div>
+                <p>High-gloss polymer sheets for sharp laser-cut logos, backlit mandir panels &amp; LED nameplates.</p>
               </div>
             </div>
-            <div className={styles.woodCard}>
-              <div className={styles.woodSwatch}>
+
+            {/* Block 6: Full Photo with Floating Center Text Card */}
+            <div className={styles.woodMosaicBlock}>
+              <div className={styles.woodMosaicFull}>
                 <img src="/PVC Foam Board.png" alt="PVC Foam Board" />
-              </div>
-              <div className={styles.woodBody}>
-                <h3>PVC Foam Board</h3>
-                <p>Lightweight polymer foam — waterproof sheets best for signs and damp-resistant items.</p>
-                <div className={styles.woodTags}>
-                  <span>100% Waterproof</span>
-                  <span>Termite Proof</span>
+                <div className={styles.woodFloatingOverlay}>
+                  <h3>PVC Foam Board</h3>
+                  <p>100% Waterproof &amp; termite-proof lightweight polymer foam for outdoor partitions &amp; damp walls.</p>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </section>
