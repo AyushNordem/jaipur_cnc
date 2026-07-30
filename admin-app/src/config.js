@@ -1,7 +1,9 @@
-// Centralized Live Production API Base URL
+// Centralized EC2/Local Production API Base URL
 export const API_BASE_URL = (import.meta.env.VITE_API_URL && import.meta.env.VITE_API_URL.trim())
   ? import.meta.env.VITE_API_URL.trim().replace(/\/+$/, '')
-  : 'https://jaipurcnc-production.up.railway.app';
+  : (typeof window !== 'undefined' && window.location.hostname)
+    ? `${window.location.protocol}//${window.location.hostname}:5000`
+    : 'http://localhost:5000';
 
 export const getFullMediaUrl = (url) => {
   if (!url || typeof url !== 'string') return '';
