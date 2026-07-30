@@ -96,15 +96,32 @@ const ProductDetail = () => {
         "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80"
       ];
 
-  const handleInquirySubmit = (e) => {
+  const handleInquirySubmit = async (e) => {
     e.preventDefault();
-    setInquirySubmitted(true);
-    setTimeout(() => {
-      setInquirySubmitted(false);
-      setInquiryName('');
-      setInquiryPhone('');
-      setInquiryMessage('');
-    }, 4000);
+    if (!inquiryName || !inquiryPhone) return;
+
+    try {
+      await fetch(`${API_BASE_URL}/api/inquiries`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: inquiryName,
+          phone: inquiryPhone,
+          patternType: product.category || '3D Design',
+          message: `[Product Enquiry for: ${product.title} (Code: ${product.designCode || product._id})] ${inquiryMessage}`
+        })
+      });
+      setInquirySubmitted(true);
+      setTimeout(() => {
+        setInquirySubmitted(false);
+        setInquiryName('');
+        setInquiryPhone('');
+        setInquiryMessage('');
+      }, 4000);
+    } catch (err) {
+      console.error('Failed to submit inquiry:', err);
+      setInquirySubmitted(true);
+    }
   };
 
   return (
