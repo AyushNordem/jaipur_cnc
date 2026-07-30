@@ -88,7 +88,8 @@ app.put('/api/content', async (req, res) => {
 // Global Centralized Error Handler Middleware
 app.use(errorHandler);
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`Backend server running on http://localhost:${PORT}`);
+// Start Server (Bound to 0.0.0.0 for AWS EC2 public network access)
+const HOST = process.env.HOST || '0.0.0.0';
+app.listen(PORT, HOST, () => {
+  console.log(`Backend server running on http://${HOST}:${PORT}`);
 });
