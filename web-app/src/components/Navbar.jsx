@@ -67,7 +67,6 @@ const Navbar = () => {
         </nav>
 
         <div className={styles.navRight}>
-          <span className={styles.phone}>{siteData?.contactPhone || '+91 90010 21857'}</span>
           <Link to="/contact" className={`btn btn-primary ${styles.desktopQuoteBtn}`}>Get a Quote</Link>
           <button 
             className={styles.mobileMenuToggle}
@@ -92,9 +91,6 @@ const Navbar = () => {
           <Link to="/contact" className="btn btn-primary" style={{ textAlign: 'center', width: '100%', padding: '14px' }} onClick={() => setIsMobileMenuOpen(false)}>
             Get a Free Quote
           </Link>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--walnut)', textAlign: 'center', marginTop: '4px' }}>
-            {siteData?.contactPhone || '+91 90010 21857'}
-          </span>
         </div>
       </div>
     </header>
