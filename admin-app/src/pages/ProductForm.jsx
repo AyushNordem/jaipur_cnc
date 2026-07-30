@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { ArrowLeft, Save, Upload, Image as ImageIcon, Trash2, Plus, Bold, List, Code, CheckCircle, AlertCircle, Eye } from 'lucide-react';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL, getFullMediaUrl } from '../config';
 
 const CATEGORY_OPTIONS = [
   "3D Design",
@@ -128,15 +128,21 @@ const ProductForm = () => {
       const res = await axios.post(`${API_BASE_URL}/api/upload`, data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      const url = res.data?.url || res.data?.secure_url || res.data;
-      if (url) {
-        setMasterImage(url);
+      
+      const uploadedUrl = res.data?.data?.url || res.data?.url || res.data?.secure_url || (typeof res.data === 'string' ? res.data : '');
+      
+      if (uploadedUrl && typeof uploadedUrl === 'string') {
+        setMasterImage(uploadedUrl);
         showNotify('Master image uploaded successfully!');
+      } else {
+        showNotify('Failed to retrieve image URL after upload', 'error');
       }
     } catch (err) {
+      console.error('Master upload error:', err);
       showNotify('Upload failed. You can paste direct image URL below.', 'error');
     } finally {
       setUploadingMaster(false);
+      e.target.value = '';
     }
   };
 
@@ -153,15 +159,21 @@ const ProductForm = () => {
       const res = await axios.post(`${API_BASE_URL}/api/upload`, data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      const url = res.data?.url || res.data?.secure_url || res.data;
-      if (url) {
-        setSubImages(prev => [...prev, url]);
+
+      const uploadedUrl = res.data?.data?.url || res.data?.url || res.data?.secure_url || (typeof res.data === 'string' ? res.data : '');
+
+      if (uploadedUrl && typeof uploadedUrl === 'string') {
+        setSubImages(prev => [...prev, uploadedUrl]);
         showNotify('Sub image added to product gallery!');
+      } else {
+        showNotify('Failed to retrieve sub image URL', 'error');
       }
     } catch (err) {
+      console.error('Sub upload error:', err);
       showNotify('Upload failed. Paste direct URL below.', 'error');
     } finally {
       setUploadingSub(false);
+      e.target.value = '';
     }
   };
 
@@ -190,13 +202,21 @@ const ProductForm = () => {
     try {
       const allImages = [masterImage, ...subImages].filter(Boolean);
 
+      const fileFormatsArr = Array.isArray(formData.fileFormats)
+        ? formData.fileFormats
+        : (typeof formData.fileFormats === 'string' ? formData.fileFormats.split(',').map(s => s.trim()).filter(Boolean) : ['RLF', 'STL']);
+
+      const softwareArr = Array.isArray(formData.software)
+        ? formData.software
+        : (typeof formData.software === 'string' ? formData.software.split(',').map(s => s.trim()).filter(Boolean) : ['Artcam']);
+
       const payload = {
         ...formData,
-        price: Number(formData.price),
-        originalPrice: Number(formData.originalPrice),
-        discountPercent: Number(formData.discountPercent),
-        fileFormats: formData.fileFormats.split(',').map(s => s.trim()).filter(Boolean),
-        software: formData.software.split(',').map(s => s.trim()).filter(Boolean),
+        price: Number(formData.price) || 0,
+        originalPrice: Number(formData.originalPrice) || 0,
+        discountPercent: Number(formData.discountPercent) || 0,
+        fileFormats: fileFormatsArr,
+        software: softwareArr,
         images: allImages
       };
 
@@ -210,10 +230,12 @@ const ProductForm = () => {
 
       setTimeout(() => {
         navigate('/products');
-      }, 1000);
+      }, 1200);
 
     } catch (err) {
-      showNotify(err.response?.data?.message || 'Failed to save product', 'error');
+      console.error('Error saving product:', err);
+      const msg = err.response?.data?.message || err.response?.data?.error || err.message || 'Failed to save product';
+      showNotify(msg, 'error');
     } finally {
       setSaving(false);
     }
@@ -420,7 +442,7 @@ const ProductForm = () => {
               {masterImage && (
                 <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{ width: '90px', height: '90px', borderRadius: '4px', overflow: 'hidden', border: '2px solid var(--brass)' }}>
-                    <img src={masterImage} alt="Master Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={getFullMediaUrl(masterImage)} alt="Master Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--brick)' }}>Primary Master Listing Photo</span>
                 </div>
@@ -465,7 +487,7 @@ const ProductForm = () => {
                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '10px' }}>
                   {subImages.map((img, idx) => (
                     <div key={idx} style={{ position: 'relative', width: '70px', height: '70px', borderRadius: '4px', overflow: 'hidden', border: '1px solid var(--line)' }}>
-                      <img src={img} alt={`Sub ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <img src={getFullMediaUrl(img)} alt={`Sub ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       <button 
                         type="button" 
                         onClick={() => removeSubImage(idx)} 
