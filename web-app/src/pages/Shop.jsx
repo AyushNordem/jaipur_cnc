@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, ShoppingBag, ArrowRight, ShieldCheck, Download, RefreshCw, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
+import { Search, ShoppingBag, RefreshCw, Eye } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
 import { API_BASE_URL, getFullMediaUrl } from '../config';
 import { SiteContext } from '../context/SiteContext';
@@ -55,72 +55,62 @@ const Shop = () => {
         breadcrumb="Shop / Designs"
       />
 
-      <section className="section py-8">
+      <section className={styles.shopContentSection}>
         <div className="container">
 
-          {/* Unified Compact Search Bar + Category Pills */}
+          {/* Clean Search Bar & Category Pills */}
           <div className={styles.filterSection}>
-            <div className={styles.searchPillsBar}>
-              
-              {/* Search Box */}
-              <div className={styles.searchBoxInline}>
-                <Search size={18} className={styles.searchIcon} />
-                <input 
-                  type="text" 
-                  placeholder="Search design code or title (e.g. JAC-3D-3028, Door)..." 
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className={styles.searchInputInline}
-                />
-                {searchTerm && (
-                  <button 
-                    onClick={() => setSearchTerm("")}
-                    className={styles.clearSearchBtn}
-                  >
-                    ×
-                  </button>
-                )}
-              </div>
-
-              {/* Category Pills */}
-              <div className={styles.categoryPillsInline}>
-                {CATEGORIES.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`${styles.pillBtn} ${selectedCategory === cat ? styles.activePill : ''}`}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-
+            
+            {/* Search Box Input */}
+            <div className={styles.searchWrapper}>
+              <Search size={18} className={styles.searchIcon} />
+              <input 
+                type="text" 
+                placeholder="Search design code or title (e.g. JAC-3D-3028, Door)..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={styles.searchInput}
+              />
             </div>
+
+            {/* Category Filter Pills */}
+            <div className={styles.categoryPills}>
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`${styles.categoryBtn} ${selectedCategory === cat ? styles.activeCategory : ''}`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
           </div>
 
-          {/* Active Filter Count */}
-          <div className={styles.resultsInfoRow}>
-            <span className={styles.resultsCount}>
-              Showing <strong>{filteredProducts.length}</strong> {selectedCategory !== "All" ? selectedCategory : ''} Design Files
+          {/* Active Filter Count & Tagline */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <span style={{ fontSize: '14.5px', color: 'var(--espresso)', fontWeight: '600', fontFamily: 'var(--font-heading)' }}>
+              Showing <strong>{filteredProducts.length}</strong> {selectedCategory !== "All" ? selectedCategory : 'High-Precision CNC'} Design Files Ready for WhatsApp Purchase
             </span>
             {(selectedCategory !== "All" || searchTerm) && (
               <button 
                 onClick={() => { setSelectedCategory("All"); setSearchTerm(""); }}
-                className={styles.resetFilterBtn}
+                style={{ background: 'none', border: 'none', color: 'var(--brick)', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}
               >
                 Reset Filters
               </button>
             )}
           </div>
 
-          {/* Product Grid */}
+          {/* Product Grid Layout */}
           {loading ? (
-            <div className={styles.loadingState}>
-              <RefreshCw className="animate-spin" size={28} />
+            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--walnut)' }}>
+              <RefreshCw className="animate-spin" size={28} style={{ margin: '0 auto 12px auto' }} />
               <p>Loading CNC Design Files catalog...</p>
             </div>
           ) : filteredProducts.length === 0 ? (
-            <div className={styles.emptyState}>
+            <div className={styles.noResults}>
               <h3>No Design Files Found</h3>
               <p>No matching models found for "{searchTerm || selectedCategory}". Try searching for another code like 3028 or change filters.</p>
               <button 
@@ -131,7 +121,7 @@ const Shop = () => {
               </button>
             </div>
           ) : (
-            <div className={styles.productGrid}>
+            <div className={styles.productsGrid}>
               {filteredProducts.map((product) => {
                 const productId = product._id || product.designCode;
                 const imgUrl = (product.images && product.images.length > 0) 
