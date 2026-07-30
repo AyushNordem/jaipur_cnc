@@ -105,9 +105,24 @@ const Shop = () => {
 
           {/* Product Grid Layout */}
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--walnut)' }}>
-              <RefreshCw className="animate-spin" size={28} style={{ margin: '0 auto 12px auto' }} />
-              <p>Loading CNC Design Files catalog...</p>
+            <div className={styles.productsGrid}>
+              {Array.from({ length: 8 }).map((_, index) => (
+                <div key={index} className={styles.skeletonCard}>
+                  <div className={styles.skeletonImage} />
+                  <div className={styles.skeletonMeta}>
+                    <div className={styles.skeletonTagRow}>
+                      <div className={styles.skeletonTag} />
+                      <div className={styles.skeletonCode} />
+                    </div>
+                    <div className={styles.skeletonTitle} />
+                    <div className={styles.skeletonTitleShort} />
+                    <div className={styles.skeletonFooter}>
+                      <div className={styles.skeletonPrice} />
+                      <div className={styles.skeletonBtn} />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : filteredProducts.length === 0 ? (
             <div className={styles.noResults}>

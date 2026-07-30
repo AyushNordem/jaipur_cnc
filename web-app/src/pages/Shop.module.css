@@ -491,3 +491,93 @@
   color: var(--cream);
   opacity: 0.9;
 }
+
+/* Skeleton Loading Shimmer UI */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeletonBase {
+  background: linear-gradient(90deg, #E6D8C4 25%, #F5ECDF 50%, #E6D8C4 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeletonCard {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeletonImage {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  composes: skeletonBase;
+}
+
+.skeletonMeta {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeletonTagRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.skeletonTag {
+  width: 70px;
+  height: 14px;
+  composes: skeletonBase;
+}
+
+.skeletonCode {
+  width: 55px;
+  height: 18px;
+  composes: skeletonBase;
+}
+
+.skeletonTitle {
+  width: 90%;
+  height: 16px;
+  composes: skeletonBase;
+}
+
+.skeletonTitleShort {
+  width: 60%;
+  height: 16px;
+  composes: skeletonBase;
+}
+
+.skeletonFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.skeletonPrice {
+  width: 65px;
+  height: 22px;
+  composes: skeletonBase;
+}
+
+.skeletonBtn {
+  width: 80px;
+  height: 28px;
+  composes: skeletonBase;
+}

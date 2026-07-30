@@ -18,9 +18,9 @@ const About = () => {
       <section className={`${styles.pageHero} styles.jaliBg`}>
         <div className={styles.wrap}>
           <div className={styles.eyebrow}>About Jaipur Art CNC</div>
-          <h1>A small Jaipur workshop, cutting wood with precision since 2019.</h1>
+          <h1>Crafting wood with precision &amp; heritage since 2019.</h1>
           <p className={styles.lede}>
-            We started with one CNC machine and a love for pattern work. Today we cut 2D and 3D designs for homes, showrooms and craftsmen across Rajasthan and beyond.
+            Founded by <strong>Shubham Jangid</strong>, Jaipur Art CNC blends rich traditional woodworking artistry with state-of-the-art 2D and 3D CNC carving technology.
           </p>
         </div>
       </section>
@@ -35,20 +35,20 @@ const About = () => {
                   ? getFullMediaUrl(siteData.ourStoryImage)
                   : "/ganeshji.jpg"
               } 
-              alt="Ganeshji Wood Carving - Jaipur Art CNC" 
+              alt="Ganeshji Wood Carving - Jaipur Art CNC by Shubham Jangid" 
             />
           </div>
           <div className={styles.storyCopy}>
-            <div className={styles.eyebrow}>Our Story</div>
-            <h2 style={{ marginBottom: '22px' }}>From a family carpentry shop to a full CNC studio</h2>
+            <div className={styles.eyebrow}>Our Heritage &amp; Story</div>
+            <h2 style={{ marginBottom: '22px' }}>From traditional craft to a full CNC studio</h2>
             <p>
-              <strong>Jaipur Art CNC</strong> grew out of a family carpentry business in Jaipur. We saw customers asking for finer, more intricate pattern work than hand tools could reliably deliver — so we invested in our first CNC router in 2019.
+              Jaipur Art CNC grew out of a rich wood-crafting heritage in Jaipur. Led by owner and lead designer <strong>Shubham Jangid</strong>, our workshop carries forward generations of woodworking craftsmanship into the digital era.
             </p>
             <p>
-              Since then, we've cut everything from delicate jali screens for home interiors to large 3D relief panels for showrooms and temples, working across MDF, Plywood and Pine to match whatever the design calls for.
+              Recognizing that customers required unprecedented detail for intricate jali screens, mandir backdrops, and architectural panels, <strong>Shubham Jangid</strong> brought high-precision CNC routers into the workshop in 2019 to complement traditional hand-finishing skills.
             </p>
             <p>
-              Every order is still checked by hand before it leaves our workshop — the machine gives us precision, but the finishing is where the craft happens.
+              Every single piece is personally inspected by <strong>Shubham Jangid</strong> and our master craftsmen — modern machinery gives us exact micro-millimeter precision, but traditional artisan finishing gives each piece its authentic soul.
             </p>
           </div>
         </div>
@@ -113,7 +113,7 @@ const About = () => {
               <span>Cutting Accuracy</span>
             </div>
             <div className={styles.specCard}>
-              <b>Wood & MDF</b>
+              <b>Wood &amp; MDF</b>
               <span>Materials Allowed</span>
             </div>
             <div className={styles.specCard}>
@@ -136,23 +136,23 @@ const About = () => {
           <div className={styles.timeline}>
             <div className={styles.tItem}>
               <div className={styles.tYear}>2016</div>
-              <h3>Family carpentry workshop founded</h3>
-              <p>Started as a small hand-tool carpentry business in Jaipur, taking on furniture and interior woodwork.</p>
+              <h3>Woodworking heritage established</h3>
+              <p>Rooted in traditional hand-carving and custom furniture craftsmanship in Jaipur.</p>
             </div>
             <div className={styles.tItem}>
               <div className={styles.tYear}>2019</div>
-              <h3>First CNC router installed</h3>
-              <p>Brought in our first CNC machine to meet growing demand for detailed pattern and jali work.</p>
+              <h3>Jaipur Art CNC founded by Shubham Jangid</h3>
+              <p>Brought in high-precision CNC router machines to blend traditional handcrafted artistry with modern speed.</p>
             </div>
             <div className={styles.tItem}>
               <div className={styles.tYear}>2021</div>
-              <h3>Added 3D relief carving</h3>
-              <p>Expanded capability to sculpted, layered 3D designs alongside our existing 2D pattern work.</p>
+              <h3>Added 3D relief carving &amp; Artcam models</h3>
+              <p>Expanded capability to sculpted, layered 3D designs, deity reliefs, and architectural mandir pillars.</p>
             </div>
             <div className={styles.tItem}>
               <div className={styles.tYear}>2024</div>
-              <h3>500+ projects delivered</h3>
-              <p>Crossed 500 completed orders — from single home décor pieces to large showroom installations.</p>
+              <h3>500+ projects delivered pan-India</h3>
+              <p>Crossed 500 completed orders — from single home décor pieces to large showroom and temple installations.</p>
             </div>
           </div>
         </div>
@@ -162,13 +162,13 @@ const About = () => {
       <section style={{ paddingTop: 0, paddingBottom: '90px' }}>
         <div className={styles.wrap}>
           <div className={styles.quoteBlock}>
-            <div className={styles.quoteAvatar}>J</div>
+            <div className={styles.quoteAvatar}>SJ</div>
             <div className={styles.quoteText}>
               <p>
-                "Every piece that leaves our workshop has to be something we'd be happy to put in our own home. That's the standard we cut to."
+                "Wood carving is our passion and lifelong craft. Every piece that leaves our workshop — whether a delicate home jali or a royal temple backdrop — carries our commitment to perfection."
               </p>
-              <div className={styles.rName}>Founder, Jaipur Art CNC</div>
-              <div className={styles.rRole}>Workshop Lead &amp; Designer</div>
+              <div className={styles.rName}>Shubham Jangid</div>
+              <div className={styles.rRole}>Owner &amp; Lead Designer • Jaipur Art CNC</div>
             </div>
           </div>
         </div>

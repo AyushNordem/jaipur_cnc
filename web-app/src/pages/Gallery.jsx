@@ -55,7 +55,17 @@ const Gallery = () => {
         </div>
 
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--walnut)' }}>Loading creations gallery...</div>
+          <div className={styles.masonryGrid}>
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className={styles.skeletonCard}>
+                <div className={styles.skeletonImage} />
+                <div className={styles.skeletonContent}>
+                  <div className={styles.skeletonTitle} />
+                  <div className={styles.skeletonCategory} />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : filteredItems.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--walnut)' }}>
             No creations found in gallery.
