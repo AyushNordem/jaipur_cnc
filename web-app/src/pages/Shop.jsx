@@ -66,7 +66,7 @@ const Shop = () => {
               <Search size={18} className={styles.searchIcon} />
               <input 
                 type="text" 
-                placeholder="Search design code or title (e.g. JAC-3D-3028, Door)..." 
+                placeholder="Search design code or title (e.g. 3028, Door)..." 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={styles.searchInput}

@@ -134,16 +134,16 @@ const Services = () => {
               </Link>
             </div>
             <div className={styles.prepImage}>
-              <video 
+              <video
                 src={
-                  siteData?.servicesVideoUrl 
+                  siteData?.servicesVideoUrl
                     ? getFullMediaUrl(siteData.servicesVideoUrl)
                     : "/Jaipur_Arts_CNC_promotional_video_202605071220.mp4"
-                } 
-                autoPlay 
-                loop 
-                muted 
-                playsInline 
+                }
+                autoPlay
+                loop
+                muted
+                playsInline
               />
             </div>
           </div>
@@ -183,7 +183,7 @@ const Services = () => {
                 </tr>
                 <tr>
                   <td className={styles.featureName}>Master Craftsmanship</td>
-                  <td><CheckCircle2 size={16} className={styles.checkIcon} /> 25+ years' experience</td>
+                  <td><CheckCircle2 size={16} className={styles.checkIcon} /> 5+ years' experience</td>
                   <td><XCircle size={16} className={styles.crossIcon} /> Inconsistent</td>
                 </tr>
                 <tr>

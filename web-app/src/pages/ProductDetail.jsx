@@ -133,11 +133,11 @@ const ProductDetail = () => {
         breadcrumb={`Shop / Designs / ${product.designCode || 'Product'}`}
       />
 
-      <section className="section py-8">
+      <section className={styles.detailSection}>
         <div className="container">
           
           <Link to="/shop" className={styles.backLink}>
-            <ArrowLeft size={16} /> Back to Designs Shop
+            <ArrowLeft size={16} /> Back to Design Shop
           </Link>
 
           {/* Product View */}

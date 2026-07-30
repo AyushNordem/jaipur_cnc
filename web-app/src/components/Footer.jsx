@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { FaInstagram, FaFacebookF, FaYoutube, FaWhatsapp, FaTwitter, FaLinkedinIn, FaGoogle } from 'react-icons/fa';
+import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 import styles from './Footer.module.css';
 import { useContext } from 'react';
 import { SiteContext } from '../context/SiteContext';
@@ -29,7 +30,7 @@ const Footer = () => {
         <div>
           <h4>Explore</h4>
           <ul>
-            <li><Link to="/shop">3D Designs Shop</Link></li>
+            <li><Link to="/shop">Design Shop</Link></li>
             <li><Link to="/services">Services</Link></li>
             <li><Link to="/gallery">Gallery</Link></li>
             <li><Link to="/about">About Us</Link></li>
@@ -37,16 +38,32 @@ const Footer = () => {
         </div>
         <div>
           <h4>Contact</h4>
-          <ul>
-            <li>{siteData?.contactPhone || '+91 90010 21857'}</li>
-            <li>{siteData?.contactEmail || 'hello@jaipurartcnc.com'}</li>
-            <li>{siteData?.address || 'Jaipur, Rajasthan'}</li>
+          <ul className={styles.contactList}>
+            <li>
+              <Phone size={15} className={styles.contactIcon} />
+              <a href={`tel:${((siteData?.contactPhone || '9001021857').replace(/[^0-9]/g, '')).startsWith('91') ? '+' + (siteData?.contactPhone || '9001021857').replace(/[^0-9]/g, '') : '+91' + (siteData?.contactPhone || '9001021857').replace(/[^0-9]/g, '')}`}>
+                {siteData?.contactPhone || '+91 90010 21857'}
+              </a>
+            </li>
+            <li>
+              <Mail size={15} className={styles.contactIcon} />
+              <a href={`mailto:${siteData?.contactEmail || 'hello@jaipurartcnc.com'}`}>
+                {siteData?.contactEmail || 'hello@jaipurartcnc.com'}
+              </a>
+            </li>
+            <li>
+              <MapPin size={15} className={styles.contactIcon} />
+              <span>{siteData?.address || 'Jaipur, Rajasthan'}</span>
+            </li>
           </ul>
         </div>
         <div>
           <h4>Hours</h4>
-          <ul>
-            <li>Mon – Sun: 10:00 – 21:00</li>
+          <ul className={styles.contactList}>
+            <li>
+              <Clock size={15} className={styles.contactIcon} />
+              <span>Mon – Sun: 10:00 AM – 9:00 PM</span>
+            </li>
           </ul>
 
           {/* Social Links conditionally displayed under Hours */}

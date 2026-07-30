@@ -265,7 +265,7 @@ const Contact = () => {
               <h3>Working Hours</h3>
               <div className={styles.hoursRow}>
                 <span>Monday – Sunday</span>
-                <span>10:00 – 21:00</span>
+                <span>10:00 AM – 9:00 PM</span>
               </div>
             </div>
           </div>

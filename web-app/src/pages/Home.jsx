@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import axios from 'axios';
 import { ArrowRight, Users, CheckCircle2, Briefcase, MapPin, ShoppingBag, Eye, Sparkles, X, MessageCircle, Maximize2, Layers } from 'lucide-react';
 import styles from './Home.module.css';
@@ -182,6 +182,8 @@ const Home = () => {
   const [isHoveredReviews, setIsHoveredReviews] = useState(false);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
   const [selectedLightbox, setSelectedLightbox] = useState(null);
+  const galleryScrollRef = useRef(null);
+  const [isGalleryHovered, setIsGalleryHovered] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -224,6 +226,25 @@ const Home = () => {
 
     return () => clearInterval(timer);
   }, [reviewsList, isHoveredReviews]);
+
+  // Auto scroll effect for mobile Recent Work creations row
+  useEffect(() => {
+    if (windowWidth > 600 || isGalleryHovered) return;
+    const el = galleryScrollRef.current;
+    if (!el) return;
+
+    const timer = setInterval(() => {
+      const cardStep = 319;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      if (el.scrollLeft >= maxScroll - 10) {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        el.scrollBy({ left: cardStep, behavior: 'smooth' });
+      }
+    }, 3500);
+
+    return () => clearInterval(timer);
+  }, [windowWidth, isGalleryHovered, creationsList]);
 
   const getFullImageUrl = (url) => getFullMediaUrl(url);
 
@@ -475,7 +496,7 @@ const Home = () => {
             </div>
 
             <div className={shopStyles.productsGrid}>
-              {shopProducts.slice(0, 4).map((product) => {
+              {shopProducts.slice(0, 3).map((product) => {
                 const productId = product._id || product.designCode;
                 const imgUrl = (product.images && product.images.length > 0)
                   ? getFullMediaUrl(product.images[0])
@@ -580,7 +601,14 @@ const Home = () => {
             <p>A small sample from our portfolio of premium CNC carving and custom cutting.</p>
           </div>
 
-          <div className={styles.galleryGrid}>
+          <div 
+            className={styles.galleryGrid}
+            ref={galleryScrollRef}
+            onMouseEnter={() => setIsGalleryHovered(true)}
+            onMouseLeave={() => setIsGalleryHovered(false)}
+            onTouchStart={() => setIsGalleryHovered(true)}
+            onTouchEnd={() => setTimeout(() => setIsGalleryHovered(false), 5000)}
+          >
             {loadingCreations ? (
               Array.from({ length: 8 }).map((_, idx) => (
                 <div key={idx} className={styles.gItemShimmer}>

@@ -66,7 +66,7 @@
 
 .categoryBtn {
   padding: 8px 18px;
-  border-radius: 2px;
+  border-radius: 20px;
   border: 1px solid var(--line);
   background: var(--cream);
   color: var(--espresso);
@@ -75,6 +75,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .categoryBtn:hover {
@@ -580,4 +581,56 @@
   width: 80px;
   height: 28px;
   composes: skeletonBase;
+}
+
+@media (max-width: 768px) {
+  .shopContentSection {
+    padding: 16px 0 40px 0;
+  }
+
+  .filterSection {
+    padding: 12px 14px;
+    gap: 12px;
+    margin-top: 12px;
+    margin-bottom: 20px;
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 8px;
+  }
+
+  .searchWrapper {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .searchInput {
+    padding: 10px 14px 10px 38px;
+    font-size: 13px;
+    border-radius: 6px;
+  }
+
+  .categoryPills {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    width: 100%;
+    padding-bottom: 4px;
+    gap: 8px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .categoryPills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .categoryBtn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 7px 15px;
+    font-size: 12.5px;
+    border-radius: 20px;
+  }
 }

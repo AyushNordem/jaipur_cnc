@@ -1318,11 +1318,20 @@
   }
 
   .galleryGrid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-auto-rows: auto !important;
+    gap: 16px !important;
   }
 
-  .gItem:nth-child(1) {
-    grid-column: span 2;
+  .gItem,
+  .gItemShimmer,
+  .gItem:nth-child(1),
+  .gItemShimmer:nth-child(1),
+  .gItem:nth-child(4),
+  .gItemShimmer:nth-child(4) {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+    height: 220px !important;
   }
 
   .processGrid {
@@ -1356,22 +1365,47 @@
     transform: scale(1) !important;
   }
 
-  /* Gallery Grid Mobile Perfection */
+  /* Gallery Grid Mobile Perfection (Horizontal Scroll) */
   .galleryGrid {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    gap: 14px !important;
+    padding-bottom: 12px !important;
+    margin-left: -16px !important;
+    margin-right: -16px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .galleryGrid::-webkit-scrollbar {
+    display: none !important;
   }
 
   .gItem,
-  .gItemShimmer {
-    grid-column: span 1 !important;
-    grid-row: span 1 !important;
-    height: 280px !important;
+  .gItemShimmer,
+  .gItem:nth-child(1),
+  .gItemShimmer:nth-child(1),
+  .gItem:nth-child(4),
+  .gItemShimmer:nth-child(4) {
+    min-width: 300px !important;
+    max-width: 315px !important;
+    width: 305px !important;
+    height: 390px !important;
+    flex-shrink: 0 !important;
+    scroll-snap-align: start !important;
   }
 
-  .gItem:nth-child(1),
-  .gItemShimmer:nth-child(1) {
-    height: 320px !important;
+  .gViewBtn {
+    opacity: 1 !important;
+    transform: translateY(0) scale(1) !important;
+  }
+
+  .gContentOverlay {
+    opacity: 1 !important;
   }
 
   /* Dark Metrics Section Mobile Perfection */
