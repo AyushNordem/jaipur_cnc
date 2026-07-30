@@ -320,21 +320,22 @@ const ProductDetail = () => {
             <div className={styles.tabContentBox}>
               {activeTab === 'description' && (
                 <div className={styles.descriptionContent}>
-                  <p>Get design files on WhatsApp immediately after purchase.</p>
-
-                  <p><strong>Files</strong> – RLF File (Artcam Relief File For All Version Of Artcam)</p>
-                  <p><strong>Files</strong> – STL File</p>
-
-                  <p><strong>RLF Files Can Be open in</strong> – Artcam 2009, Artcam 2008 Artcam 2007 And Artcam 2018.</p>
-                  <p><strong>STL Files Can Be open in</strong> – 3Ds Max, JDPaint, AutoCAD, Maya And Other All 3D Modeling Software.</p>
-
-                  <p><strong>Size</strong> – Adjustable</p>
-                  <p><strong>Download Link Time</strong> – Get on WhatsApp after purchase.</p>
-
-                  <p>If Any error in files, Please request on Whatsapp Helpline We will provide Files within 24 Hr.</p>
-
-                  <p>This is a Computer Digital File not any actual product.</p>
-                  <p>Return Of order is not Accepted Because product is Copy-able, Please Read all details before purchase.</p>
+                  {product.description ? (
+                    <div 
+                      dangerouslySetInnerHTML={{ 
+                        __html: product.description.includes('<') 
+                          ? product.description 
+                          : product.description.replace(/\n/g, '<br/>') 
+                      }} 
+                    />
+                  ) : (
+                    <>
+                      <p>Get design files on WhatsApp immediately after purchase.</p>
+                      <p><strong>Files</strong> – RLF File (Artcam Relief File For All Version Of Artcam)</p>
+                      <p><strong>Files</strong> – STL File</p>
+                      <p><strong>Size</strong> – Adjustable</p>
+                    </>
+                  )}
 
                   <div className={styles.categoriesFooter}>
                     <strong>Categories:</strong> Designs, {product.category || '3D Wall Panel'}
