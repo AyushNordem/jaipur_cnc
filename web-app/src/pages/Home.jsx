@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { ArrowRight, Users, CheckCircle2, Briefcase, MapPin, ShoppingBag, Eye } from 'lucide-react';
+import { ArrowRight, Users, CheckCircle2, Briefcase, MapPin, ShoppingBag, Eye, Sparkles, X, MessageCircle, Maximize2, Layers } from 'lucide-react';
 import styles from './Home.module.css';
 import shopStyles from './Shop.module.css';
 import { Link } from 'react-router-dom';
@@ -8,25 +8,30 @@ import { SiteContext } from '../context/SiteContext';
 import { API_BASE_URL, getFullMediaUrl } from '../config';
 
 // Standalone component defined outside Home to prevent component unmounting/remounting on parent state updates
-const ShimmerCreationItem = ({ src, alt, label }) => {
+const ShimmerCreationItem = ({ src, alt, title, category, onClick }) => {
   const [loaded, setLoaded] = useState(false);
   return (
-    <div className={styles.gItem}>
+    <div className={styles.gItem} onClick={onClick}>
       {!loaded && <div className={styles.shimmerBox} style={{ position: 'absolute', inset: 0, zIndex: 1 }} />}
       <img
         src={src}
         alt={alt}
         onLoad={() => setLoaded(true)}
+        className={styles.gItemImg}
         style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          display: 'block',
           opacity: loaded ? 1 : 0,
-          transition: 'opacity 0.4s ease'
         }}
       />
-      <span className={styles.gLabel}>{label}</span>
+      <div className={styles.gTopTags}>
+        <span className={styles.gCatPill}>{category || 'CNC Work'}</span>
+        <span className={styles.gViewBtn}>
+          <Eye size={13} /> Quick View
+        </span>
+      </div>
+      <div className={styles.gContentOverlay}>
+        <h4 className={styles.gTitle}>{title || alt}</h4>
+        <span className={styles.gSub}>Precision Cut • Click to View</span>
+      </div>
     </div>
   );
 };
@@ -175,6 +180,7 @@ const Home = () => {
   const [activeReviewIndex, setActiveReviewIndex] = useState(0);
   const [isHoveredReviews, setIsHoveredReviews] = useState(false);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+  const [selectedLightbox, setSelectedLightbox] = useState(null);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -226,7 +232,7 @@ const Home = () => {
 
   return (
     <div className={styles.homeWrapper}>
-      
+
       {/* ================= HERO ================= */}
       <section className={styles.heroSection}>
         {/* Full-width Video Background */}
@@ -272,10 +278,10 @@ const Home = () => {
                 </div>
                 <div className={styles.hstatLight}>
                   <b>
-                    {siteData?.yearsExperienceCount 
+                    {siteData?.yearsExperienceCount
                       ? (siteData.yearsExperienceCount.toLowerCase().includes('yr') || siteData.yearsExperienceCount.toLowerCase().includes('year')
-                          ? siteData.yearsExperienceCount 
-                          : `${siteData.yearsExperienceCount} Years`)
+                        ? siteData.yearsExperienceCount
+                        : `${siteData.yearsExperienceCount} Years`)
                       : '7+ Years'}
                   </b>
                   <span>Experience</span>
@@ -372,113 +378,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ================= SHOP FEATURED PRODUCTS ================= */}
-      {shopProducts && shopProducts.length > 0 && (
-        <section id="shop" className={styles.sectionPadding} style={{ backgroundColor: 'var(--paper)' }}>
-          <div className={styles.wrap}>
-            <div className={styles.sectionHead}>
-              <div>
-                <div className={styles.eyebrow}>Instant Download Shop</div>
-                <h2>Featured CNC Design Files</h2>
-              </div>
-              <p>Download high quality 3D Artcam RLF, STL relief models &amp; 2D Vector cut files ready for instant purchase.</p>
-            </div>
-
-            <div className={shopStyles.productsGrid}>
-              {shopProducts.slice(0, 4).map((product) => {
-                const productId = product._id || product.designCode;
-                const imgUrl = (product.images && product.images.length > 0) 
-                  ? getFullMediaUrl(product.images[0]) 
-                  : 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&q=80';
-                
-                const phoneNum = (siteData?.contactPhone || '9001021857').replace(/[^0-9]/g, '');
-                const whatsappOrderUrl = `https://wa.me/${phoneNum}?text=${encodeURIComponent(`Hi Jaipur Art CNC, I want to buy Design File: ${product.title} (${product.designCode || productId}) for ₹${product.price}`)}`;
-
-                return (
-                  <div key={productId} className={shopStyles.productCard}>
-                    
-                    <div className={shopStyles.imageBoxWrapper}>
-                      {product.discountPercent && (
-                        <span className={shopStyles.discountBadge}>
-                          -{product.discountPercent}% OFF
-                        </span>
-                      )}
-
-                      <Link to={`/shop/${productId}`} className={shopStyles.imageBox}>
-                        <img src={imgUrl} alt={product.title} loading="lazy" />
-                      </Link>
-
-                      <div className={shopStyles.hoverOverlay}>
-                        <Link to={`/shop/${productId}`} className={shopStyles.overlayQuickBtn}>
-                          <Eye size={16} /> Quick Details
-                        </Link>
-                      </div>
-                    </div>
-
-                    <div className={shopStyles.productMeta}>
-                      <div className={shopStyles.categoryCodeRow}>
-                        <span className={shopStyles.categoryTag}>
-                          {product.category || '3D Design'}
-                        </span>
-                        <span className={shopStyles.designCodePill}>
-                          #{product.designCode || productId}
-                        </span>
-                      </div>
-
-                      <h3 className={shopStyles.productTitle}>
-                        <Link to={`/shop/${productId}`}>{product.title}</Link>
-                      </h3>
-
-                      <div className={shopStyles.specChipsRow}>
-                        <span className={shopStyles.specChip}>8x4 Ft Size</span>
-                        <span className={shopStyles.specChip}>Artcam Relief</span>
-                      </div>
-
-                      <div className={shopStyles.priceRow}>
-                        <div className={shopStyles.priceContainer}>
-                          <span className={shopStyles.currencySymbol}>₹</span>
-                          <span className={shopStyles.salePrice}>{product.price}</span>
-                          {product.originalPrice && (
-                            <span className={shopStyles.originalPrice}>₹{product.originalPrice}</span>
-                          )}
-                        </div>
-
-                        <div className={shopStyles.cardActionsGroup}>
-                          <a 
-                            href={whatsappOrderUrl} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className={shopStyles.whatsappDirectBtn}
-                            title="Instant Order on WhatsApp"
-                          >
-                            Buy File
-                          </a>
-
-                          <Link 
-                            to={`/shop/${productId}`} 
-                            className={shopStyles.cartIconBtn}
-                            title="View Details"
-                          >
-                            <ShoppingBag size={15} />
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                );
-              })}
-            </div>
-
-            <div style={{ textAlign: 'center', marginTop: '36px' }}>
-              <Link to="/shop" className="btn btn-primary">
-                Explore All Shop Designs <ArrowRight size={16} />
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* ================= EDITORIAL 3-COLUMN ALTERNATING MATERIAL MOSAIC ================= */}
       <section id="wood" className={`${styles.sectionPadding} ${styles.woodSection}`}>
         <div className={styles.wrap}>
@@ -491,7 +390,7 @@ const Home = () => {
           </div>
 
           <div className={styles.woodMosaicGrid}>
-            
+
             {/* Block 1 (Left in Reference): Full Photo with Floating Center Text Card */}
             <div className={styles.woodMosaicBlock}>
               <div className={styles.woodMosaicFull}>
@@ -562,6 +461,113 @@ const Home = () => {
         </div>
       </section>
 
+      {/* ================= SHOP FEATURED PRODUCTS ================= */}
+      {shopProducts && shopProducts.length > 0 && (
+        <section id="shop" className={styles.sectionPadding} style={{ backgroundColor: 'var(--paper)' }}>
+          <div className={styles.wrap}>
+            <div className={styles.sectionHead}>
+              <div>
+                <div className={styles.eyebrow}>Instant Download Shop</div>
+                <h2>Featured CNC Design Files</h2>
+              </div>
+              <p>Download high quality 3D Artcam RLF, STL relief models &amp; 2D Vector cut files ready for instant purchase.</p>
+            </div>
+
+            <div className={shopStyles.productsGrid}>
+              {shopProducts.slice(0, 4).map((product) => {
+                const productId = product._id || product.designCode;
+                const imgUrl = (product.images && product.images.length > 0)
+                  ? getFullMediaUrl(product.images[0])
+                  : 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&q=80';
+
+                const phoneNum = (siteData?.contactPhone || '9001021857').replace(/[^0-9]/g, '');
+                const whatsappOrderUrl = `https://wa.me/${phoneNum}?text=${encodeURIComponent(`Hi Jaipur Art CNC, I want to buy Design File: ${product.title} (${product.designCode || productId}) for ₹${product.price}`)}`;
+
+                return (
+                  <div key={productId} className={shopStyles.productCard}>
+
+                    <div className={shopStyles.imageBoxWrapper}>
+                      {product.discountPercent && (
+                        <span className={shopStyles.discountBadge}>
+                          -{product.discountPercent}% OFF
+                        </span>
+                      )}
+
+                      <Link to={`/shop/${productId}`} className={shopStyles.imageBox}>
+                        <img src={imgUrl} alt={product.title} loading="lazy" />
+                      </Link>
+
+                      <div className={shopStyles.hoverOverlay}>
+                        <Link to={`/shop/${productId}`} className={shopStyles.overlayQuickBtn}>
+                          <Eye size={16} /> Quick Details
+                        </Link>
+                      </div>
+                    </div>
+
+                    <div className={shopStyles.productMeta}>
+                      <div className={shopStyles.categoryCodeRow}>
+                        <span className={shopStyles.categoryTag}>
+                          {product.category || '3D Design'}
+                        </span>
+                        <span className={shopStyles.designCodePill}>
+                          #{product.designCode || productId}
+                        </span>
+                      </div>
+
+                      <h3 className={shopStyles.productTitle}>
+                        <Link to={`/shop/${productId}`}>{product.title}</Link>
+                      </h3>
+
+                      <div className={shopStyles.specChipsRow}>
+                        <span className={shopStyles.specChip}>8x4 Ft Size</span>
+                        <span className={shopStyles.specChip}>Artcam Relief</span>
+                      </div>
+
+                      <div className={shopStyles.priceRow}>
+                        <div className={shopStyles.priceContainer}>
+                          <span className={shopStyles.currencySymbol}>₹</span>
+                          <span className={shopStyles.salePrice}>{product.price}</span>
+                          {product.originalPrice && (
+                            <span className={shopStyles.originalPrice}>₹{product.originalPrice}</span>
+                          )}
+                        </div>
+
+                        <div className={shopStyles.cardActionsGroup}>
+                          <a
+                            href={whatsappOrderUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={shopStyles.whatsappDirectBtn}
+                            title="Instant Order on WhatsApp"
+                          >
+                            Buy File
+                          </a>
+
+                          <Link
+                            to={`/shop/${productId}`}
+                            className={shopStyles.cartIconBtn}
+                            title="View Details"
+                          >
+                            <ShoppingBag size={15} />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                );
+              })}
+            </div>
+
+            <div style={{ textAlign: 'center', marginTop: '36px' }}>
+              <Link to="/shop" className="btn btn-primary">
+                Explore All Shop Designs <ArrowRight size={16} />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ================= GALLERY ================= */}
       <section id="gallery" className={styles.sectionPadding}>
         <div className={styles.wrap}>
@@ -572,6 +578,7 @@ const Home = () => {
             </div>
             <p>A small sample from our portfolio of premium CNC carving and custom cutting.</p>
           </div>
+
           <div className={styles.galleryGrid}>
             {loadingCreations ? (
               Array.from({ length: 8 }).map((_, idx) => (
@@ -580,7 +587,7 @@ const Home = () => {
                 </div>
               ))
             ) : (() => {
-              // Combine creationsList with defaultGalleryItems up to 8 items so all 8 grid slots are filled with 0 blank spaces
+              // Combine creationsList with defaultGalleryItems up to 8 items so grid slots are full
               const combinedList = [...creationsList];
               let defaultIdx = 0;
               while (combinedList.length < 8 && defaultIdx < defaultGalleryItems.length) {
@@ -591,18 +598,46 @@ const Home = () => {
 
               return displayList.map((item, idx) => {
                 if (item.imageUrl) {
+                  const fullImg = getFullImageUrl(item.imageUrl);
                   return (
                     <ShimmerCreationItem
                       key={item._id || idx}
-                      src={getFullImageUrl(item.imageUrl)}
+                      src={fullImg}
                       alt={item.title || 'CNC Creation'}
-                      label={`${item.title} ${item.category ? `• ${item.category}` : ''}`}
+                      title={item.title}
+                      category={item.category || 'CNC Work'}
+                      onClick={() => setSelectedLightbox({
+                        src: fullImg,
+                        title: item.title,
+                        category: item.category || 'CNC Creation Work'
+                      })}
                     />
                   );
                 }
                 return (
-                  <div key={idx} className={styles.gItem}>
-                    <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%', display: 'block' }}>
+                  <div
+                    key={idx}
+                    className={styles.gItem}
+                    onClick={() => setSelectedLightbox({
+                      src: null,
+                      title: item.title,
+                      category: item.category || 'Custom Cut',
+                      fill: item.fill,
+                      pattern: item.pattern,
+                      path: item.path,
+                      circle: item.circle,
+                      triangle: item.triangle,
+                      rect: item.rect,
+                      doubleCircle: item.doubleCircle
+                    })}
+                  >
+                    <div className={styles.gTopTags}>
+                      <span className={styles.gCatPill}>{item.category || 'Custom Cut'}</span>
+                      <span className={styles.gViewBtn}>
+                        <Eye size={13} /> Quick View
+                      </span>
+                    </div>
+                    <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" className={styles.gItemImg}>
                       <rect width="200" height="200" fill={item.fill || '#6E4A2E'} />
                       {item.pattern && (
                         <>
@@ -625,12 +660,16 @@ const Home = () => {
                         </>
                       )}
                     </svg>
-                    <span className={styles.gLabel}>{item.title}</span>
+                    <div className={styles.gContentOverlay}>
+                      <h4 className={styles.gTitle}>{item.title}</h4>
+                      <span className={styles.gSub}>Precision Cut • Click to View</span>
+                    </div>
                   </div>
                 );
               });
             })()}
           </div>
+
           <div style={{ textAlign: 'center', marginTop: '40px' }}>
             <Link to="/gallery" className="btn btn-outline">
               View Full Gallery <ArrowRight size={16} />
@@ -699,14 +738,14 @@ const Home = () => {
               </div>
 
               {/* 3-Card Auto-Scrolling Carousel Container */}
-              <div 
+              <div
                 className={styles.carouselWrapper3}
                 onMouseEnter={() => setIsHoveredReviews(true)}
                 onMouseLeave={() => setIsHoveredReviews(false)}
               >
-                <div 
+                <div
                   className={styles.carouselTrack3}
-                  style={{ 
+                  style={{
                     transform: `translateX(-${currentIndex * slideStep}%)`,
                     transition: 'transform 0.5s ease-in-out'
                   }}
@@ -772,7 +811,7 @@ const Home = () => {
           <div className={styles.darkMetricsContent}>
             <h2 className={styles.darkMetricsTitle}>Completed Custom Projects</h2>
             <div className={styles.darkMetricsGrid}>
-              
+
               <div className={styles.darkMetricItem}>
                 <div className={styles.darkMetricNumber}>
                   {siteData?.completedProjectsCount || '950+'}
@@ -789,10 +828,10 @@ const Home = () => {
 
               <div className={styles.darkMetricItem}>
                 <div className={styles.darkMetricNumber}>
-                  {siteData?.yearsExperienceCount 
+                  {siteData?.yearsExperienceCount
                     ? (siteData.yearsExperienceCount.toLowerCase().includes('yr') || siteData.yearsExperienceCount.toLowerCase().includes('year')
-                        ? siteData.yearsExperienceCount 
-                        : `${siteData.yearsExperienceCount}+`)
+                      ? siteData.yearsExperienceCount
+                      : `${siteData.yearsExperienceCount}+`)
                     : '25+'}
                 </div>
                 <div className={styles.darkMetricLabel}>Years Experience</div>
@@ -827,9 +866,73 @@ const Home = () => {
         </div>
       </section>
 
+      {/* ================= LIGHTBOX PREVIEW MODAL ================= */}
+      {selectedLightbox && (
+        <div className={styles.lightboxOverlay} onClick={() => setSelectedLightbox(null)}>
+          <div className={styles.lightboxContainer} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.lightboxCloseBtn} onClick={() => setSelectedLightbox(null)} aria-label="Close modal">
+              <X size={20} />
+            </button>
+
+            <div className={styles.lightboxImageFrame}>
+              {selectedLightbox.src ? (
+                <img src={selectedLightbox.src} alt={selectedLightbox.title} className={styles.lightboxFullImage} />
+              ) : (
+                <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%' }}>
+                  <rect width="400" height="400" fill={selectedLightbox.fill || '#6E4A2E'} />
+                  {selectedLightbox.pattern && (
+                    <>
+                      <defs>
+                        <pattern id="modalPat" width="40" height="40" patternUnits="userSpaceOnUse">
+                          <circle cx="20" cy="20" r="14" fill="none" stroke="#F2EADC" strokeWidth="1.8" opacity="0.6" />
+                        </pattern>
+                      </defs>
+                      <rect width="400" height="400" fill="url(#modalPat)" />
+                    </>
+                  )}
+                  {selectedLightbox.path && <path d="M0 200 200 0 400 200 200 400Z" fill="#F2EADC" opacity="0.22" />}
+                  {selectedLightbox.circle && <circle cx="200" cy="200" r="110" fill="none" stroke="#2E2116" strokeWidth="4" opacity="0.4" />}
+                  {selectedLightbox.triangle && <path d="M40 360 L200 40 L360 360 Z" fill="none" stroke="#B8892B" strokeWidth="4" />}
+                  {selectedLightbox.rect && <rect x="80" y="80" width="240" height="240" fill="none" stroke="#F2EADC" strokeWidth="3" opacity="0.5" />}
+                  {selectedLightbox.doubleCircle && (
+                    <>
+                      <circle cx="120" cy="120" r="28" fill="#F2EADC" opacity="0.35" />
+                      <circle cx="280" cy="280" r="28" fill="#F2EADC" opacity="0.35" />
+                    </>
+                  )}
+                </svg>
+              )}
+            </div>
+
+            <div className={styles.lightboxDetails}>
+              <div>
+                <span className={styles.gCatPill} style={{ marginBottom: '8px', display: 'inline-block' }}>
+                  {selectedLightbox.category || 'CNC Work'}
+                </span>
+                <h3 style={{ margin: '4px 0 2px', color: '#FAF7F2', fontSize: '20px', fontFamily: 'var(--font-heading)' }}>
+                  {selectedLightbox.title}
+                </h3>
+                <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '13px' }}>
+                  Custom CNC cutting &amp; 3D relief carving done at Jaipur CNC Cutting Workshop.
+                </p>
+              </div>
+
+              <a
+                href={`https://wa.me/${(siteData?.contactPhone || '9001021857').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hi Jaipur CNC, I am interested in getting custom work done like "${selectedLightbox.title}". Please share details & pricing.`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.lightboxOrderBtn}
+              >
+                <MessageCircle size={18} /> Inquire on WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ================= WHATSAPP FLOAT ================= */}
       <a className={styles.waFloat} href={whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
-        <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.87.5 3.66 1.44 5.24L2 22l4.98-1.53a9.87 9.87 0 0 0 5.06 1.38h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.4 1.3-1.93 1.36-.5.06-1.13.09-1.83-.11-.42-.13-.96-.3-1.65-.6-2.9-1.25-4.79-4.16-4.94-4.36-.14-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.26-.28.57-.35.76-.35h.55c.18 0 .42-.07.65.5.24.6.82 2.06.9 2.21.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.35 1.44.3.15.47.13.65-.08.17-.2.73-.85.93-1.15.2-.3.4-.24.65-.15.26.1 1.65.78 1.93.92.29.15.48.22.55.34.07.13.07.72-.17 1.4z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.87.5 3.66 1.44 5.24L2 22l4.98-1.53a9.87 9.87 0 0 0 5.06 1.38h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.4 1.3-1.93 1.36-.5.06-1.13.09-1.83-.11-.42-.13-.96-.3-1.65-.6-2.9-1.25-4.79-4.16-4.94-4.36-.14-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.26-.28.57-.35.76-.35h.55c.18 0 .42-.07.65.5.24.6.82 2.06.9 2.21.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.35 1.44.3.15.47.13.65-.08.17-.2.73-.85.93-1.15.2-.3.4-.24.65-.15.26.1 1.65.78 1.93.92.29.15.48.22.55.34.07.13.07.72-.17 1.4z" /></svg>
       </a>
 
     </div>
