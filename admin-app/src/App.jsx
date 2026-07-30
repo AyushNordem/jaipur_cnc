@@ -6,6 +6,7 @@ import Settings from './pages/Settings';
 import GalleryManager from './pages/GalleryManager';
 import ReviewManager from './pages/ReviewManager';
 import InquiryManager from './pages/InquiryManager';
+import ProductManager from './pages/ProductManager';
 import Login from './pages/Login';
 
 const SESSION_KEY = 'admin_session_expiry';
@@ -59,6 +60,7 @@ function App() {
       <Layout onLogout={handleLogout}>
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/products" element={<ProductManager />} />
           <Route path="/inquiries" element={<InquiryManager />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/reviews" element={<ReviewManager />} />

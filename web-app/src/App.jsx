@@ -5,6 +5,8 @@ import Gallery from './pages/Gallery';
 import Services from './pages/Services';
 import Contact from './pages/Contact';
 import About from './pages/About';
+import Shop from './pages/Shop';
+import ProductDetail from './pages/ProductDetail';
 import ScrollToTop from './components/ScrollToTop';
 import { SiteProvider } from './context/SiteContext';
 
@@ -18,6 +20,8 @@ function App() {
             <Route index element={<Home />} />
             <Route path="about" element={<About />} />
             <Route path="services" element={<Services />} />
+            <Route path="shop" element={<Shop />} />
+            <Route path="shop/:id" element={<ProductDetail />} />
             <Route path="gallery" element={<Gallery />} />
             <Route path="contact" element={<Contact />} />
           </Route>

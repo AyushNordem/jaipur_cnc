@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Settings, Image, FileText, MessageSquare, LogOut, Menu } from 'lucide-react';
+import { LayoutDashboard, Settings, Image, FileText, MessageSquare, LogOut, Menu, ShoppingBag } from 'lucide-react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
 
@@ -22,6 +22,7 @@ const Layout = ({ children, onLogout }) => {
 
   const menuItems = [
     { name: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
+    { name: '3D Products Manager', path: '/products', icon: <ShoppingBag size={20} /> },
     { name: 'Global Settings', path: '/settings', icon: <Settings size={20} /> },
     { name: 'Inquiries Manager', path: '/inquiries', icon: <MessageSquare size={20} /> },
     { name: 'Review Section', path: '/reviews', icon: <FileText size={20} /> },
