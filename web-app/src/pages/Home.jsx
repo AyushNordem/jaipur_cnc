@@ -260,7 +260,8 @@ const Home = () => {
         {/* Full-width Video Background */}
         <div className={styles.heroVideoBg}>
           <video
-            src="/cnc_header_video.mp4"
+            key={windowWidth <= 768 ? 'mobile-video' : 'desktop-video'}
+            src={windowWidth <= 768 ? '/mobile_cnc_header_video.mp4' : '/cnc_header_video.mp4'}
             autoPlay
             loop
             muted
