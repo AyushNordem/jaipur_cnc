@@ -288,7 +288,7 @@ const Settings = () => {
             </div>
             <label style={labelStyle}>
               Site/Business Name <span style={{ color: 'var(--brick)' }}>*</span>
-              <input type="text" name="siteName" value={content.siteName || ''} onChange={handleChange} style={getInputStyle('siteName')} placeholder="e.g. Jaipur Art CNC" />
+              <input type="text" name="siteName" value={content.siteName || ''} onChange={handleChange} style={getInputStyle('siteName')} placeholder="e.g. Jaipur Arts CNC" />
               {renderError('siteName')}
             </label>
             <label style={labelStyle}>

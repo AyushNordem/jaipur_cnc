@@ -143,7 +143,7 @@ const Shop = () => {
                   ? getFullMediaUrl(product.images[0]) 
                   : 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&q=80';
                 
-                const whatsappOrderUrl = `https://wa.me/${phoneNum}?text=${encodeURIComponent(`Hi Jaipur Art CNC, I want to buy Design File: ${product.title} (${product.designCode || productId}) for ₹${product.price}`)}`;
+                const whatsappOrderUrl = `https://wa.me/${phoneNum}?text=${encodeURIComponent(`Hi Jaipur Arts CNC, I want to buy Design File: ${product.title} (${product.designCode || productId}) for ₹${product.price}`)}`;
 
                 return (
                   <div key={productId} className={styles.productCard}>

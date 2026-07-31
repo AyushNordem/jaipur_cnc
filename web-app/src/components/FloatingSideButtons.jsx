@@ -10,7 +10,7 @@ const FloatingSideButtons = () => {
   const cleanPhone = rawPhone.replace(/[^0-9]/g, '');
   const telUrl = `tel:${cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone}`;
   
-  const whatsappUrl = siteData?.whatsappUrl || `https://wa.me/${cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone}?text=${encodeURIComponent('Hi Jaipur Art CNC, I would like to inquire about your CNC cutting & design services.')}`;
+  const whatsappUrl = siteData?.whatsappUrl || `https://wa.me/${cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone}?text=${encodeURIComponent('Hi Jaipur Arts CNC, I would like to inquire about your CNC cutting & design services.')}`;
 
   return (
     <div className={styles.sideContainer}>

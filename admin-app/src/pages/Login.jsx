@@ -7,7 +7,7 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [siteName, setSiteName] = useState('Jaipur Art CNC');
+  const [siteName, setSiteName] = useState('Jaipur Arts CNC');
 
   useEffect(() => {
     axios.get(`${API_BASE_URL}/api/settings`)

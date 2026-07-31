@@ -57,7 +57,7 @@ const ProductForm = () => {
   };
 
   const generateDesignCode = (categoryName) => {
-    const bizPrefix = "JAC"; // Jaipur Art CNC
+    const bizPrefix = "JAC"; // Jaipur Arts CNC
     let catCode = "3D";
     
     if (categoryName === "2D Design") catCode = "2D";

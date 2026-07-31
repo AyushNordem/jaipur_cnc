@@ -17,10 +17,10 @@ const About = () => {
       {/* ================= PAGE HERO ================= */}
       <section className={`${styles.pageHero} styles.jaliBg`}>
         <div className={styles.wrap}>
-          <div className={styles.eyebrow}>About Jaipur Art CNC</div>
+          <div className={styles.eyebrow}>About Jaipur Arts CNC</div>
           <h1>Crafting wood with precision &amp; heritage since 2019.</h1>
           <p className={styles.lede}>
-            Founded by <strong>Shubham Jangid</strong>, Jaipur Art CNC blends rich traditional woodworking artistry with state-of-the-art 2D and 3D CNC carving technology.
+            Founded by <strong>Shubham Jangid</strong>, Jaipur Arts CNC blends rich traditional woodworking artistry with state-of-the-art 2D and 3D CNC carving technology.
           </p>
         </div>
       </section>
@@ -35,14 +35,14 @@ const About = () => {
                   ? getFullMediaUrl(siteData.ourStoryImage)
                   : "/ganeshji.jpg"
               } 
-              alt="Ganeshji Wood Carving - Jaipur Art CNC by Shubham Jangid" 
+              alt="Ganeshji Wood Carving - Jaipur Arts CNC by Shubham Jangid" 
             />
           </div>
           <div className={styles.storyCopy}>
             <div className={styles.eyebrow}>Our Heritage &amp; Story</div>
             <h2 style={{ marginBottom: '22px' }}>From traditional craft to a full CNC studio</h2>
             <p>
-              Jaipur Art CNC grew out of a rich wood-crafting heritage in Jaipur. Led by owner and lead designer <strong>Shubham Jangid</strong>, our workshop carries forward generations of woodworking craftsmanship into the digital era.
+              Jaipur Arts CNC grew out of a rich wood-crafting heritage in Jaipur. Led by owner and lead designer <strong>Shubham Jangid</strong>, our workshop carries forward generations of woodworking craftsmanship into the digital era.
             </p>
             <p>
               Recognizing that customers required unprecedented detail for intricate jali screens, mandir backdrops, and architectural panels, <strong>Shubham Jangid</strong> brought high-precision CNC routers into the workshop in 2019 to complement traditional hand-finishing skills.
@@ -141,7 +141,7 @@ const About = () => {
             </div>
             <div className={styles.tItem}>
               <div className={styles.tYear}>2019</div>
-              <h3>Jaipur Art CNC founded by Shubham Jangid</h3>
+              <h3>Jaipur Arts CNC founded by Shubham Jangid</h3>
               <p>Brought in high-precision CNC router machines to blend traditional handcrafted artistry with modern speed.</p>
             </div>
             <div className={styles.tItem}>
@@ -168,7 +168,7 @@ const About = () => {
                 "Wood carving is our passion and lifelong craft. Every piece that leaves our workshop — whether a delicate home jali or a royal temple backdrop — carries our commitment to perfection."
               </p>
               <div className={styles.rName}>Shubham Jangid</div>
-              <div className={styles.rRole}>Owner &amp; Lead Designer • Jaipur Art CNC</div>
+              <div className={styles.rRole}>Owner &amp; Lead Designer • Jaipur Arts CNC</div>
             </div>
           </div>
         </div>

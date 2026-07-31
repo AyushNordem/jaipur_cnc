@@ -116,63 +116,9 @@ const Home = () => {
   const { siteData } = useContext(SiteContext);
   const [activeWood, setActiveWood] = useState(WOOD_MATERIALS[0]);
 
-  // Fallback data for gallery items
-  const defaultGalleryItems = [
-    { title: 'Jali Panel • MDF', category: '2D', fill: '#6E4A2E', pattern: true },
-    { title: 'Relief • Pine', category: '3D', fill: '#A83D2C', path: true },
-    { title: 'Name Board • Plywood', category: 'Name Board', fill: '#B8892B', circle: true },
-    { title: 'Wall Décor • MDF', category: 'Wall Décor', fill: '#2E2116', triangle: true },
-    { title: 'Room Partition • Ply', category: 'Room Partition', fill: '#6E4A2E', rect: true },
-    { title: 'Rangoli Panel • MDF', category: 'Rangoli Panel', fill: '#A83D2C', doubleCircle: true },
-    { title: 'Mandir Pillar • Teak Wood', category: 'Mandir Pillar', fill: '#8C5A37', pattern: true },
-    { title: 'Floral Grille • HDHMR', category: 'Floral Grille', fill: '#5C3820', path: true }
-  ];
 
-  // Fallback data for customer reviews
-  const defaultReviews = [
-    {
-      clientName: 'Amit Sharma',
-      clientLocation: 'Jaipur',
-      workType: '3D Mandir Relief',
-      rating: 5,
-      quote: 'The 3D carving detail on HDHMR board was absolutely breathtaking. Delivered on time in Jaipur!'
-    },
-    {
-      clientName: 'Priya Verma',
-      clientLocation: 'Udaipur',
-      workType: 'Custom Jali Screen',
-      rating: 5,
-      quote: 'Exact dimensions as requested. Their CNC cutting precision on MDF sheets is second to none.'
-    },
-    {
-      clientName: 'Vikram Singh',
-      clientLocation: 'Jodhpur',
-      workType: 'Teak Wooden Gate',
-      rating: 5,
-      quote: 'Highly skilled craftsmanship and transparent pricing. Great communication throughout the project.'
-    },
-    {
-      clientName: 'Ramesh Patel',
-      clientLocation: 'Ahmedabad',
-      workType: 'Name Board & Wall Art',
-      rating: 5,
-      quote: 'Superb quality and clean finish. Will definitely order all our future CNC cutting jobs from Jaipur CNC!'
-    },
-    {
-      clientName: 'Neha Mehta',
-      clientLocation: 'Delhi',
-      workType: 'PVC Partition Screen',
-      rating: 5,
-      quote: 'Beautiful waterproof PVC foam board cutting. Perfect fit for our dining room partition!'
-    },
-    {
-      clientName: 'Sanjay Gupta',
-      clientLocation: 'Kota',
-      workType: 'MDF Grill Work',
-      rating: 5,
-      quote: 'Flawless precision cutting and quick turnaround. Highly recommended for custom CNC jobs!'
-    }
-  ];
+
+
 
   const [reviewsList, setReviewsList] = useState([]);
   const [creationsList, setCreationsList] = useState([]);
@@ -261,13 +207,18 @@ const Home = () => {
         <div className={styles.heroVideoBg}>
           <video
             key={windowWidth <= 768 ? 'mobile-video' : 'desktop-video'}
-            src={windowWidth <= 768 ? '/mobile_cnc_header_video.mp4' : '/cnc_header_video.mp4'}
             autoPlay
             loop
             muted
             playsInline
+            preload="auto"
             className={styles.heroVideo}
-          />
+          >
+            <source
+              src={windowWidth <= 768 ? '/mobile_cnc_header_video.mp4' : '/cnc_header_video.mp4'}
+              type="video/mp4"
+            />
+          </video>
           {/* Left Shadow Overlay covering video smoothly on left */}
           <div className={styles.heroShadowOverlay}></div>
         </div>
@@ -275,6 +226,14 @@ const Home = () => {
         <div className={styles.heroWrap}>
           <div className={styles.heroGrid}>
             <div className={styles.heroLeftContent}>
+              <div className={styles.heroBrandBadge}>
+                <img 
+                  src={siteData?.logoUrl || "/logo.png"} 
+                  alt={siteData?.siteName || "Jaipur Arts CNC"} 
+                  className={styles.heroLogoImg} 
+                  onError={(e) => { e.target.src = "/logo.png"; }}
+                />
+              </div>
               <div className={styles.eyebrowLight}>Jaipur, Rajasthan · Custom CNC Wood Cutting</div>
               <h1 className={styles.heroTitleLight}>
                 We cut wood<br />into <em>art</em>, precisely.
@@ -504,7 +463,7 @@ const Home = () => {
                   : 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&q=80';
 
                 const phoneNum = (siteData?.contactPhone || '9001021857').replace(/[^0-9]/g, '');
-                const whatsappOrderUrl = `https://wa.me/${phoneNum}?text=${encodeURIComponent(`Hi Jaipur Art CNC, I want to buy Design File: ${product.title} (${product.designCode || productId}) for ₹${product.price}`)}`;
+                const whatsappOrderUrl = `https://wa.me/${phoneNum}?text=${encodeURIComponent(`Hi Jaipur Arts CNC, I want to buy Design File: ${product.title} (${product.designCode || productId}) for ₹${product.price}`)}`;
 
                 return (
                   <div key={productId} className={shopStyles.productCard}>
@@ -592,42 +551,33 @@ const Home = () => {
       )}
 
       {/* ================= GALLERY ================= */}
-      <section id="gallery" className={styles.sectionPadding}>
-        <div className={styles.wrap}>
-          <div className={styles.sectionHead}>
-            <div>
-              <div className={styles.eyebrow}>Recent Work</div>
-              <h2>A few pieces we've cut</h2>
+      {(loadingCreations || (creationsList && creationsList.length > 0)) && (
+        <section id="gallery" className={styles.sectionPadding}>
+          <div className={styles.wrap}>
+            <div className={styles.sectionHead}>
+              <div>
+                <div className={styles.eyebrow}>Recent Work</div>
+                <h2>A few pieces we've cut</h2>
+              </div>
+              <p>A small sample from our portfolio of premium CNC carving and custom cutting.</p>
             </div>
-            <p>A small sample from our portfolio of premium CNC carving and custom cutting.</p>
-          </div>
 
-          <div 
-            className={styles.galleryGrid}
-            ref={galleryScrollRef}
-            onMouseEnter={() => setIsGalleryHovered(true)}
-            onMouseLeave={() => setIsGalleryHovered(false)}
-            onTouchStart={() => setIsGalleryHovered(true)}
-            onTouchEnd={() => setTimeout(() => setIsGalleryHovered(false), 5000)}
-          >
-            {loadingCreations ? (
-              Array.from({ length: 8 }).map((_, idx) => (
-                <div key={idx} className={styles.gItemShimmer}>
-                  <div className={styles.shimmerBox} />
-                </div>
-              ))
-            ) : (() => {
-              // Combine creationsList with defaultGalleryItems up to 8 items so grid slots are full
-              const combinedList = [...creationsList];
-              let defaultIdx = 0;
-              while (combinedList.length < 8 && defaultIdx < defaultGalleryItems.length) {
-                combinedList.push(defaultGalleryItems[defaultIdx]);
-                defaultIdx++;
-              }
-              const displayList = combinedList.slice(0, 8);
-
-              return displayList.map((item, idx) => {
-                if (item.imageUrl) {
+            <div 
+              className={styles.galleryGrid}
+              ref={galleryScrollRef}
+              onMouseEnter={() => setIsGalleryHovered(true)}
+              onMouseLeave={() => setIsGalleryHovered(false)}
+              onTouchStart={() => setIsGalleryHovered(true)}
+              onTouchEnd={() => setTimeout(() => setIsGalleryHovered(false), 5000)}
+            >
+              {loadingCreations ? (
+                Array.from({ length: 8 }).map((_, idx) => (
+                  <div key={idx} className={styles.gItemShimmer}>
+                    <div className={styles.shimmerBox} />
+                  </div>
+                ))
+              ) : (
+                creationsList.slice(0, 8).map((item, idx) => {
                   const fullImg = getFullImageUrl(item.imageUrl);
                   return (
                     <ShimmerCreationItem
@@ -643,70 +593,18 @@ const Home = () => {
                       })}
                     />
                   );
-                }
-                return (
-                  <div
-                    key={idx}
-                    className={styles.gItem}
-                    onClick={() => setSelectedLightbox({
-                      src: null,
-                      title: item.title,
-                      category: item.category || 'Custom Cut',
-                      fill: item.fill,
-                      pattern: item.pattern,
-                      path: item.path,
-                      circle: item.circle,
-                      triangle: item.triangle,
-                      rect: item.rect,
-                      doubleCircle: item.doubleCircle
-                    })}
-                  >
-                    <div className={styles.gTopTags}>
-                      <span className={styles.gCatPill}>{item.category || 'Custom Cut'}</span>
-                      <span className={styles.gViewBtn}>
-                        <Eye size={13} /> Quick View
-                      </span>
-                    </div>
-                    <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" className={styles.gItemImg}>
-                      <rect width="200" height="200" fill={item.fill || '#6E4A2E'} />
-                      {item.pattern && (
-                        <>
-                          <defs>
-                            <pattern id={`galleryPat_${idx}`} width="28" height="28" patternUnits="userSpaceOnUse">
-                              <circle cx="14" cy="14" r="9" fill="none" stroke="#F2EADC" strokeWidth="1.2" opacity="0.6" />
-                            </pattern>
-                          </defs>
-                          <rect width="200" height="200" fill={`url(#galleryPat_${idx})`} />
-                        </>
-                      )}
-                      {item.path && <path d="M0 100 100 0 200 100 100 200Z" fill="#F2EADC" opacity="0.18" />}
-                      {item.circle && <circle cx="100" cy="100" r="55" fill="none" stroke="#2E2116" strokeWidth="2" opacity="0.4" />}
-                      {item.triangle && <path d="M20 180 L100 20 L180 180 Z" fill="none" stroke="#B8892B" strokeWidth="2" />}
-                      {item.rect && <rect x="40" y="40" width="120" height="120" fill="none" stroke="#F2EADC" strokeWidth="1.4" opacity="0.5" />}
-                      {item.doubleCircle && (
-                        <>
-                          <circle cx="60" cy="60" r="14" fill="#F2EADC" opacity="0.3" />
-                          <circle cx="140" cy="140" r="14" fill="#F2EADC" opacity="0.3" />
-                        </>
-                      )}
-                    </svg>
-                    <div className={styles.gContentOverlay}>
-                      <h4 className={styles.gTitle}>{item.title}</h4>
-                      <span className={styles.gSub}>Precision Cut • Click to View</span>
-                    </div>
-                  </div>
-                );
-              });
-            })()}
-          </div>
+                })
+              )}
+            </div>
 
-          <div style={{ textAlign: 'center', marginTop: '40px' }}>
-            <Link to="/gallery" className="btn btn-outline">
-              View Full Gallery <ArrowRight size={16} />
-            </Link>
+            <div style={{ textAlign: 'center', marginTop: '40px' }}>
+              <Link to="/gallery" className="btn btn-outline">
+                View Full Gallery <ArrowRight size={16} />
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ================= PROCESS ================= */}
       <section className={`${styles.sectionPadding} ${styles.process}`}>
@@ -744,7 +642,7 @@ const Home = () => {
 
       {/* ================= REVIEWS ================= */}
       {(() => {
-        const baseReviews = (testimonials && testimonials.length > 0) ? testimonials : defaultReviews;
+        const baseReviews = (testimonials && testimonials.length > 0) ? testimonials : [];
         if (!baseReviews || baseReviews.length === 0) return null;
 
         // Multiply array if length < 3, then clone first 3 items onto end to guarantee 0 blank slots

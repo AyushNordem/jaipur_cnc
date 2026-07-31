@@ -277,7 +277,7 @@ const Contact = () => {
         <div className={styles.wrap}>
           <div className={styles.mapFrame}>
             <iframe
-              title="Jaipur Art CNC Location"
+              title="Jaipur Arts CNC Location"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3557.512630095818!2d75.76735117628892!3d26.91974717664273!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396db57f496c274d%3A0x69e65de890e2b706!2sJaipur%20Art%20CNC!5e0!3m2!1sen!2sin!4v1722000000000!5m2!1sen!2sin"
               style={{ border: 0, display: 'block', width: '100%', height: '100%' }}
               allowFullScreen=""

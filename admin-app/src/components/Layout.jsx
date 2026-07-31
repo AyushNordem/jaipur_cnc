@@ -7,7 +7,7 @@ import { API_BASE_URL } from '../config';
 const Layout = ({ children, onLogout }) => {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [siteName, setSiteName] = useState('Jaipur Art CNC');
+  const [siteName, setSiteName] = useState('Jaipur Arts CNC');
 
   useEffect(() => {
     axios.get(`${API_BASE_URL}/api/settings`)

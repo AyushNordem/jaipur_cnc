@@ -117,6 +117,20 @@
   margin-bottom: 16px;
 }
 
+.heroBrandBadge {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.heroLogoImg {
+  height: 56px;
+  max-height: 56px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+}
+
 .eyebrowLight::before {
   content: "";
   width: 22px;

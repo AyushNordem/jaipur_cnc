@@ -88,7 +88,7 @@ const ProductDetail = () => {
   }
 
   const phoneNum = (siteData?.contactPhone || '9001021857').replace(/[^0-9]/g, '');
-  const whatsappMessage = `Hi Jaipur Art CNC, I want to purchase / download the Design File: ${product.title} (Code: ${product.designCode || product._id}) at ₹${product.price}`;
+  const whatsappMessage = `Hi Jaipur Arts CNC, I want to purchase / download the Design File: ${product.title} (Code: ${product.designCode || product._id}) at ₹${product.price}`;
   const whatsappUrl = `https://wa.me/${phoneNum}?text=${encodeURIComponent(whatsappMessage)}`;
 
   const imagesList = (product.images && product.images.length > 0) 
@@ -324,7 +324,7 @@ const ProductDetail = () => {
                     ? getFullMediaUrl(item.images[0]) 
                     : 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&q=80';
                   
-                  const itemWhatsappUrl = `https://wa.me/${phoneNum}?text=${encodeURIComponent(`Hi Jaipur Art CNC, I want to order Design: ${item.title} (${item.designCode || itemCode}) for ₹${item.price}`)}`;
+                  const itemWhatsappUrl = `https://wa.me/${phoneNum}?text=${encodeURIComponent(`Hi Jaipur Arts CNC, I want to order Design: ${item.title} (${item.designCode || itemCode}) for ₹${item.price}`)}`;
 
                   return (
                     <div key={itemCode} className={`${shopStyles.productCard} ${styles.productCard}`}>

@@ -22,7 +22,7 @@ const Footer = () => {
     <footer className={styles.footer} id="contact">
       <div className={`container ${styles.footerGrid}`}>
         <div>
-          <div className={styles.footerLogo}>{siteData?.siteName || 'Jaipur Art CNC'}</div>
+          <div className={styles.footerLogo}>{siteData?.siteName || 'Jaipur Arts CNC'}</div>
           <p className={styles.footerDescription}>
             Custom CNC wood cutting in Jaipur — 2D &amp; 3D patterns on MDF, Plywood and Pine, made to your exact design.
           </p>
@@ -113,8 +113,7 @@ const Footer = () => {
       </div>
       <div className={styles.footerBottom}>
         <div className={`container ${styles.footerBottomFlex}`}>
-          <span>© {new Date().getFullYear()} Jaipur Art CNC. All rights reserved.</span>
-          <span>Made with wood dust &amp; precision.</span>
+          <span>© {new Date().getFullYear()} Jaipur Arts CNC. All rights reserved.</span>
         </div>
       </div>
     </footer>

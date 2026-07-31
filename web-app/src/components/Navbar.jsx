@@ -28,32 +28,16 @@ const Navbar = () => {
     <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
       <div className={styles.nav}>
         <Link to="/" className={styles.logo}>
-          {siteData?.logoUrl ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <img
-                src={siteData.logoUrl}
-                alt={siteData?.siteName || "Jaipur Art CNC"}
-                className={styles.logoImg}
-              />
-              <div className={styles.logoText}>
-                {siteData?.siteName || 'Jaipur Art CNC'}
-                <span>Wood &amp; Pattern Cutting</span>
-              </div>
-            </div>
-          ) : (
-            <>
-              <svg className={styles.logoMark} viewBox="0 0 40 40" fill="none">
-                <rect x="1" y="1" width="38" height="38" stroke="#A83D2C" strokeWidth="1.4" />
-                <path d="M20 5 L20 35 M5 20 L35 20 M9 9 L31 31 M31 9 L9 31" stroke="#B8892B" strokeWidth="1" opacity="0.55" />
-                <circle cx="20" cy="20" r="7" fill="#2E2116" />
-                <circle cx="20" cy="20" r="2.4" fill="#F2EADC" />
-              </svg>
-              <div className={styles.logoText}>
-                {siteData?.siteName || 'Jaipur Art CNC'}
-                <span>Wood &amp; Pattern Cutting</span>
-              </div>
-            </>
-          )}
+          <img
+            src={siteData?.logoUrl || "/logo.png"}
+            alt={siteData?.siteName || "JAIPUR ARTS CNC"}
+            className={styles.logoImg}
+            onError={(e) => { e.target.src = "/logo.png"; }}
+          />
+          <div className={styles.logoText}>
+            {siteData?.siteName || 'JAIPUR ARTS CNC'}
+            <span>Wood &amp; Pattern Cutting</span>
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
